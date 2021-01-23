@@ -1,0 +1,13 @@
+#corpo {
+    background-color: #f4f9ff;
+}
+
+.border-4 {
+    border-width:4px;
+    border-color: aqua;
+}
+
+.login-card {
+    border-left: 0.5em solid #074bb8;
+    border-right: 0.5em solid #074bb8;
+}
