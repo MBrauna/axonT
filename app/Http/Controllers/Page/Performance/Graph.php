@@ -19,11 +19,27 @@
         public function startPage(Request $request) {
             try {
                 $user   =   User::find(Auth::user()->id);
-                OauthAccessTokens::where('user_id',Auth::user()->id)
-                $others =   OauthAccessTokens::where('user_id')
+
+                $others =   OauthAccessTokens::where('user_id', Auth::user()->id)
+                ->where(function($query){
+                    $query->orWhere('expires_at','>=',Carbon::now());
+                    $query->orWhere('revoked',true);
+                }) // ->where(function($query){ ... })
+                ->delete();
+
+                $oauthAccess    =   OauthAccessTokens::where('user_id', Auth::user()->id)->count();
+
+                if($oauthAccess <= 0) {
+                    User::find(Auth::user()->id)
+                    ->update([
+                        'accessToken' => null,
+                    ]);
+                    $user   =   User::find(Auth::user()->id);
+                } // if($oauthAccess <= 0) { ... }
                 
                 if(is_null($user->accessToken)) {
                     $token = $user->createToken('axonT')->accessToken;
+
                     User::find(Auth::user()->id)
                     ->update([
                         'accessToken'   =>  $token,
