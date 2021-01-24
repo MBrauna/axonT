@@ -15,8 +15,8 @@
         public function getCompany(Request $request) {
             try {
                 $userConfig =   UsuarioConfig::where('id_usuario', Auth::user()->id)
-                                ->select('id_perfil');
-
+                                ->get();
+                return response()->json($userConfig, 200);
                 
             } // try { ... }
             catch(Exception $error) {

@@ -14,8 +14,7 @@
     use App\Models\OauthAccessTokens;
     use App\Models\User;
 
-    class Graph extends Controller
-    {
+    class Graph extends Controller {
         public function startPage(Request $request) {
             try {
                 $user   =   User::find(Auth::user()->id);
@@ -37,14 +36,15 @@
                     $user   =   User::find(Auth::user()->id);
                 } // if($oauthAccess <= 0) { ... }
                 
-                if(is_null($user->accessToken)) {
+                if(is_null($user->token)) {
+                    
                     $token = $user->createToken('axonT')->accessToken;
 
-                    User::find(Auth::user()->id)
-                    ->update([
-                        'accessToken'   =>  $token,
-                    ]);
+                    $user->token    =   $token;
+                    $user->save();
                 }
+
+                dd($user);
 
                 return view('page.performance.graph',[]);
             }
