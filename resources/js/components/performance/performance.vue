@@ -7,7 +7,7 @@
             <div class="card-body">
                 <div class="row d-flex justify-content-center">
                     <div v-for="datacurreg in curreg.graphs" class="col-12 col-sm-12 col-md-6" v-bind:key="datacurreg.content.id" >
-                        {{ datacurreg }}
+                        <apexchart v-bind:height="datacurreg.chart.height" v-bind:type="datacurreg.chart.type" :options="datacurreg" :series="datacurreg.series"></apexchart>
                     </div>
                 </div>
             </div>
@@ -16,12 +16,12 @@
 </template>
 
 <script>
-    import ApexCharts from 'apexcharts';
+    import VueApexCharts from 'vue-apexcharts';
 
     export default {
         props: ['token','bearer','auth'],
         components: {
-            apexchart: ApexCharts,
+            apexchart: VueApexCharts,
         },
         data() {
             return {

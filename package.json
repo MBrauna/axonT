@@ -10,13 +10,13 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
+        "@fortawesome/fontawesome-free": "^5.15.1",
+        "apexcharts": "^3.23.1",
         "axios": "^0.19",
         "bootstrap": "^4.0.0",
         "bootstrap-vue": "^2.15.0",
-        "apexcharts": "^3.23.1",
-        "epic-spinners": "^1.1.0",
-        "@fortawesome/fontawesome-free": "^5.15.1",
         "cross-env": "^7.0",
+        "epic-spinners": "^1.1.0",
         "jquery": "^3.2",
         "laravel-mix": "^5.0.1",
         "lodash": "^4.17.19",
@@ -25,11 +25,12 @@
         "sass": "^1.20.1",
         "sass-loader": "^8.0.0",
         "vue": "^2.5.17",
-        "vuetify": "^2.4.0",
+        "vue-template-compiler": "^2.6.10",
         "vue-toast-notification": "^0.6.0",
-        "vue-template-compiler": "^2.6.10"
+        "vuetify": "^2.4.0"
     },
     "dependencies": {
+        "vue-apexcharts": "^1.6.0",
         "vue2-datepicker": "^3.8.2"
     }
 }
