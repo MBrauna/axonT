@@ -8,22 +8,44 @@
     use Auth;
     use Carbon\Carbon;
     use DB;
+
     use App\Models\Chamado;
     use App\Models\Empresa;
     use App\Models\Processo;
+    use App\Models\UsuarioConfig;
+    use App\Models\Perfil;
 
     class Graph extends Controller {
         public function getGraphs(Request $request) {
             try {
-                $vReturn    =   [
-                    $this->graph1($request, $request->idCompany),
-                    $this->graph2($request, $request->idCompany),
-                    $this->graph3($request, $request->idCompany),
-                    $this->graph4($request, $request->idCompany),
-                    $this->graph5($request, $request->idCompany),
-                ];
+                $filtro     =   is_null($request->filter) ? false : $request->filter;
 
-                return response()->json($vReturn,200);
+                $userConfig =   UsuarioConfig::where('id_usuario', Auth::user()->id)->select('id_perfil');
+                $perfil     =   Perfil::whereIn('id_perfil',$userConfig)->select('id_empresa');
+                $empresa    =   Empresa::whereIn('id_empresa',$perfil)
+                                ->where('situacao',true)
+                                ->orderBy('descricao','asc');
+
+                // Inicia os dados dos filtros
+                if(!is_null($request->idCompany) && $filtro) {
+                    $empresa    =   $empresa->where('id_empresa',$request->idCompany);
+                } // if(isset($request->idCompany) && !is_null($request->idCompany) && $filtro) { ... }
+
+
+                $empresa    =   $empresa->get();
+
+
+                foreach ($empresa as $key => $value) {
+                    $empresa[$key]->graphs  =   [
+                        $this->graph1($request, $value->id_empresa),
+                        $this->graph2($request, $value->id_empresa),
+                        $this->graph3($request, $value->id_empresa),
+                        $this->graph4($request, $value->id_empresa),
+                        $this->graph5($request, $value->id_empresa),
+                    ];
+                } // foreach ($empresa as $key => $value) { ... }
+
+                return response()->json($empresa,200);
             }
             catch(Exception $error){
                 return response()->json([

@@ -1,33 +1,33 @@
 <template>
     <div>
-        <div v-for="curreg in dataCompany" v-bind:key="curreg.id_empresa" class="card shadow mt-3 mb-3 border-primary bg-white">
+        <div v-for="curreg in content" v-bind:key="curreg.id_empresa" class="card shadow mt-3 mb-3 border-primary bg-white">
             <div class="card-header text-center bg-primary font-weight-bold text-light">
                 {{ curreg.descricao }}
             </div>
             <div class="card-body">
-                <chart-axont 
-                    :token="token"
-                    :bearer="bearer"
-                    :auth="userData"
-                    :idCompany="curreg.id_empresa">
-                </chart-axont>
+                <div class="row d-flex justify-content-center">
+                    <div v-for="datacurreg in curreg.graphs" class="col-12 col-sm-12 col-md-6" v-bind:key="datacurreg.content.id" >
+                        {{ datacurreg }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import ApexCharts from 'apexcharts';
 
     export default {
         props: ['token','bearer','auth'],
         components: {
+            apexchart: ApexCharts,
         },
         data() {
             return {
                 loading: false,
                 content: {},
                 userData: null,
-                dataCompany: {},
             }
         },
         methods: {
@@ -37,45 +37,6 @@
                 if(vm.axiontoken == undefined || vm.axiontoken.trim() == '' || vm.axiontoken == null) {
                     vm.loading      =   true;
                 }
-            },
-            initCompanies   :   function(){
-                try {
-                    var vm      =   this;
-                    vm.header   = {
-                        'headers'   :   {
-                            'Authorization' :   'Bearer ' + this.bearer,
-                        },
-                    };
-                    vm.request = {
-                        '_token'            :   vm.token,
-                        'filter'            :   true,
-                        'idUser'            :   vm.userData.id,
-                        'idCompany'         :   vm.PREFERENCES.getCompany(),
-                        'idProcess'         :   null,
-                        'idSituation'       :   null,
-                        'createIni'         :   vm.createDateIni == null ? null : vm.createDateIni.toLocaleDateString(),
-                        'createEnd'         :   vm.createDateIni == null ? null : vm.createDateEnd.toLocaleDateString(),
-                    };
-
-                    axios.post('/api/util/company',vm.request,vm.header)
-                    .then(function (response) {
-                        if(response.status === 200) {
-                            vm.dataCompany  =   response.data;
-
-                            vm.dataCompany
-                        }
-                        else {
-                            console.log('outro');
-                        }
-                    })
-                    .catch(function(retorno){
-                        console.log('teste');
-                        console.log(retorno);
-                    });
-                } // try { ... }
-                catch(error) {
-
-                } // catch(error) { ... },
             },
             initQuery   :   function(){
                 try {
@@ -89,7 +50,7 @@
                     vm.request = {
                         '_token'            :   vm.token,
                         'filter'            :   true,
-                        'idUser'            :   vm.auth.id,
+                        'idUser'            :   vm.userData.id,
                         'idCompany'         :   vm.PREFERENCES.getCompany(),
                         'idProcess'         :   null,
                         'idSituation'       :   null,
@@ -116,7 +77,7 @@
             this.PREFERENCES.initData();
 
             this.userData   =   JSON.parse(this.auth);
-            this.initCompanies();
+            this.initQuery();
         },
     }
 </script>
