@@ -27,7 +27,6 @@
             <menu-app csrf="{{ csrf_token() }}" user="{{ json_encode(Auth::user()) }}"></menu-app>
 
             <div class="body" style="padding-top: 4.5em">
-                <filter-app token="{{ csrf_token() }}" bearer="{{ Auth::user()->token }}" auth="{{ json_encode(Auth::user()) }}"></filter-app>
                 @yield('body')
             </div>
         </div>

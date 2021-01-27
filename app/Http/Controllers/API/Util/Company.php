@@ -35,8 +35,7 @@
             } // try { ... }
             catch(Exception $error) {
                 return response()->json([
-                    'Company'  =>  []
-                ],200);
+                ],404);
             } // catch(Exception $error) { ... }
         } // public function getCompany(Request $request) { ... }
     } // class Company extends Controller { ... }

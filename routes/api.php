@@ -10,10 +10,11 @@
             Route::any('/login','Login@verifyAccess')->name('login');
         });
 
-        
         Route::namespace('Util')->middleware('auth:api')->prefix('util')->name('util.')->group(function(){
             // [util.company]
             Route::any('/company','Company@getCompany')->name('company');
+            // [util.filterTasks]
+            Route::any('/filterTasks','FilterTasks@filter')->name('filterTasks');
         });
 
         Route::namespace('Performance')->middleware('auth:api')->prefix('performance')->name('performance.')->group(function(){

@@ -181,6 +181,7 @@ class Reconstrucao extends Migration
             $table->increments('id_tipo_processo');
             $table->integer('id_processo');
             $table->integer('id_situacao_inicial');
+            $table->boolean('automatico')->default(false);
             $table->text('titulo');
             $table->text('subtitulo');
             $table->integer('sla')->default(72);

@@ -11,7 +11,7 @@
         public function startPage(Request $request) {
             try {
 
-                return view('page.task.create',[
+                return view('page.solicitation.create',[
                     
                 ]);
             }
