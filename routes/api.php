@@ -10,12 +10,13 @@
             Route::any('/login','Login@verifyAccess')->name('login');
         });
 
-        Route::namespace('Util')->prefix('util')->name('util.')->group(function(){
+        
+        Route::namespace('Util')->middleware('auth:api')->prefix('util')->name('util.')->group(function(){
             // [util.company]
             Route::any('/company','Company@getCompany')->name('company');
         });
 
         Route::namespace('Performance')->middleware('auth:api')->prefix('performance')->name('performance.')->group(function(){
-            Route::get('/teste','Graph@getGraphs')->name('graph');
+            Route::post('/graph','Graph@getGraphs')->name('graph');
         });
     });

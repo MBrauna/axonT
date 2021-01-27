@@ -1,6 +1,7 @@
 <template>
-    <div>
-        <div v-bind:id="'chart-' + idempresa + '-' + contentchart.content.id"></div>
+    <div class="row d-flex justify-content-center">
+        <div v-for="curreg in content" v-bind:key="'chart-' + idCompany + '-' + curreg.content.id" class="col-12 col-sm-12 col-md-6" v-bind:id="'chart-' + idCompany + '-' + curreg.content.id">
+        </div>
     </div>
 </template>
 
@@ -8,30 +9,39 @@
     import ApexCharts from 'apexcharts';
     
     export default {
-        props: ['contentchart','idempresa','descempresa','idxreg'],
+        props: ['token','bearer','auth','idCompany'],
         components: {
             apexchart: ApexCharts,
         },
         data() {
             return {
                 loading: false,
-                content: {},
-                idxdata: null,
+                content: [],
             }
         },
         methods: {
-            startChart      :   function(){
+            startChart      :   function(contentchart){
                 var vm      =   this;
-                vm.idxdata  =   vm.idxreg;
-
-                var chart   =   new ApexCharts(document.querySelector('#chart-' + vm.idempresa + '-' + vm.contentchart.content.id), vm.contentchart);
+                var chart   =   new ApexCharts(document.querySelector('#chart-' + vm.idCompany + '-' + contentchart.content.id));
 
                 chart.render();
             },
+            chartAtt        :   function(){
+                var vm      =   this;
 
+                console.log('executei');
+                console.log(vm.content);
+                vm.content.forEach(function(contentchart){
+                    vm.startChart(contentchart);
+                }); // vm.content.forEach(function(contentchart){ ... }
+            },
+            
+            
         },
         mounted() {
-            this.startChart();
+            this.LAYOUT.initData();
+            this.PREFERENCES.initData();
+            this.initQuery();
         },
     }
 </script>

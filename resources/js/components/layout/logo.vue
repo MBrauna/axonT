@@ -24,6 +24,8 @@
         methods: {
         },
         mounted() {
+            this.LAYOUT.initData();
+            this.PREFERENCES.initData();
         },
     }
 </script>

@@ -117,6 +117,8 @@
         mounted() {
             this.getVersion();
             this.verifyToken();
+            this.LAYOUT.initData();
+            this.PREFERENCES.initData();
         },
     }
 </script>

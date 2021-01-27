@@ -3,8 +3,5 @@
 @section('title','Gráficos')
 
 @section('body')
-    <passport-clients></passport-clients>
-    <passport-authorized-clients></passport-authorized-clients>
-    <passport-personal-access-tokens></passport-personal-access-tokens>
-
+    <performance token="{{ csrf_token() }}" bearer="{{ Auth::user()->token }}" auth="{{ json_encode(Auth::user()) }}"></performance>
 @endsection

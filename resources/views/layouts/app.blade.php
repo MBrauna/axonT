@@ -15,6 +15,7 @@
         <meta charset="UTF-8">
         <!-- Token de sessão -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
+
         <!-- Site Title -->
         <title>@yield('title') - {{ config('app.name', 'AxionT*') }}</title>
         <!-- Arquivos principais -->
@@ -25,8 +26,8 @@
         <div class="container-fluid" id="app">
             <menu-app csrf="{{ csrf_token() }}" user="{{ json_encode(Auth::user()) }}"></menu-app>
 
-            <div class="body" style="padding-top: 14vh;">
-                <filter-app csrftoken="{{ csrf_token() }}"></filter-app>
+            <div class="body" style="padding-top: 4.5em">
+                <filter-app token="{{ csrf_token() }}" bearer="{{ Auth::user()->token }}" auth="{{ json_encode(Auth::user()) }}"></filter-app>
                 @yield('body')
             </div>
         </div>

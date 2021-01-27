@@ -1,10 +1,12 @@
 export const LAYOUT = {
     initData    :   function(){
-        sessionStorage.setItem('LAYOUT', true);
-        sessionStorage.setItem('LAYOUT_version', '3.0.0');
-        sessionStorage.setItem('LAYOUT_expansible', false);
-        sessionStorage.setItem('LAYOUT_alerts', []);
-    },
+        if(sessionStorage.getItem('LAYOUT') === null || sessionStorage.getItem('LAYOUT') === undefined) {
+            sessionStorage.setItem('LAYOUT', true);
+            sessionStorage.setItem('LAYOUT_version', '3.0.0');
+            sessionStorage.setItem('LAYOUT_expansible', false);
+            sessionStorage.setItem('LAYOUT_alerts', []);
+        } // if(sessionStorage.getItem('LAYOUT') === null || sessionStorage.getItem('LAYOUT') === undefined) { ... }
+    }, // initData    :   function(){ ... }
     retrieveData:   function(){
         if(sessionStorage.getItem('LAYOUT') === null) LAYOUT.initData();
 
@@ -16,5 +18,5 @@ export const LAYOUT = {
         };
 
         return vgbLayout;
-    },
+    }, // retrieveData:   function(){ ... }
 }

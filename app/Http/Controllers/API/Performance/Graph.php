@@ -16,11 +16,11 @@
         public function getGraphs(Request $request) {
             try {
                 $vReturn    =   [
-                    $this->graph1($request, $request->idEmpresa),
-                    $this->graph2($request, $request->idEmpresa),
-                    $this->graph3($request, $request->idEmpresa),
-                    $this->graph4($request, $request->idEmpresa),
-                    $this->graph5($request, $request->idEmpresa),
+                    $this->graph1($request, $request->idCompany),
+                    $this->graph2($request, $request->idCompany),
+                    $this->graph3($request, $request->idCompany),
+                    $this->graph4($request, $request->idCompany),
+                    $this->graph5($request, $request->idCompany),
                 ];
 
                 return response()->json($vReturn,200);

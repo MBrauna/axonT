@@ -21,19 +21,16 @@
 
                 $others =   OauthAccessTokens::where('user_id', Auth::user()->id)
                 ->where(function($query){
-                    $query->orWhere('expires_at','>=',Carbon::now());
+                    $query->orWhere('expires_at','<=',Carbon::now());
                     $query->orWhere('revoked',true);
                 }) // ->where(function($query){ ... })
-                ->delete();
+                ->get();
 
                 $oauthAccess    =   OauthAccessTokens::where('user_id', Auth::user()->id)->count();
 
                 if($oauthAccess <= 0) {
-                    User::find(Auth::user()->id)
-                    ->update([
-                        'accessToken' => null,
-                    ]);
-                    $user   =   User::find(Auth::user()->id);
+                    $user->token    =   null;
+                    $user->save();
                 } // if($oauthAccess <= 0) { ... }
                 
                 if(is_null($user->token)) {
@@ -43,8 +40,6 @@
                     $user->token    =   $token;
                     $user->save();
                 }
-
-                dd($user);
 
                 return view('page.performance.graph',[]);
             }

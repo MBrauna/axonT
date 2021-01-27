@@ -31,6 +31,7 @@ class Reconstrucao extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->dateTime('last_login')->nullable();
+            $table->text('token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -166,12 +167,14 @@ class Reconstrucao extends Migration
             $table->index(['id_usuario']);
             $table->index(['id_processo']);
             $table->index(['id_perfil']);
+            $table->index(['id_superior']);
     
-            $table->unique(['id_usuario','id_processo','id_perfil']);
+            $table->unique(['id_usuario','id_processo','id_perfil','id_superior']);
 
             $table->foreign('id_processo')->references('id_processo')->on('processo');
             $table->foreign('id_perfil')->references('id_perfil')->on('perfil');
             $table->foreign('id_usuario')->references('id')->on('users');
+            $table->foreign('id_superior')->references('id')->on('users');
         }); // Schema::create('usuario_config', function (Blueprint $table) { ...});
 
         Schema::create('tipo_processo', function (Blueprint $table) {

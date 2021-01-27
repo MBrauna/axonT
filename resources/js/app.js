@@ -12,12 +12,14 @@ import '@fortawesome/fontawesome-free/js/all.js';
 
 // Dados globais para construção da aplicação
 import {LAYOUT} from './global/layout.js';
+import {PREFERENCES} from './global/preferences.js';
 import VueToast from 'vue-toast-notification';
 import Vuetify from 'vuetify';
 
 
 // Declaração de dados globais para a aplicação
-Vue.prototype.LAYOUT    =   LAYOUT;
+Vue.prototype.LAYOUT        =   LAYOUT;
+Vue.prototype.PREFERENCES   =   PREFERENCES;
 Vue.use(VueToast);
 Vue.use(Vuetify);
 

@@ -1,6 +1,6 @@
 <template>
   <header class="navbar navbar-expand navbar-light flex-column flex-md-row bd-navbar fixed-top shadow border-primary border-bottom bg-light" id="header">
-      <a class="navbar-brand" href="/">
+      <a class="navbar-brand d-none d-md-block" href="/">
           <span style="font-size: 1em; font-weight: bold;" class="text-primary px-3">AxonT</span>
       </a>
 
@@ -98,6 +98,8 @@
         methods: {
         },
         mounted() {
+            this.LAYOUT.initData();
+            this.PREFERENCES.initData();
             this.authuser = JSON.parse(this.user);
         },
     }
