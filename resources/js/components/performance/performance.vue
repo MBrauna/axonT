@@ -74,10 +74,12 @@
                         }
                     })
                     .catch(function(retorno){
+                        console.log('Ocorreu um erro desconhecido! Verifique.');
                         console.log(retorno);
                     });
                 } // try { ... }
                 catch(error) {
+                    console.log('Ocorreu um erro desconhecido! Verifique.');
                     console.log(error);
                 } // catch(error) { ... }
             },

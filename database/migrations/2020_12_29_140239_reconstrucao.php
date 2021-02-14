@@ -204,11 +204,12 @@ class Reconstrucao extends Migration
         Schema::create('questao', function (Blueprint $table) {
             $table->increments('id_questao');
             $table->integer('id_tipo_processo');
-            $table->integer('tipo')->default(1); // [0] - Frase, [1] - Texto, [2] - Numérico, [3] - Data, [4] - Hora, [5] - Data e hora, [6] - Data e hora c/ alteração de data de vencimento, [7] - E-mail, [8] - Telefone, [9] - Cor, [10] - URL
+            $table->text('tipo')->default('texto');
             $table->text('titulo');
             $table->text('placeholder')->nullable();
             $table->boolean('obrigatorio')->default(true);
             $table->integer('ordem')->default(999);
+            $table->boolean('alt_data_vencimento')->default(true);
             $table->boolean('situacao')->default(true);
             $table->dateTime('data_cria');
             $table->dateTime('data_alt');
@@ -220,7 +221,6 @@ class Reconstrucao extends Migration
             $table->index(['ordem']);
             $table->index(['situacao']);
             $table->unique(['id_tipo_processo','titulo']);
-            $table->unique(['id_tipo_processo','ordem']);
 
             $table->foreign('id_tipo_processo')->references('id_tipo_processo')->on('tipo_processo');
         }); // Schema::create('questao', function (Blueprint $table) { ...});
@@ -292,7 +292,7 @@ class Reconstrucao extends Migration
         Schema::create('agendamento_item', function (Blueprint $table) {
             $table->increments('id_agendamento_item');
             $table->integer('id_agendamento');
-            $table->integer('tipo')->default(1); // [0] - Frase, [1] - Texto, [2] - Numérico, [3] - Data, [4] - Hora, [5] - Data e hora, [6] - Data e hora c/ alteração de data de vencimento, [7] - E-mail, [8] - Telefone, [9] - Cor, [10] - URL
+            $table->text('tipo')->default('texto');
             $table->integer('id_questao')->nullable();
             $table->boolean('obrigatorio')->default(true);
             $table->text('questao');
@@ -358,7 +358,7 @@ class Reconstrucao extends Migration
         Schema::create('chamado_item', function (Blueprint $table) {
             $table->increments('id_chamado_item');
             $table->integer('id_chamado');
-            $table->integer('tipo')->default(1); // [0] - Frase, [1] - Texto, [2] - Numérico, [3] - Data, [4] - Hora, [5] - Data e hora, [6] - Data e hora c/ alteração de data de vencimento, [7] - E-mail, [8] - Telefone, [9] - Cor, [10] - URL
+            $table->text('tipo')->default('texto');
             $table->integer('id_questao')->nullable();
             $table->boolean('obrigatorio')->default(true);
             $table->integer('ordem')->default(999);

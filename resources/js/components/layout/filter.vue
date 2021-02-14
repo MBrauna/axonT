@@ -146,16 +146,14 @@
                         if(response.status === 200) {
                             vm.dataCompany  =   response.data;
                         }
-                        else {
-                            console.log('outro');
-                        }
                     })
                     .catch(function(retorno){
-                        console.log('teste');
+                        console.log('Ocorreu um erro desconhecido! Verifique.');
                         console.log(retorno);
                     });
                 } // try { ... }
                 catch(error) {
+                    console.log('Ocorreu um erro desconhecido! Verifique.');
                     console.log(error);
                 } // catch(error) { ... }
             } // initFilter  :   function(){ ... }

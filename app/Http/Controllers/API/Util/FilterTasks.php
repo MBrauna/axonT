@@ -28,8 +28,10 @@
                                 ->get();
 
                 foreach ($empresa as $keyEmpresa => $valueEmpresa) {
-                    $empresa[$keyEmpresa]->processos =   Processo::where('id_empresa',$valueEmpresa->id_empresa)
-                                            ->get();
+                    $empresa[$keyEmpresa]->processos =  Processo::where('id_empresa',$valueEmpresa->id_empresa)
+                                                        ->where('situacao',true)
+                                                        ->orderBy('descricao','asc')
+                                                        ->get();
 
                     foreach($empresa[$keyEmpresa]->processos as $keyProc => $valueProc) {
                         $empresa[$keyEmpresa]->processos[$keyProc]->tipoAutomatico  =   TipoProcesso::where('id_processo',$valueProc->id_processo)
