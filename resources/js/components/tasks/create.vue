@@ -32,17 +32,27 @@
                             <div class="row">
                                 <div class="col-12">
                                     <label for="companyTask">Empresa:</label>
-                                    <select class="form-control form-control-sm" id="companyTask" v-model="choiceCompany" @change="">
+                                    <select class="form-control form-control-sm" id="companyTask" v-model="choiceCompany" @change="selectChoiceCompany">
                                         <option v-bind:value="null">Nenhuma opção selecionada</option>
                                         <option v-for="curreg in company" v-bind:key="curreg.id_empresa" v-bind:value="curreg.id_empresa">{{ curreg.descricao }}</option>
                                     </select>
                                 </div>
 
-                                <div class="col-12">
-                                    <label for="companyTask">Processo:</label>
-                                    <select class="form-control form-control-sm" id="proccessTask" v-model="choiceProccess">
+                                <div class="col-12" v-if="choiceCompany != null">
+                                    <label for="proccessTask">Processo:</label>
+                                    <select class="form-control form-control-sm" id="proccessTask" v-model="choiceProccess" @change="selectChoiceProccess">
                                         <option v-bind:value="null">Nenhuma opção selecionada</option>
-                                        <option v-for="curreg in company.find((element) => element.id_empresa === choiceCompany)" v-bind:key="curreg.id_empresa" v-bind:value="curreg.id_empresa">{{ curreg.descricao }}</option>
+                                        <option v-for="curreg in choiceProccessList" v-bind:key="curreg.id_processo" v-bind:value="curreg.id_processo">{{ curreg.descricao }}</option>
+                                    </select>
+                                </div>
+
+                                {{ choiceTypeList }}
+
+                                <div class="col-12" v-if="choiceProccess != null && choiceCompany != null">
+                                    <label for="companyTask">Tipo:</label>
+                                    <select class="form-control form-control-sm" id="proccessTask" v-model="choiceType">
+                                        <option v-bind:value="null">Nenhuma opção selecionada</option>
+                                        <option v-for="curreg in choiceTypeList" v-bind:key="curreg.id_tipo_processo" v-bind:value="curreg.id_tipo_processo">{{ curreg.descricao }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -77,8 +87,9 @@
 
                 'choiceTypeTask'    :   1,
                 'choiceCompany'     :   null,
-                'choiceCompanyList' :   null,
+                'choiceProccessList':   [],
                 'choiceProccess'    :   null,
+                'choiceTypeList'    :   [],
                 'choiceType'        :   null,
 
                 'typeTasks'         :   [
@@ -126,6 +137,7 @@
             selectTypeTask  :   function(data) {
                 var vm              =   this;
                 vm.choiceTypeTask   =   data.value;
+                vm.step             =   0;
                 
                 if(vm.choiceTypeTask == 1) {
                     vm.manualData();
@@ -148,7 +160,31 @@
             automaticData   :   function(){
 
             },
+            selectChoiceCompany :   function(){
+                var vm  =   this;
+                
+                vm.choiceProccessList   =   [];
+                vm.choiceProccess       =   null;
 
+                vm.company.forEach((element) => {
+                    if(element.id_empresa == vm.choiceCompany) {
+                        vm.choiceProccessList   =   element.processos;
+                    }
+                });
+            },
+            selectChoiceProccess    :   function(){
+                var vm  =   this;
+                
+                vm.choiceTypeList   =   [];
+                vm.choiceType       =   null;
+
+                vm.choiceProccessList.forEach((element) => {
+                    console.log(element);
+                    if(element.id_proccess == vm.choiceProccess) {
+                        vm.choiceTypeList   =   element.tipoManual;
+                    }
+                });
+            }
         },
         mounted() {
             this.LAYOUT.initData();
