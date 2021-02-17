@@ -46,14 +46,18 @@
                                     </select>
                                 </div>
 
-                                {{ choiceTypeList }}
-
                                 <div class="col-12" v-if="choiceProccess != null && choiceCompany != null">
                                     <label for="companyTask">Tipo:</label>
                                     <select class="form-control form-control-sm" id="proccessTask" v-model="choiceType">
                                         <option v-bind:value="null">Nenhuma opção selecionada</option>
-                                        <option v-for="curreg in choiceTypeList" v-bind:key="curreg.id_tipo_processo" v-bind:value="curreg.id_tipo_processo">{{ curreg.descricao }}</option>
+                                        <option v-for="curreg in choiceTypeList" v-bind:key="curreg.id_tipo_processo" v-bind:value="curreg.id_tipo_processo">{{ curreg.titulo }}</option>
                                     </select>
+                                </div>
+
+                                <div class="col-12" v-if="choiceCompany != null && choiceCompany != '' && choiceProccess != null && choiceProccess != '' && choiceType != null && choiceType != ''">
+                                    <button class="btn btn-sm btn-block btn-primary" type="button" @click="changeStep">
+                                        Confirmar seleção
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -62,6 +66,9 @@
                     <div v-if="choiceTypeTask == 2">
                         Automatico
                     </div>
+                </div>
+                <div v-if="step == 1">
+                    1111
                 </div>
             </div>
             <div class="card-footer text-center bg-primary font-weight-bold text-light">
@@ -134,10 +141,19 @@
                     console.log(error);
                 } // catch(error) { ... }
             }, // initFilter  :   function(){ ... }
+            changeStep      :   function(){
+                var vm  =   this;
+                vm.step += 1;
+            },
             selectTypeTask  :   function(data) {
-                var vm              =   this;
-                vm.choiceTypeTask   =   data.value;
-                vm.step             =   0;
+                var vm                  =   this;
+                vm.choiceTypeTask       =   data.value;
+                vm.choiceCompany        =   null;
+                vm.choiceProccess       =   null;
+                vm.choiceType           =   null;
+                vm.choiceProccessList   =   [];
+                vm.choiceTypeList       =   [];
+                vm.step                 =   0;
                 
                 if(vm.choiceTypeTask == 1) {
                     vm.manualData();
@@ -179,8 +195,7 @@
                 vm.choiceType       =   null;
 
                 vm.choiceProccessList.forEach((element) => {
-                    console.log(element);
-                    if(element.id_proccess == vm.choiceProccess) {
+                    if(element.id_processo == vm.choiceProccess) {
                         vm.choiceTypeList   =   element.tipoManual;
                     }
                 });
