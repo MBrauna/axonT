@@ -140,6 +140,43 @@
                                 <input v-else-if="curreg.tipo == 'number'" type="number" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" required>
                                 <textarea v-else class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-bind:name="'idQuestion_' + curreg.id_questao" required></textarea>
                             </div>
+
+                            <div class="col-12">
+                                <div class="card border-primary shadow-sm">
+                                    <div class="card-header bg-primary text-white">
+                                        <div class="row d-flex justify-content-between">
+                                            <span class="col-12 col-sm-8 col-md-9 col-lg-10">Adicionar arquivos</span>
+                                            <div class="col-12 col-sm-4 col-md-3 col-lg-2">
+                                                <button class="btn btn-sm btn-outline-white btn-block" @click="newRegister">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-hover table-striped" id="tableFile">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Arquivo</th>
+                                                        <th scope="col">Data</th>
+                                                        <th scope="col">Ações</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th scope="col">Arquivo</th>
+                                                        <th scope="col">Data</th>
+                                                        <th scope="col">Ações</th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </div>
                     <div v-if="choiceTypeTask == 2">
@@ -228,6 +265,17 @@
             changeStep      :   function(){
                 var vm  =   this;
                 vm.step += 1;
+            },
+            newRegister     :   function(){
+
+                var tbodyRef = document.getElementById('tableFile').getElementsByTagName('tbody')[0];
+                var newRow = tbodyRef.insertRow();
+                var newCell = newRow.insertCell();
+                var newCell2 = newRow.insertCell();
+                var newText = document.innerHTML("<a hrf='#'>123</a>");
+
+                newCell.appendChild(newText);
+                newCell2.appendChild(newText);
             },
             selectTypeTask  :   function(data) {
                 var vm                  =   this;
