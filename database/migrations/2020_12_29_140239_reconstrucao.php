@@ -37,7 +37,7 @@ class Reconstrucao extends Migration
         });
 
         Schema::create('empresa', function (Blueprint $table) {
-            $table->increments('id_empresa');
+            $table->bigIncrements('id_empresa');
             $table->string('descricao');
             $table->string('sigla');
             $table->string('imagem')->nullable();
@@ -62,7 +62,7 @@ class Reconstrucao extends Migration
         });
 
         Schema::create('empresa_vinculo', function (Blueprint $table) {
-            $table->increments('id_empresa_vinculo');
+            $table->bigIncrements('id_empresa_vinculo');
             $table->integer('id_empresa');
             $table->integer('id_empresa_relacao');
             $table->dateTime('data_cria');
@@ -79,7 +79,7 @@ class Reconstrucao extends Migration
         });
         
         Schema::create('processo', function (Blueprint $table) {
-            $table->increments('id_processo');
+            $table->bigIncrements('id_processo');
             $table->integer('id_empresa');
             $table->text('descricao');
             $table->text('sigla')->nullable();
@@ -101,10 +101,10 @@ class Reconstrucao extends Migration
 
             $table->foreign('id_usuario_responsavel')->references('id')->on('users');
             $table->foreign('id_empresa')->references('id_empresa')->on('empresa');
-        }); // Schema::create('processo', function (Blueprint $table) { ...});
+        });
 
         Schema::create('situacao', function (Blueprint $table) {
-            $table->increments('id_situacao');
+            $table->bigIncrements('id_situacao');
             $table->integer('id_processo');
             $table->text('descricao');
             $table->boolean('envia_email')->default(false);
@@ -132,10 +132,10 @@ class Reconstrucao extends Migration
             $table->unique(['id_processo','descricao']);
 
             $table->foreign('id_processo')->references('id_processo')->on('processo');
-        }); // Schema::create('situacao', function (Blueprint $table) { ...});
+        });
 
         Schema::create('perfil', function (Blueprint $table) {
-            $table->increments('id_perfil');
+            $table->bigIncrements('id_perfil');
             $table->integer('id_empresa');
             $table->text('descricao');
             $table->boolean('situacao')->default(true);
@@ -151,10 +151,10 @@ class Reconstrucao extends Migration
             $table->unique(['id_empresa','descricao']);
 
             $table->foreign('id_empresa')->references('id_empresa')->on('empresa');
-        }); // Schema::create('perfil', function (Blueprint $table) { ...});
+        });
 
         Schema::create('usuario_config', function (Blueprint $table) {
-            $table->increments('id_usuario_config');
+            $table->bigIncrements('id_usuario_config');
             $table->integer('id_usuario');
             $table->integer('id_processo');
             $table->integer('id_superior')->nullable();
@@ -175,10 +175,10 @@ class Reconstrucao extends Migration
             $table->foreign('id_perfil')->references('id_perfil')->on('perfil');
             $table->foreign('id_usuario')->references('id')->on('users');
             $table->foreign('id_superior')->references('id')->on('users');
-        }); // Schema::create('usuario_config', function (Blueprint $table) { ...});
+        });
 
         Schema::create('tipo_processo', function (Blueprint $table) {
-            $table->increments('id_tipo_processo');
+            $table->bigIncrements('id_tipo_processo');
             $table->integer('id_processo');
             $table->integer('id_situacao_inicial');
             $table->boolean('automatico')->default(false);
@@ -199,10 +199,10 @@ class Reconstrucao extends Migration
 
             $table->foreign('id_situacao_inicial')->references('id_situacao')->on('situacao');
             $table->foreign('id_processo')->references('id_processo')->on('processo');
-        }); // Schema::create('tipo_processo', function (Blueprint $table) { ...});
+        });
 
         Schema::create('questao', function (Blueprint $table) {
-            $table->increments('id_questao');
+            $table->bigIncrements('id_questao');
             $table->integer('id_tipo_processo');
             $table->text('tipo')->default('texto');
             $table->text('titulo');
@@ -223,10 +223,10 @@ class Reconstrucao extends Migration
             $table->unique(['id_tipo_processo','titulo']);
 
             $table->foreign('id_tipo_processo')->references('id_tipo_processo')->on('tipo_processo');
-        }); // Schema::create('questao', function (Blueprint $table) { ...});
+        });
 
         Schema::create('situacao_abertura_processo', function (Blueprint $table) {
-            $table->increments('id_situacao_abertura_processo');
+            $table->bigIncrements('id_situacao_abertura_processo');
             $table->integer('id_situacao');
             $table->integer('id_processo');
             $table->integer('ordem')->default(999);
@@ -242,10 +242,10 @@ class Reconstrucao extends Migration
 
             $table->foreign('id_situacao')->references('id_situacao')->on('situacao');
             $table->foreign('id_processo')->references('id_processo')->on('processo');
-        }); // Schema::create('situacao_abertura_processo', function (Blueprint $table) { ...});
+        });
 
         Schema::create('agendamento', function (Blueprint $table) {
-            $table->increments('id_agendamento');
+            $table->bigIncrements('id_agendamento');
             $table->integer('tipo')->default(1); // [1] - Entrada, [2] - Saída
             $table->integer('id_processo_referencia');
             $table->integer('id_tipo_processo_origem');
@@ -287,10 +287,10 @@ class Reconstrucao extends Migration
             $table->foreign('id_processo_referencia')->references('id_processo')->on('processo');
             $table->foreign('id_usuario_origem')->references('id')->on('users');
             $table->foreign('id_usuario_destino')->references('id')->on('users');
-        }); // Schema::create('agendamento', function (Blueprint $table) { ...});
+        });
 
         Schema::create('agendamento_item', function (Blueprint $table) {
-            $table->increments('id_agendamento_item');
+            $table->bigIncrements('id_agendamento_item');
             $table->integer('id_agendamento');
             $table->text('tipo')->default('texto');
             $table->integer('id_questao')->nullable();
@@ -313,10 +313,10 @@ class Reconstrucao extends Migration
 
             $table->foreign('id_agendamento')->references('id_agendamento')->on('agendamento');
             $table->foreign('id_questao')->references('id_questao')->on('questao');
-        }); // Schema::create('situacao_abertura_processo', function (Blueprint $table) { ...});
+        });
 
         Schema::create('chamado', function (Blueprint $table) {
-            $table->increments('id_chamado');
+            $table->bigIncrements('id_chamado');
             $table->integer('id_empresa');
             $table->integer('id_processo');
             $table->integer('id_tipo_processo');
@@ -356,7 +356,7 @@ class Reconstrucao extends Migration
         });
 
         Schema::create('chamado_item', function (Blueprint $table) {
-            $table->increments('id_chamado_item');
+            $table->bigIncrements('id_chamado_item');
             $table->integer('id_chamado');
             $table->text('tipo')->default('texto');
             $table->integer('id_questao')->nullable();
@@ -377,7 +377,7 @@ class Reconstrucao extends Migration
         });
 
         Schema::create('tarefa', function (Blueprint $table) {
-            $table->increments('id_tarefa');
+            $table->bigIncrements('id_tarefa');
             $table->integer('id_chamado');
             $table->text('conteudo')->nullable();
             $table->integer('id_situacao_anterior');
@@ -402,7 +402,7 @@ class Reconstrucao extends Migration
         });
 
         Schema::create('arquivo', function (Blueprint $table) {
-            $table->increments('id_arquivo');
+            $table->bigIncrements('id_arquivo');
             $table->integer('id_usuario');
             $table->integer('id_usuario_alvo')->nullable();
             $table->integer('id_chamado')->nullable();
@@ -429,8 +429,7 @@ class Reconstrucao extends Migration
             $table->foreign('id_usuario_alvo')->references('id')->on('users');
             $table->foreign('id_chamado')->references('id_chamado')->on('chamado');
             $table->foreign('id_tarefa')->references('id_tarefa')->on('tarefa');
-            //$table->foreign('id_tarefa')->references('id_tarefa')->on('tarefa');
-        }); // Schema::create('situacao_abertura_processo', function (Blueprint $table) { ...});
+        });
     }
 
     public function down()

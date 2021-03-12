@@ -27,11 +27,10 @@
                     $empresa    =   $empresa->where('id_empresa',$request->idCompany);
                 } // if(isset($request->idCompany) && !is_null($request->idCompany) && $filtro) { ... }
 
-
                 $empresa    =   $empresa->get();
-                                
+
                 return response()->json($empresa, 200);
-                
+
             } // try { ... }
             catch(Exception $error) {
                 return response()->json([

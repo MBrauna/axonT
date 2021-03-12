@@ -31,7 +31,6 @@
                     $empresa    =   $empresa->where('id_empresa',$request->idCompany);
                 } // if(isset($request->idCompany) && !is_null($request->idCompany) && $filtro) { ... }
 
-
                 $empresa    =   $empresa->get();
 
 
