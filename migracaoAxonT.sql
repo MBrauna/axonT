@@ -51,7 +51,8 @@ select id_situacao,
 		data_alt,
 		usr_cria,
 		usr_alt
-  from backup.situacao;
+  from backup.situacao bs
+where not exists (select null from backup.situacao bss where bss.id_processo = bs.id_processo and bss.descricao = bs.descricao and bss.id_situacao != bs.id_situacao);
 
 
 insert into public.tipo_processo(id_tipo_processo, id_processo, id_situacao_inicial, titulo, subtitulo, sla, situacao, data_cria, data_alt, usr_cria, usr_alt, automatico)
@@ -68,7 +69,6 @@ select id_tipo_processo,
 		usr_alt,
 		automatico
   from backup.tipo_processo
- where situacao = true
  order by id_tipo_processo;
 
 

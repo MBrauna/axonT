@@ -40,7 +40,7 @@ class Reconstrucao extends Migration
             $table->bigIncrements('id_empresa');
             $table->string('descricao');
             $table->string('sigla');
-            $table->string('imagem')->nullable();
+            $table->text('imagem')->nullable();
             $table->integer('id_usuario_responsavel')->nullable();
             $table->dateTime('vencimento_contrato')->nullable();
             $table->integer('maximo_arquivos')->nullable();

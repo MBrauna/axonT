@@ -40,7 +40,8 @@ Vue.component('login', require('./components/auth/login.vue').default);
 Vue.component('performance', require('./components/performance/performance.vue').default);
 Vue.component('chart-axont', require('./components/performance/chartAxonT.vue').default);
 Vue.component('create-task', require('./components/tasks/create.vue').default);
-Vue.component('create-task', require('./components/tasks/createManual.vue').default);
+Vue.component('create-task-manual', require('./components/tasks/createManual.vue').default);
+Vue.component('create-task-automatic', require('./components/tasks/createAutomatic.vue').default);
 
 
 // -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- //

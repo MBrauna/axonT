@@ -26,6 +26,8 @@
             // [task.mainPage]
 
             // [task.create] - Criação de solicitacoes, agendamentos
-            Route::any('/create','Create@startPage')->name('create');
+            Route::get('/create','Create@startPage')->name('create');
+
+            // [task.create] - Sistema para criação das solicitações e agendamentos.
         }); // Route::namespace('Task')->prefix('task')->name('task.')->group(function(){ ... });
     }); // Route::namespace('Page')->middleware(['auth'])->group(function(){ ... });
