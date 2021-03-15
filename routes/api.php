@@ -15,9 +15,16 @@
             Route::any('/company','Company@getCompany')->name('company');
             // [util.filterTasks]
             Route::any('/filterTasks','FilterTasks@filter')->name('filterTasks');
+            // [util.companiesPerm]
+            Route::any('/companiesPerm','Permission@companiesPerm')->name('companiesPerm');
         });
 
         Route::namespace('Performance')->middleware('auth:api')->prefix('performance')->name('performance.')->group(function(){
             Route::post('/graph','Graph@getGraphs')->name('graph');
+        });
+
+        Route::namespace('Tasks')->middleware('auth:api')->prefix('tasks')->name('tasks.')->group(function(){
+            // [tasks.search]
+            Route::any('/verifyPermissionTaskAutomatic','Search@verifyPermissionTaskAutomatic')->name('verifyPermissionTaskAutomatic');
         });
     });

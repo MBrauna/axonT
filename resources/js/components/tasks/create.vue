@@ -30,7 +30,11 @@
                     ></create-task-manual>
                 </div>
                 <div class="col-12" v-if="choice == 1">
-                    234
+                    <create-task-automatic
+                        :auth='auth'
+                        :token='token'
+                        :bearer='bearer'
+                    ></create-task-automatic>
                 </div>
                 <!-- Conteúdo do sistema -->
             </div>

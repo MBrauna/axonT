@@ -41,7 +41,7 @@
         </div>
 
         <!-- Etapa secundária - Preenchimento de informações -->
-        <form class="row" v-if="!loading && step == 1 && choiceCompany != null && choiceCompany != '' && choiceProccess != null && choiceProccess != '' && choiceType != null && choiceType != ''">
+        <form class="row was-validated" v-if="!loading && step == 1 && choiceCompany != null && choiceCompany != '' && choiceProccess != null && choiceProccess != '' && choiceType != null && choiceType != ''" method="POST">
             <input type="hidden" name="type" value="0" required>
             <input type="hidden" name="idCompany" v-bind:value="saveDataCompany.id" required>
             <input type="hidden" name="idProccess" v-bind:value="saveDataProccess.id" required>
@@ -128,15 +128,15 @@
 
             <div class="col-12">
                 <ul class="list-group border border-primary">
-                    <li class="list-group-item" v-for="curreg in dataQuestionList" v-bind:key="curreg.id_questao">
+                    <li class="list-group-item" v-for="(curreg, idx) in dataQuestionList" v-bind:key="curreg.id_questao">
                         <div class="row">
                             <div class="col-12">
                                 <label v-bind:for="'idQuestion_' + curreg.id_questao">{{ curreg.titulo }}</label>
-                                <input v-if="curreg.tipo == 'date'" type="date" class="form-control form-control-sm" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" required>
-                                <input v-else-if="curreg.tipo == 'datetime'" type="date" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" required>
-                                <input v-else-if="curreg.tipo == 'text'" type="text" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" required>
-                                <input v-else-if="curreg.tipo == 'number'" type="number" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" required>
-                                <textarea v-else class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-bind:name="'idQuestion_' + curreg.id_questao" required></textarea>
+                                <input v-if="curreg.tipo == 'date'" type="date" class="form-control form-control-sm" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" required>
+                                <input v-else-if="curreg.tipo == 'datetime'" type="date" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" required>
+                                <input v-else-if="curreg.tipo == 'text'" type="text" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" required>
+                                <input v-else-if="curreg.tipo == 'number'" type="number" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" required>
+                                <textarea v-else class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-bind:name="'idQuestion_' + curreg.id_questao" v-model="dataQuestionList[idx].valueData" @change="trimData" required></textarea>
                             </div>
                         </div>
                     </li>
@@ -146,12 +146,9 @@
             <div class="col-12">
                 <ul class="list-group border border-primary">
                     <li class="list-group-item">
-                        <div class="row d-flex justify-content-between">
-                            <span class="col-12 col-sm-8 col-md-9 col-lg-10">Adicionar arquivos</span>
-                            <div class="col-12 col-sm-4 col-md-3 col-lg-2">
-                                <button class="btn btn-sm btn-outline-white btn-block" @click="newRegister">
-                                    <i class="fa fa-plus"></i>
-                                </button>
+                        <div class="row">
+                            <div class="col-12">
+                                <button type="button" class="btn btn-sm btn-block btn-primary" @click="newRegister">Adicionar arquivo</button>
                             </div>
                         </div>
                     </li>
@@ -160,24 +157,28 @@
                             <table class="table table-sm table-hover table-striped" id="tableFile">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Arquivo</th>
-                                        <th scope="col">Data</th>
                                         <th scope="col">Ações</th>
+                                        <th scope="col">Arquivo</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th scope="col">Arquivo</th>
-                                        <th scope="col">Data</th>
                                         <th scope="col">Ações</th>
+                                        <th scope="col">Arquivo</th>
                                     </tr>
                                 </tfoot>
                             </table>
                         </div>
                     </li>
                 </ul>
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="btn btn-sm btn-block btn-primary">
+                    Criar solicitação de serviço
+                </button>
             </div>
         </form>
     </div>
@@ -322,17 +323,26 @@
                     }
                 });
             },
-            newRegister     :   function(){
+            newRegister :   function(){
 
-                var tbodyRef = document.getElementById('tableFile').getElementsByTagName('tbody')[0];
-                var newRow = tbodyRef.insertRow();
-                var newCell = newRow.insertCell();
-                var newCell2 = newRow.insertCell();
-                var newText = document.innerHTML("<a hrf='#'>123</a>");
+                var tbodyRef            =   document.getElementById('tableFile').getElementsByTagName('tbody')[0];
+                var newRow              =   tbodyRef.insertRow();
 
-                newCell.appendChild(newText);
-                newCell2.appendChild(newText);
+                var cellFile            =   newRow.insertCell(0);
+                var cellAction          =   newRow.insertCell(1);
+
+                cellFile.innerHTML      =   '<input class="form-control form-control-sm" id="formFileSm" name="arquivo[]" type="file" required>';
+                cellAction.innerHTML    =   '<button type="button" class="btn btn-sm btn-block btn-outline-danger" onclick="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode);"><i class="fas fa-trash"></i></button>';
             },
+            trimData    :   function(){
+                var vm  =   this;
+                vm.dataQuestionList.forEach((element, index) => {
+                    if(vm.dataQuestionList[index].valueData != undefined) {
+                        vm.dataQuestionList[index].valueData    =   vm.dataQuestionList[index].valueData.trim();
+                    }
+                });
+            },
+            
             
         },
         mounted() {

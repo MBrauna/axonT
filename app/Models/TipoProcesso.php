@@ -8,12 +8,13 @@
     {
         protected $table        =   'tipo_processo';
         protected $primaryKey   =   'id_tipo_processo';
-        protected $fillable     =   ['id_processo','id_situacao_inicial','titulo','subtitulo','sla','situacao'];
+        protected $fillable     =   ['id_processo','id_situacao_inicial','titulo','subtitulo','sla','situacao','automatico'];
         protected $hidden       =   [];
         protected $casts        =   [];
         protected $attributes   =   [
             'situacao'      =>  true,
             'sla'           =>  72,
+            'automatico'    =>  false,
         ];
 
         const CREATED_AT        =   'data_cria';
