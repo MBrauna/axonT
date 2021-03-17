@@ -11,6 +11,7 @@
                 Aguarde.
             </div>
         </div>
+
         <div v-else v-for="curreg in content" v-bind:key="curreg.id_empresa" class="card shadow mt-3 mb-3 border-primary bg-white">
             <div class="card-header text-center bg-primary font-weight-bold text-light">
                 {{ curreg.descricao }}

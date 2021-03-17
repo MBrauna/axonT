@@ -19,12 +19,7 @@
         public function getGraphs(Request $request) {
             try {
                 $filtro     =   is_null($request->filter) ? false : $request->filter;
-
-                $userConfig =   UsuarioConfig::where('id_usuario', Auth::user()->id)->select('id_perfil');
-                $perfil     =   Perfil::whereIn('id_perfil',$userConfig)->select('id_empresa');
-                $empresa    =   Empresa::whereIn('id_empresa',$perfil)
-                                ->where('situacao',true)
-                                ->orderBy('descricao','asc');
+                $empresa    =   getCompanyPermission();
 
                 // Inicia os dados dos filtros
                 if(!is_null($request->idCompany) && $filtro) {

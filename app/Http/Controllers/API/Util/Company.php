@@ -14,27 +14,10 @@
     class Company extends Controller {
         public function getCompany(Request $request) {
             try {
-                $filtro     =   is_null($request->filter) ? false : $request->filter;
-
-                $userConfig =   UsuarioConfig::where('id_usuario', Auth::user()->id)->select('id_perfil');
-                $perfil     =   Perfil::whereIn('id_perfil',$userConfig)->select('id_empresa');
-                $empresa    =   Empresa::whereIn('id_empresa',$perfil)
-                                ->where('situacao',true)
-                                ->orderBy('descricao','asc');
-
-                // Inicia os dados dos filtros
-                if(!is_null($request->idCompany) && $filtro) {
-                    $empresa    =   $empresa->where('id_empresa',$request->idCompany);
-                } // if(isset($request->idCompany) && !is_null($request->idCompany) && $filtro) { ... }
-
-                $empresa    =   $empresa->get();
-
-                return response()->json($empresa, 200);
-
+                return response()->json(getCompanyPermission(), 200);
             } // try { ... }
             catch(Exception $error) {
-                return response()->json([
-                ],404);
+                return response()->json([], 500);
             } // catch(Exception $error) { ... }
-        } // public function getCompany(Request $request) { ... }
+        } // public function filter(Request $request) { ... }
     } // class Company extends Controller { ... }

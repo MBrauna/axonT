@@ -6,7 +6,7 @@
         <div class="card-body">
             <div class="row" v-if="step == 0">
                 <div v-bind:class="'col-' + (12/typeTasks.length)" v-for="curreg in typeTasks" v-bind:key="curreg.value" >
-                    <button v-bind:class="'btn btn-s btn-block ' + (choice == curreg.value ? 'btn-primary' : 'btn-outline-primary')" @click="selectChoice(curreg)">
+                    <button v-bind:class="'btn btn-s btn-block ' + (choice == curreg.value ? 'btn-primary' : 'btn-outline-primary')" @click="selectChoice(curreg)" :disabled="curreg.disabled">
                         {{ curreg.title }}
                     </button>
                 </div>
@@ -60,16 +60,18 @@
                 'yearCopright'  :   new Date().getFullYear(),
                 'typeTasks'     :   [
                     {
-                        'title' :   'Manual',
-                        'value' :   0,
+                        'title'     :   'Manual',
+                        'value'     :   0,
+                        'disabled'  :   false,
                     },
                     {
                         'title' :   'Automático',
                         'value' :   1,
+                        'disabled'  :   true,
                     }
                 ],
                 'typeChoice'    :   null,
-                'choice'        :   0,
+                'choice'        :   -1,
                 'step'          :   0,
             }
         },
@@ -86,13 +88,45 @@
                 vm.typeChoice   =   null;
                 vm.step         =   0;
             },
+            initFilter       :   function(){
+                try {
+                    var vm      =   this;
+                    var header   = {
+                        'headers'   :   {
+                            'Authorization' :   'Bearer ' + this.bearer,
+                        },
+                    };
+                    var request = {
+                        '_token'            :   vm.token,
+                    };
+
+                    axios.post('/api/tasks/verifyTaskAutomatic',request,header)
+                    .then(function (response) {
+                        vm.typeTasks.forEach(function(element, index){
+                            if(element.value == 1) {
+                                vm.typeTasks[index].disabled    =   response.verificador;
+                                console.log(response.verificador);
+                            }
+                        }); // vm.typeTasks.forEach(function(element){ ... }
+
+                    })
+                    .catch(function(retorno){
+                        console.log('Ocorreu um erro desconhecido! Verifique.');
+                        console.log(retorno);
+                    });
+                } // try { ... }
+                catch(error) {
+                    console.log('Ocorreu um erro desconhecido! Verifique.');
+                    console.log(error);
+                } // catch(error) { ... }
+            }
         },
         mounted() {
             this.LAYOUT.initData();
             this.PREFERENCES.initData();
 
             this.userData   =   JSON.parse(this.auth);
-            //this.initFilter();
+            this.initFilter();
         },
     }
 </script>
