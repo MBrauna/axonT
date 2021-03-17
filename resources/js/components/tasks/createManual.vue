@@ -42,6 +42,7 @@
 
         <!-- Etapa secundária - Preenchimento de informações -->
         <form class="row was-validated" v-if="!loading && step == 1 && choiceCompany != null && choiceCompany != '' && choiceProccess != null && choiceProccess != '' && choiceType != null && choiceType != ''" method="POST">
+            <input type="hidden" name="_token" v-bind:value="":
             <input type="hidden" name="type" value="0" required>
             <input type="hidden" name="idCompany" v-bind:value="saveDataCompany.id" required>
             <input type="hidden" name="idProccess" v-bind:value="saveDataProccess.id" required>
@@ -226,7 +227,7 @@
                         'filter'            :   false,
                     };
 
-                    axios.post('/api/util/filterTasks',vm.request,vm.header)
+                    axios.post('/api/util/company',vm.request,vm.header)
                     .then(function (response) {
                         if(response.status === 200) {
                             vm.loading  =   false;
