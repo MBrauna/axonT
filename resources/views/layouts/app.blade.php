@@ -15,6 +15,7 @@
         <meta charset="UTF-8">
         <!-- Token de sessão -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="useToken" content="{{ generateTokenOaut() }}"
 
         <!-- Site Title -->
         <title>@yield('title') - {{ config('app.name', 'AxionT*') }}</title>

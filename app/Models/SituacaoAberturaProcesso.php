@@ -8,7 +8,7 @@
     {
         protected $table        =   'situacao_abertura_processo';
         protected $primaryKey   =   'id_situacao_abertura_processo';
-        protected $fillable     =   ['id_situacao','id_processo','ordem','situacao'];
+        protected $fillable     =   ['id_situacao','id_tipo_processo','ordem','situacao'];
         protected $hidden       =   [];
         protected $casts        =   [];
         protected $attributes   =   [

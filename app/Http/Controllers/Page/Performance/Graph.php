@@ -17,30 +17,6 @@
     class Graph extends Controller {
         public function startPage(Request $request) {
             try {
-                $user   =   User::find(Auth::user()->id);
-
-                $others =   OauthAccessTokens::where('user_id', Auth::user()->id)
-                ->where(function($query){
-                    $query->orWhere('expires_at','<=',Carbon::now());
-                    $query->orWhere('revoked',true);
-                }) // ->where(function($query){ ... })
-                ->get();
-
-                $oauthAccess    =   OauthAccessTokens::where('user_id', Auth::user()->id)->count();
-
-                if($oauthAccess <= 0) {
-                    $user->token    =   null;
-                    $user->save();
-                } // if($oauthAccess <= 0) { ... }
-                
-                if(is_null($user->token)) {
-                    
-                    $token = $user->createToken('axonT')->accessToken;
-
-                    $user->token    =   $token;
-                    $user->save();
-                }
-
                 return view('page.performance.graph',[]);
             }
             catch(Exception $error) {

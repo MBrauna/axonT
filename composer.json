@@ -36,6 +36,7 @@
     },
     "autoload": {
         "files": [
+            "app/Global/globalToken.php",
             "app/Global/globalUser.php"
         ],
         "psr-4": {
