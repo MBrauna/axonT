@@ -18,16 +18,20 @@
     class Graph extends Controller {
         public function getGraphs(Request $request) {
             try {
-                $filtro     =   is_null($request->filter) ? false : $request->filter;
                 $empresa    =   getCompanyPermission();
 
                 // Inicia os dados dos filtros
-                if(!is_null($request->idCompany) && $filtro) {
-                    $empresa    =   $empresa->where('id_empresa',$request->idCompany);
+                if(!is_null($request->idCompany)) {
+                    $tmpCompany =   [];
+                    foreach ($empresa as $keyEmpresa => $valueEmpresa) {
+                        if($valueEmpresa->id_empresa == $request->idCompany) {
+                            array_push($tmpCompany, $valueEmpresa);
+                        } // if($valueEmpresa->id_empresa == $request->idCompany) { ... }
+                    } // foreach ($empresa as $keyEmpresa => $valueEmpresa) { ... }
+
+                    // Se for necessário filtro ... então limpa os dados.
+                    $empresa    =   $tmpCompany;
                 } // if(isset($request->idCompany) && !is_null($request->idCompany) && $filtro) { ... }
-
-                $empresa    =   $empresa->get();
-
 
                 foreach ($empresa as $key => $value) {
                     $empresa[$key]->graphs  =   [

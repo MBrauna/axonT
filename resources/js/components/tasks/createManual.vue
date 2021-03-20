@@ -41,12 +41,12 @@
         </div>
 
         <!-- Etapa secundária - Preenchimento de informações -->
-        <form class="row was-validated" v-if="!loading && step == 1 && choiceCompany != null && choiceCompany != '' && choiceProccess != null && choiceProccess != '' && choiceType != null && choiceType != ''" method="POST">
-            <input type="hidden" name="_token" v-bind:value="":
-            <input type="hidden" name="type" value="0" required>
+        <div class="row was-validated" v-if="!loading && step == 1 && choiceCompany != null && choiceCompany != '' && choiceProccess != null && choiceProccess != '' && choiceType != null && choiceType != ''">
+            <input type="hidden" name="_token" v-bind:value="token">
+            <input type="hidden" name="typeSS" value="0" required>
             <input type="hidden" name="idCompany" v-bind:value="saveDataCompany.id" required>
             <input type="hidden" name="idProccess" v-bind:value="saveDataProccess.id" required>
-            <input type="hidden" name="idTask" v-bind:value="choiceType" required>
+            <input type="hidden" name="idType" v-bind:value="choiceType" required>
 
             <div class="col-12">
                 <ul class="list-group border border-primary">
@@ -129,15 +129,30 @@
 
             <div class="col-12">
                 <ul class="list-group border border-primary">
+                    <li class="list-group-item">
+                        <div class="form-group">
+                            <label for="title">Título</label>
+                            <input type="text" minlength="25" maxlength="320" class="form-control form-control-sm" id="title" name="title" placeholder="Informe o título da solicitação de serviço de forma direta" v-model="title" @change="trimTitle" required>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-12">
+                <ul class="list-group border border-primary">
                     <li class="list-group-item" v-for="(curreg, idx) in dataQuestionList" v-bind:key="curreg.id_questao">
                         <div class="row">
                             <div class="col-12">
                                 <label v-bind:for="'idQuestion_' + curreg.id_questao">{{ curreg.titulo }}</label>
-                                <input v-if="curreg.tipo == 'date'" type="date" class="form-control form-control-sm" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" required>
-                                <input v-else-if="curreg.tipo == 'datetime'" type="date" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" required>
-                                <input v-else-if="curreg.tipo == 'text'" type="text" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" required>
-                                <input v-else-if="curreg.tipo == 'number'" type="number" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" required>
-                                <textarea v-else class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-bind:name="'idQuestion_' + curreg.id_questao" v-model="dataQuestionList[idx].valueData" @change="trimData" required></textarea>
+                                <input v-if="curreg.tipo == 'date'" type="date" class="form-control form-control-sm" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" :required="curreg.obrigatorio">
+                                <input v-else-if="curreg.tipo == 'datetime'" type="date" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" :required="curreg.obrigatorio">
+                                <input v-else-if="curreg.tipo == 'text'" type="text" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" :required="curreg.obrigatorio">
+                                <input v-else-if="curreg.tipo == 'number'" type="number" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" :required="curreg.obrigatorio">
+                                <select v-else-if="curreg.tipo === 'user'" class="form-control form-control-sm" v-bind:placeholder="curreg.placeholder" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-model="dataQuestionList[idx].valueData" :required="curreg.obrigatorio">
+                                    <option>Nenhum usuário selecionado</option>
+                                    <option v-for="curuser in userList" v-bind:key="curuser.id" v-bind:value="curuser.id">{{ curuser.name }}</option>
+                                </select>
+                                <textarea rows="5" v-else class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-bind:name="'idQuestion_' + curreg.id_questao" v-model="dataQuestionList[idx].valueData" @change="trimData" :required="curreg.obrigatorio"></textarea>
                             </div>
                         </div>
                     </li>
@@ -181,7 +196,7 @@
                     Criar solicitação de serviço
                 </button>
             </div>
-        </form>
+        </div>
     </div>
 </template>
 
@@ -207,10 +222,12 @@
                 'dataProccessList'  :   null,
                 'dataTypeList'      :   null,
                 'dataQuestionList'  :   null,
+                'userList'          :   [],
 
                 'saveDataCompany'   :   null,
                 'saveDataProccess'  :   null,
                 'saveDataType'      :   null,
+                'title'             :   null,
             }
         },
         methods: {
@@ -343,6 +360,13 @@
                     }
                 });
             },
+            trimTitle   :   function(){
+                var vm      =   this;
+
+                if(vm.title != null) {
+                    vm.title    =   vm.title.trim();
+                }
+            } // trimTitle   :   function(){ ... }
             
             
         },

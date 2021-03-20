@@ -36,7 +36,12 @@
                     </div>
                     <div class="modal-body">
                         <div class="container-fluid">
-                            <div class="row">
+                            <div class="row" v-if="dataCompany == null || dataCompany == []">
+                                <div class="col-12 text-center">
+                                    <center><logo :size="100"></logo></center>
+                                </div>
+                            </div>
+                            <div class="row" v-else>
                                 <h6 class="col-12 text-center text-primary">Informativos</h6>
                                 <div class="col-12 col-sm-6">
                                     <div class="form-group">
@@ -78,10 +83,11 @@
                                     </div>
                                 </div>
 
-
-                                <h6 class="col-12 text-center text-primary">Data de criação</h6>
-                                <date-picker class="col-12 col-sm-6" id="createDateIni" v-model="createDateIni" type="datetime" placeholder="Data de criação inicial"></date-picker>
-                                <date-picker class="col-12 col-sm-6" id="createDateEnd" v-model="createDateEnd" type="datetime" placeholder="Data de criação final"></date-picker>
+                                <!--
+                                    <h6 class="col-12 text-center text-primary">Data de criação</h6>
+                                    <date-picker class="col-12 col-sm-6" id="createDateIni" v-model="createDateIni" type="datetime" placeholder="Data de criação inicial"></date-picker>
+                                    <date-picker class="col-12 col-sm-6" id="createDateEnd" v-model="createDateEnd" type="datetime" placeholder="Data de criação final"></date-picker>
+                                -->
                             </div>
                         </div>
                     </div>
@@ -114,8 +120,6 @@
 
                 'timerAtt'      :   null,
                 'idCompany'     :   null,
-                'createDateIni' :   null,
-                'createDateEnd' :   null,
             }
         },
         methods: {
@@ -132,13 +136,9 @@
                     };
                     vm.request = {
                         '_token'            :   vm.token,
-                        'filter'            :   false,
-                        'idUser'            :   vm.userData.id,
                         'idCompany'         :   vm.idCompany,
                         'idProcess'         :   null,
                         'idSituation'       :   null,
-                        'createIni'         :   vm.createDateIni == null ? null : vm.createDateIni.toLocaleDateString(),
-                        'createEnd'         :   vm.createDateIni == null ? null : vm.createDateEnd.toLocaleDateString(),
                     };
 
                     axios.post('/api/util/company',vm.request,vm.header)

@@ -72,7 +72,7 @@
                             $return[$keyEmpresa]->responsavel  =   null;
                         }
                         else {
-                            $return[$keyEmpresa]->responsavel  =   User::find($return[$keyEmpresa]->id_usuario_responsavel);
+                            $return[$keyEmpresa]->responsavel  =   App\Models\User::find($return[$keyEmpresa]->id_usuario_responsavel);
                         }
 
                         foreach($return[$keyEmpresa]->processos as $keyProc => $valueProc) {

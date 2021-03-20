@@ -103,37 +103,6 @@ class Reconstrucao extends Migration
             $table->foreign('id_empresa')->references('id_empresa')->on('empresa');
         });
 
-        Schema::create('situacao', function (Blueprint $table) {
-            $table->bigIncrements('id_situacao');
-            $table->integer('id_processo');
-            $table->text('descricao');
-            $table->boolean('envia_email')->default(false);
-            $table->boolean('envia_mensagem')->default(false);
-            $table->boolean('tarefa_solicitante')->default(false);
-            $table->boolean('marcar_responsavel')->default(false);
-            $table->boolean('limpar_responsavel')->default(false);
-            $table->boolean('data_vencimento')->default(false);
-            $table->boolean('conclusiva')->default(true);
-            $table->boolean('situacao')->default(true);
-            $table->dateTime('data_cria');
-            $table->dateTime('data_alt');
-            $table->integer('usr_cria');
-            $table->integer('usr_alt');
-
-            $table->index(['descricao']);
-            $table->index(['id_processo']);
-            $table->index(['tarefa_solicitante']);
-            $table->index(['marcar_responsavel']);
-            $table->index(['limpar_responsavel']);
-            $table->index(['data_vencimento']);
-            $table->index(['situacao']);
-            $table->index(['conclusiva']);
-    
-            $table->unique(['id_processo','descricao']);
-
-            $table->foreign('id_processo')->references('id_processo')->on('processo');
-        });
-
         Schema::create('perfil', function (Blueprint $table) {
             $table->bigIncrements('id_perfil');
             $table->integer('id_empresa');
@@ -180,7 +149,7 @@ class Reconstrucao extends Migration
         Schema::create('tipo_processo', function (Blueprint $table) {
             $table->bigIncrements('id_tipo_processo');
             $table->integer('id_processo');
-            $table->integer('id_situacao_inicial');
+            $table->integer('id_situacao_inicial')->nullable();
             $table->boolean('automatico')->default(false);
             $table->text('titulo');
             $table->text('subtitulo');
@@ -197,8 +166,39 @@ class Reconstrucao extends Migration
             $table->index(['situacao']);
             $table->unique(['id_processo','titulo']);
 
-            $table->foreign('id_situacao_inicial')->references('id_situacao')->on('situacao');
+            //$table->foreign('id_situacao_inicial')->references('id_situacao')->on('situacao');
             $table->foreign('id_processo')->references('id_processo')->on('processo');
+        });
+
+        Schema::create('situacao', function (Blueprint $table) {
+            $table->bigIncrements('id_situacao');
+            $table->integer('id_tipo_processo');
+            $table->text('descricao');
+            $table->boolean('envia_email')->default(false);
+            $table->boolean('envia_mensagem')->default(false);
+            $table->boolean('tarefa_solicitante')->default(false);
+            $table->boolean('marcar_responsavel')->default(false);
+            $table->boolean('limpar_responsavel')->default(false);
+            $table->boolean('data_vencimento')->default(false);
+            $table->boolean('conclusiva')->default(true);
+            $table->boolean('situacao')->default(true);
+            $table->dateTime('data_cria');
+            $table->dateTime('data_alt');
+            $table->integer('usr_cria');
+            $table->integer('usr_alt');
+
+            $table->index(['descricao']);
+            $table->index(['id_tipo_processo']);
+            $table->index(['tarefa_solicitante']);
+            $table->index(['marcar_responsavel']);
+            $table->index(['limpar_responsavel']);
+            $table->index(['data_vencimento']);
+            $table->index(['situacao']);
+            $table->index(['conclusiva']);
+    
+            $table->unique(['id_tipo_processo','descricao']);
+
+            $table->foreign('id_tipo_processo')->references('id_tipo_processo')->on('tipo_processo');
         });
 
         Schema::create('questao', function (Blueprint $table) {
@@ -242,6 +242,26 @@ class Reconstrucao extends Migration
 
             $table->foreign('id_situacao')->references('id_situacao')->on('situacao');
             $table->foreign('id_processo')->references('id_processo')->on('processo');
+        });
+
+        Schema::create('fluxo', function(Blueprint $table){
+            $table->bigIncrements('id_fluxo');
+            $table->integer('id_tipo_processo');
+            $table->integer('id_situacao');
+            $table->integer('id_situacao_ant')->nullable();
+            $table->dateTime('data_cria');
+            $table->dateTime('data_alt');
+            $table->integer('usr_cria');
+            $table->integer('usr_alt');
+
+            $table->unique(['id_tipo_processo','id_situacao','id_situacao_ant']);
+            $table->index(['id_tipo_processo']);
+            $table->index(['id_situacao']);
+            $table->index(['id_situacao_ant']);
+
+            $table->foreign('id_tipo_processo')->references('id_tipo_processo')->on('tipo_processo');
+            $table->foreign('id_situacao')->references('id_situacao')->on('situacao');
+            $table->foreign('id_situacao_ant')->references('id_situacao')->on('situacao');
         });
 
         Schema::create('agendamento', function (Blueprint $table) {
@@ -345,6 +365,8 @@ class Reconstrucao extends Migration
             $table->index(['id_responsavel']);
             $table->index(['url']);
             $table->index(['situacao']);
+            $table->index(['data_cria']);
+            $table->index(['data_alt']);
 
             $table->foreign('id_situacao')->references('id_situacao')->on('situacao');
             $table->foreign('id_agendamento')->references('id_agendamento')->on('agendamento');
@@ -446,6 +468,7 @@ class Reconstrucao extends Migration
         Schema::dropIfExists('tipo_processo');
         Schema::dropIfExists('questao');
         Schema::dropIfExists('situacao_abertura_processo');
+        Schema::dropIfExists('fluxo');
         Schema::dropIfExists('agendamento');
         Schema::dropIfExists('agendamento_item');
         Schema::dropIfExists('chamado');

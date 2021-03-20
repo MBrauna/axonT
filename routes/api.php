@@ -17,6 +17,12 @@
         Route::namespace('Tasks')->middleware('auth:api')->prefix('tasks')->name('tasks.')->group(function(){
             // [tasks.search]
             Route::any('/verifyTaskAutomatic','TaskAutomatic@verifyTaskAutomatic')->name('verifyTaskAutomatic');
+            // [tasks.resp]
+            Route::any('/resp','TaskAutomatic@dataOrignDestiny')->name('resp');
+            // [tasks.objType]
+            Route::any('/objType','TaskAutomatic@filterObjectType')->name('objType');
+            // [tasks.question]
+            Route::any('/question','TaskAutomatic@filterQuestion')->name('question');
         });
 
         Route::namespace('Util')->middleware('auth:api')->prefix('util')->name('util.')->group(function(){
