@@ -171,7 +171,7 @@
 <script>
     export default {
         props: [
-            'auth', 'token','bearer'
+            'token','bearer'
         ],
         components: {
         },
@@ -515,7 +515,6 @@
             this.PREFERENCES.initData();
 
             this.loading    =   true;
-            this.userData   =   JSON.parse(this.auth);
             this.coletaProcesso();
         }
     }

@@ -386,7 +386,7 @@ class Reconstrucao extends Migration
             $table->boolean('obrigatorio')->default(true);
             $table->integer('ordem')->default(999);
             $table->text('questao');
-            $table->text('resposta');
+            $table->text('resposta')->nullable();
             $table->dateTime('data_cria');
             $table->dateTime('data_alt');
             $table->integer('usr_cria');

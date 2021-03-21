@@ -24,14 +24,12 @@
                 <!-- Conteúdo do sistema -->
                 <div class="col-12" v-if="choice == 0">
                     <create-task-manual
-                        :auth='auth'
                         :token='token'
                         :bearer='bearer'
                     ></create-task-manual>
                 </div>
                 <div class="col-12" v-if="choice == 1">
                     <create-task-automatic
-                        :auth='auth'
                         :token='token'
                         :bearer='bearer'
                     ></create-task-automatic>
@@ -50,13 +48,12 @@
 <script>
     export default {
         props: [
-            'auth', 'token','bearer'
+            'token','bearer'
         ],
         components: {
         },
         data() {
             return {
-                'userData'      :   null,
                 'yearCopright'  :   new Date().getFullYear(),
                 'typeTasks'     :   [
                     {
@@ -125,7 +122,6 @@
             this.LAYOUT.initData();
             this.PREFERENCES.initData();
 
-            this.userData   =   JSON.parse(this.auth);
             this.initFilter();
         },
     }

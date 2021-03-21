@@ -41,7 +41,7 @@
         </div>
 
         <!-- Etapa secundária - Preenchimento de informações -->
-        <div class="row was-validated" v-if="!loading && step == 1 && choiceCompany != null && choiceCompany != '' && choiceProccess != null && choiceProccess != '' && choiceType != null && choiceType != ''">
+        <form class="row was-validated" v-if="!loading && step == 1 && choiceCompany != null && choiceCompany != '' && choiceProccess != null && choiceProccess != '' && choiceType != null && choiceType != ''">
             <input type="hidden" name="_token" v-bind:value="token">
             <input type="hidden" name="typeSS" value="0" required>
             <input type="hidden" name="idCompany" v-bind:value="saveDataCompany.id" required>
@@ -145,8 +145,16 @@
                             <div class="col-12">
                                 <label v-bind:for="'idQuestion_' + curreg.id_questao">{{ curreg.titulo }}</label>
                                 <input v-if="curreg.tipo == 'date'" type="date" class="form-control form-control-sm" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" :required="curreg.obrigatorio">
-                                <input v-else-if="curreg.tipo == 'datetime'" type="date" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" :required="curreg.obrigatorio">
+                                <div class="row" v-else-if="curreg.tipo == 'datetime'">
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <input type="date" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao + '_date'" v-bind:name="'idQuestion_' + curreg.id_questao + '_date'" v-bind:placeholder="curreg.placeholder" @change="trimData" :required="curreg.obrigatorio">
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <input type="time" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao + '_time'" v-bind:name="'idQuestion_' + curreg.id_questao + '_time'" v-bind:placeholder="curreg.placeholder" @change="trimData" :required="curreg.obrigatorio">
+                                    </div>
+                                </div>
                                 <input v-else-if="curreg.tipo == 'text'" type="text" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" :required="curreg.obrigatorio">
+                                <input v-else-if="curreg.tipo == 'email'" type="email" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" :required="curreg.obrigatorio">
                                 <input v-else-if="curreg.tipo == 'number'" type="number" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" :required="curreg.obrigatorio">
                                 <select v-else-if="curreg.tipo === 'user'" class="form-control form-control-sm" v-bind:placeholder="curreg.placeholder" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-model="dataQuestionList[idx].valueData" :required="curreg.obrigatorio">
                                     <option>Nenhum usuário selecionado</option>
@@ -192,27 +200,25 @@
             </div>
 
             <div class="col-12">
-                <button type="submit" class="btn btn-sm btn-block btn-primary">
+                <button type="button" class="btn btn-sm btn-block btn-primary" @click="sendData()">
                     Criar solicitação de serviço
                 </button>
             </div>
-        </div>
+        </form>
     </div>
 </template>
 
 <script>
     export default {
         props: [
-            'auth', 'token','bearer'
+            'token','bearer'
         ],
         components: {
         },
         data() {
             return {
                 'loading'   :   true,
-                'userData'  :   null,
                 'step'      :   0,
-
 
                 'choiceCompany'     :   null,
                 'choiceProccess'    :   null,
@@ -228,23 +234,24 @@
                 'saveDataProccess'  :   null,
                 'saveDataType'      :   null,
                 'title'             :   null,
+                'fileList'          :   [],
             }
         },
         methods: {
             initFilter  :   function(){
                 try {
                     var vm      =   this;
-                    vm.header   = {
+                    var header   = {
                         'headers'   :   {
                             'Authorization' :   'Bearer ' + this.bearer,
                         },
                     };
-                    vm.request = {
+                    var request = {
                         '_token'            :   vm.token,
                         'filter'            :   false,
                     };
 
-                    axios.post('/api/util/company',vm.request,vm.header)
+                    axios.post('/api/util/company',request,header)
                     .then(function (response) {
                         if(response.status === 200) {
                             vm.loading  =   false;
@@ -342,6 +349,7 @@
                 });
             },
             newRegister :   function(){
+                var vm                  =   this;
 
                 var tbodyRef            =   document.getElementById('tableFile').getElementsByTagName('tbody')[0];
                 var newRow              =   tbodyRef.insertRow();
@@ -349,13 +357,13 @@
                 var cellFile            =   newRow.insertCell(0);
                 var cellAction          =   newRow.insertCell(1);
 
-                cellFile.innerHTML      =   '<input class="form-control form-control-sm" id="formFileSm" name="arquivo[]" type="file" required>';
+                cellFile.innerHTML      =   '<input class="form-control form-control-sm" name="arquivo[]" type="file" required>';
                 cellAction.innerHTML    =   '<button type="button" class="btn btn-sm btn-block btn-outline-danger" onclick="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode);"><i class="fas fa-trash"></i></button>';
             },
             trimData    :   function(){
                 var vm  =   this;
                 vm.dataQuestionList.forEach((element, index) => {
-                    if(vm.dataQuestionList[index].valueData != undefined) {
+                    if(vm.dataQuestionList[index].valueData != undefined && vm.dataQuestionList[index].tipo != 'datetime') {
                         vm.dataQuestionList[index].valueData    =   vm.dataQuestionList[index].valueData.trim();
                     }
                 });
@@ -366,7 +374,54 @@
                 if(vm.title != null) {
                     vm.title    =   vm.title.trim();
                 }
-            } // trimTitle   :   function(){ ... }
+            }, // trimTitle   :   function(){ ... }
+            sendData    :   function(){
+                var vm  =   this;
+
+                try {
+                    var header   = {
+                        'headers'   :   {
+                            'Authorization' :   'Bearer ' + this.bearer,
+                        },
+                    };
+                    var request = {
+                        '_token'            :   vm.token,
+                        'typeSS'            :   0,
+                        'idCompany'         :   vm.saveDataCompany.id,
+                        'idProccess'        :   vm.saveDataProccess.id,
+                        'idType'            :   vm.saveDataType.id,
+                        'title'             :   vm.title,
+                        'arquivo'           :   document.getElementsByTagName("arquivo"),
+                    };
+
+                    vm.dataQuestionList.forEach(element => {
+                        if(element.tipo == 'datetime') {
+                            request['idQuestion_' + element.id_questao + '_date'] =   document.getElementById('idQuestion_' + element.id_questao + '_date').value;
+                            request['idQuestion_' + element.id_questao + '_time'] =   document.getElementById('idQuestion_' + element.id_questao + '_time').value;
+                        }
+                        else {
+                            request['idQuestion_' + element.id_questao] =   element.valueData;
+                        }
+                        
+                    }); // dataQuestionList.forEach(element => { ... });
+
+                    /*axios.post('/api/tasks/create',request,header)
+                    .then(function (response) {
+                        if(response.status === 200) {
+                            console.log('executou');
+                        } // if(response.status === 200) { ... }
+                    })
+                    .catch(function(retorno){
+                        console.log('Ocorreu um erro desconhecido! Verifique.');
+                        console.log(retorno);
+                    });*/
+
+                    console.log(request);
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
             
             
         },
@@ -374,7 +429,6 @@
             this.LAYOUT.initData();
             this.PREFERENCES.initData();
 
-            this.userData   =   JSON.parse(this.auth);
             this.loading    =   true;
             this.initFilter();
         },

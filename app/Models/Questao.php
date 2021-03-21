@@ -8,7 +8,7 @@
     {
         protected $table        =   'questao';
         protected $primaryKey   =   'id_questao';
-        protected $fillable     =   ['id_tipo_processo','tipo','titulo','placeholder','obrigatorio','ordem','situacao','alt_data_vencimento'];
+        protected $fillable     =   ['id_tipo_processo','tipo','titulo','placeholder','obrigatorio','ordem','situacao','alt_data_vencimento','data_alt','usr_alt'];
         protected $hidden       =   [];
         protected $casts        =   [];
         protected $attributes   =   [

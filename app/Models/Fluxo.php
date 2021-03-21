@@ -8,7 +8,7 @@
     {
         protected $table        =   'fluxo';
         protected $primaryKey   =   'id_fluxo';
-        protected $fillable     =   ['id_tipo_processo','id_situacao','id_situacao_ant','data_cria','data_alt','usr_cria','usr_alt'];
+        protected $fillable     =   ['id_tipo_processo','id_situacao','id_situacao_ant','data_cria','data_alt','usr_cria','usr_alt','data_alt','usr_alt'];
         protected $hidden       =   [];
         protected $casts        =   [];
         protected $attributes   =   [];

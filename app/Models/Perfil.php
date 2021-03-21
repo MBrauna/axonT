@@ -8,7 +8,7 @@
     {
         protected $table        =   'perfil';
         protected $primaryKey   =   'id_perfil';
-        protected $fillable     =   ['id_empresa','descricao','situacao'];
+        protected $fillable     =   ['id_empresa','descricao','situacao','data_alt','usr_alt'];
         protected $hidden       =   [];
         protected $casts        =   [];
         protected $attributes   =   [

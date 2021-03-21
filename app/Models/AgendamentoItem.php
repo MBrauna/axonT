@@ -8,7 +8,7 @@
     {
         protected $table        =   'agendamento_item';
         protected $primaryKey   =   'id_agendamento_item';
-        protected $fillable     =   ['id_agendamento','tipo','id_questao','obrigatorio','questao','resposta','ordem','situacao'];
+        protected $fillable     =   ['id_agendamento','tipo','id_questao','obrigatorio','questao','resposta','ordem','situacao','data_alt','usr_alt'];
         protected $hidden       =   [];
         protected $casts        =   [];
         protected $attributes   =   [

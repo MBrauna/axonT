@@ -8,7 +8,7 @@
     {
         protected $table        =   'chamado';
         protected $primaryKey   =   'id_chamado';
-        protected $fillable     =   ['id_empresa', 'id_processo', 'id_tipo_processo', 'id_situacao', 'id_agendamento','data_vencimento','data_conclusao', 'id_solicitante', 'id_responsavel','url','titulo', 'situacao'];
+        protected $fillable     =   ['id_empresa', 'id_processo', 'id_tipo_processo', 'id_situacao', 'id_agendamento','data_vencimento','data_conclusao', 'id_solicitante', 'id_responsavel','url','titulo', 'situacao','data_alt','usr_alt'];
         protected $hidden       =   [];
         protected $casts        =   [];
         protected $attributes   =   ['situacao'   =>  true,];

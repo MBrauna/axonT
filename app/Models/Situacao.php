@@ -8,7 +8,7 @@
     {
         protected $table        =   'situacao';
         protected $primaryKey   =   'id_situacao';
-        protected $fillable     =   ['id_processo','descricao','envia_email','envia_mensagem','tarefa_solicitante','marcar_responsavel','limpar_responsavel','data_vencimento','conclusiva','situacao'];
+        protected $fillable     =   ['id_processo','descricao','envia_email','envia_mensagem','tarefa_solicitante','marcar_responsavel','limpar_responsavel','data_vencimento','conclusiva','situacao','data_alt','usr_alt'];
         protected $hidden       =   [];
         protected $casts        =   [];
         protected $attributes   =   [

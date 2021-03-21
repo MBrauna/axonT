@@ -8,7 +8,7 @@
     {
         protected $table        =   'empresa_vinculo';
         protected $primaryKey   =   'id_empresa_vinculo';
-        protected $fillable     =   ['id_empresa','id_empresa_relacao'];
+        protected $fillable     =   ['id_empresa','id_empresa_relacao','data_alt','usr_alt'];
         protected $hidden       =   [];
         protected $casts        =   [];
         protected $attributes   =   [];
