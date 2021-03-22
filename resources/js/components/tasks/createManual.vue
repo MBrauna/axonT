@@ -200,7 +200,7 @@
             </div>
 
             <div class="col-12">
-                <button type="submit" class="btn btn-sm btn-block btn-primary" @click="sendData()" :disabled="submitDisabled">
+                <button type="submit" class="btn btn-sm btn-block btn-primary" :disabled="submitDisabled">
                     Criar solicitação de serviço
                 </button>
             </div>
