@@ -41,7 +41,7 @@
         </div>
 
         <!-- Etapa secundária - Preenchimento de informações -->
-        <form class="row was-validated" v-if="!loading && step == 1 && choiceCompany != null && choiceCompany != '' && choiceProccess != null && choiceProccess != '' && choiceType != null && choiceType != ''">
+        <form class="row was-validated" v-if="!loading && step == 1 && choiceCompany != null && choiceCompany != '' && choiceProccess != null && choiceProccess != '' && choiceType != null && choiceType != ''" @submit="validateData">
             <input type="hidden" name="_token" v-bind:value="token">
             <input type="hidden" name="typeSS" value="0" required>
             <input type="hidden" name="idCompany" v-bind:value="saveDataCompany.id" required>
@@ -200,7 +200,7 @@
             </div>
 
             <div class="col-12">
-                <button type="button" class="btn btn-sm btn-block btn-primary" @click="sendData()">
+                <button type="submit" class="btn btn-sm btn-block btn-primary" @click="sendData()" :disabled="submitDisabled">
                     Criar solicitação de serviço
                 </button>
             </div>
@@ -235,6 +235,7 @@
                 'saveDataType'      :   null,
                 'title'             :   null,
                 'fileList'          :   [],
+                'submitDisabled'    :   false,
             }
         },
         methods: {
@@ -375,8 +376,10 @@
                     vm.title    =   vm.title.trim();
                 }
             }, // trimTitle   :   function(){ ... }
-            sendData    :   function(){
+            validateData    :   function(){
                 var vm  =   this;
+
+                vm.submitDisabled   =   true;
 
                 try {
                     var header   = {
@@ -391,7 +394,6 @@
                         'idProccess'        :   vm.saveDataProccess.id,
                         'idType'            :   vm.saveDataType.id,
                         'title'             :   vm.title,
-                        'arquivo'           :   document.getElementsByTagName("arquivo"),
                     };
 
                     vm.dataQuestionList.forEach(element => {
@@ -405,18 +407,19 @@
                         
                     }); // dataQuestionList.forEach(element => { ... });
 
-                    /*axios.post('/api/tasks/create',request,header)
+                    axios.post('/api/tasks/validateManual',request,header)
                     .then(function (response) {
                         if(response.status === 200) {
                             console.log('executou');
+                            console.log(response.data);
                         } // if(response.status === 200) { ... }
                     })
                     .catch(function(retorno){
                         console.log('Ocorreu um erro desconhecido! Verifique.');
                         console.log(retorno);
-                    });*/
+                    });
 
-                    console.log(request);
+                    return false;
                 }
                 catch(error) {
                     console.log(error);
