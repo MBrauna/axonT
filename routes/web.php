@@ -32,6 +32,7 @@
             // [tasks.createSS] - Criação de solicitacoes, agendamentos
             Route::any('/createSS','Create@createData')->name('createSS');
 
-            // [task.create] - Sistema para criação das solicitações e agendamentos.
+            // [task.list] - Sistema para criação das solicitações e agendamentos.
+            Route::any('/list','ListSS@listPage')->name('list');
         }); // Route::namespace('Task')->prefix('task')->name('task.')->group(function(){ ... });
     }); // Route::namespace('Page')->middleware(['auth'])->group(function(){ ... });

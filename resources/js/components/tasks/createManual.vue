@@ -261,13 +261,11 @@
                         } // if(response.status === 200) { ... }
                     })
                     .catch(function(retorno){
-                        console.log('Ocorreu um erro desconhecido! Verifique.');
-                        console.log(retorno);
+                        Vue.$toast.error('Ocorreu um erro desconhecido! Verifique.');
                     });
                 } // try { ... }
                 catch(error) {
-                    console.log('Ocorreu um erro desconhecido! Verifique.');
-                    console.log(error);
+                    Vue.$toast.error('Ocorreu um erro desconhecido! Verifique.');
                 } // catch(error) { ... }
             }, // initFilter  :   function(){ ... }
             selectChoiceCompany :   function(){
@@ -410,13 +408,11 @@
                     axios.post('/api/tasks/validateManual',request,header)
                     .then(function (response) {
                         if(response.status === 200) {
-                            console.log('executou');
-                            console.log(response.data);
+                            Vue.$toast.error('Ocorreu um erro desconhecido! Verifique.');
                         } // if(response.status === 200) { ... }
                     })
                     .catch(function(retorno){
-                        console.log('Ocorreu um erro desconhecido! Verifique.');
-                        console.log(retorno);
+                        Vue.$toast.error('Ocorreu um erro desconhecido! Verifique.');
                     });
 
                     return false;

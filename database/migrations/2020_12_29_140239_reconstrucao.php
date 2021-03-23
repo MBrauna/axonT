@@ -269,8 +269,11 @@ class Reconstrucao extends Migration
             $table->bigIncrements('id_agendamento');
             $table->integer('tipo')->default(1); // [1] - Entrada, [2] - Saída
             $table->integer('id_processo_referencia');
+            $table->integer('id_processo_origem');
             $table->integer('id_tipo_processo_origem');
-            $table->integer('id_usuario_origem');
+            $table->integer('id_usuario_origem')->nullable();
+            $table->integer('id_solicitante')->nullable();
+            $table->integer('id_processo_destino')->nullable();
             $table->integer('id_tipo_processo_destino')->nullable();
             $table->integer('id_usuario_destino')->nullable();
             $table->integer('periodicidade')->default(1); // [1] - Dias, [2] - Semanas, [3] - Quinzena, [4] - Meses, [5] - Bimestre, [6] - Semestre, [7] - Anos
@@ -291,6 +294,8 @@ class Reconstrucao extends Migration
 
             $table->index(['tipo']);
             $table->index(['id_processo_referencia']);
+            $table->index(['id_processo_origem']);
+            $table->index(['id_processo_destino']);
             $table->index(['id_tipo_processo_origem']);
             $table->index(['id_usuario_origem']);
             $table->index(['id_tipo_processo_destino']);
@@ -306,6 +311,8 @@ class Reconstrucao extends Migration
             $table->foreign('id_tipo_processo_origem')->references('id_tipo_processo')->on('tipo_processo');
             $table->foreign('id_tipo_processo_destino')->references('id_tipo_processo')->on('tipo_processo');
             $table->foreign('id_processo_referencia')->references('id_processo')->on('processo');
+            $table->foreign('id_processo_origem')->references('id_processo')->on('processo');
+            $table->foreign('id_processo_destino')->references('id_processo')->on('processo');
             $table->foreign('id_usuario_origem')->references('id')->on('users');
             $table->foreign('id_usuario_destino')->references('id')->on('users');
         });

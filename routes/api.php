@@ -25,6 +25,8 @@
             Route::any('/question','TaskAutomatic@filterQuestion')->name('question');
             // [tasks.validateManual]
             Route::any('/validateManual','TaskCreate@validateDataManual')->name('validateManual');
+            // [tasks.list]
+            Route::any('/list','TaskList@list')->name('list');
         });
 
         Route::namespace('Util')->middleware('auth:api')->prefix('util')->name('util.')->group(function(){

@@ -16,6 +16,8 @@
     use App\Models\Questao;
     use App\Models\TipoProcesso;
     use App\Models\User;
+    use App\Models\Agendamento;
+    use App\Models\AgendamentoItem;
 
     class Create extends Controller
     {
@@ -260,7 +262,161 @@
 
             }
             else if($typeSS == 1) {
-                dd($request);
+
+                $idProcessoReferencia   =   $request->input('idProcessoReferencia');
+                $idProcessoOrigem       =   $request->input('idProcessoOrigem');
+                $idProcessoDestino      =   $request->input('idProcessoDestino');
+                $idSubProcessoOrigem    =   $request->input('idSubProcessoOrigem');
+                $idSubProcessoDestino   =   $request->input('idSubProcessoDestino');
+                $responsavelOrigem      =   $request->input('responsavelOrigem');
+                $responsavelDestino     =   $request->input('responsavelDestino');
+                $entregavel             =   $request->input('entregavel');
+                $periodicidade          =   $request->input('periodicidade');
+                $qtde_periodicidade     =   $request->input('qtde_periodicidade');
+                $periodicidade_data     =   $request->input('periodicidade_data');
+                $periodicidade_hora     =   $request->input('periodicidade_hora');
+                $tipo                   =   $request->input('idTipo');
+
+                if(is_null($idProcessoReferencia) || is_null($tipo) || is_null($entregavel) || is_null($periodicidade) || is_null($qtde_periodicidade)) return view('page.solicitation.create',[
+                    'success'   =>  false,
+                    'data' =>  (object)[
+                        'code'      =>  'AXONT0010',
+                        'message'   =>  'Dados principais não foram preenchidos! Verifique.',
+                    ]
+                ]);
+
+                $data = null;
+
+                if(is_null($periodicidade_data) && is_null($periodicidade_hora)) {
+                    $data   =   Carbon::now();
+                } // if(is_null($periodicidade_data) && is_null($periodicidade_hora)) { ... }
+                elseif(!is_null($periodicidade_data) && is_null($periodicidade_hora)) {
+                    $data   =   Carbon::parse($periodicidade_data.' '.Carbon::now()->hour.':'.Carbon::now()->minute);
+                } // elseif if(is_null($periodicidade_data) && is_null($periodicidade_hora)) { ... }
+                elseif(is_null($periodicidade_data) && !is_null($periodicidade_hora)) {
+                    $data   =   Carbon::now()->startOfDay();
+                    $data   =   $data->addHours(explode(':',$periodicidade_hora)[0]);
+                    $data   =   $data->addMinutes(explode(':',$periodicidade_hora)[1]);
+                } // elseif if(is_null($periodicidade_data) && is_null($periodicidade_hora)) { ... }
+                else {
+                    $data   =   Carbon::parse($periodicidade_data.' '.$periodicidade_hora);
+                }
+
+                $dataCriacao    =   Carbon::now();
+
+                $agendamentoSS                              =   new Agendamento;
+                $agendamentoSS->tipo                        =   intval($tipo);
+                $agendamentoSS->id_processo_origem          =   is_null($idProcessoOrigem) ? null : intval($idProcessoOrigem);
+                $agendamentoSS->id_processo_destino         =   is_null($idProcessoDestino) ? null : intval($idProcessoDestino);
+                $agendamentoSS->id_tipo_processo_origem     =   is_null($idSubProcessoOrigem) ? null : intval($idSubProcessoOrigem);
+                $agendamentoSS->id_tipo_processo_destino    =   is_null($idSubProcessoDestino) ? null : intval($idSubProcessoDestino);
+                $agendamentoSS->data_inicial                =   $data;
+                $agendamentoSS->proximo_agendamento         =   $data;
+                $agendamentoSS->id_solicitante              =   Auth::user()->id;
+                $agendamentoSS->id_usuario_origem           =   is_null($responsavelOrigem) ? null : intval($responsavelOrigem);
+                $agendamentoSS->id_usuario_destino          =   is_null($responsavelDestino) ? null : intval($responsavelDestino);
+                $agendamentoSS->id_processo_referencia      =   intval($idProcessoReferencia);
+                $agendamentoSS->url                         =   $_SERVER['HTTP_HOST'];
+                $agendamentoSS->titulo                      =   $entregavel;
+                $agendamentoSS->tipo_objeto                 =   null; //intval($tipoObjeto);
+                $agendamentoSS->meio                        =   null; //intval($meio);
+                $agendamentoSS->periodicidade               =   intval($periodicidade);
+                $agendamentoSS->qtde_periodicidade          =   intval($qtde_periodicidade);
+                $agendamentoSS->situacao                    =   true;
+                $agendamentoSS->data_cria                   =   $dataCriacao;
+                $agendamentoSS->data_alt                    =   $dataCriacao;
+                $agendamentoSS->usr_cria                    =   Auth::user()->id;
+                $agendamentoSS->usr_alt                     =   Auth::user()->id;
+                $agendamentoSS->save();
+
+
+                $questionList   =   Questao::where('id_tipo_processo',intval($idSubProcessoOrigem))
+                                    ->where('situacao',true)
+                                    ->orderBy('ordem','asc')
+                                    ->get();
+
+                $listQuestions  =   [];
+
+                foreach ($questionList as $keyQuestion => $valueQuestion) {
+                    // Check para respostas
+                    switch ($valueQuestion->tipo) {
+                        case 'datetime':
+                            $tmpQuestionResp    =   Carbon::parse($request->input('idQuestion_'.$valueQuestion->id_questao.'_date','').' '.$request->input('idQuestion_'.$valueQuestion->id_questao.'_time',''));
+                            break;
+                        case 'date':
+                            $tmpQuestionResp    =   Carbon::parse($request->input('idQuestion_'.$valueQuestion->id_questao,''))->startOfDay();
+                            break;
+                        case 'user':
+                            $tmpQuestionResp    =   ($request->input('idQuestion_'.$valueQuestion->id_questao,'') == null || $request->input('idQuestion_'.$valueQuestion->id_questao,'') == '') ? 'Nenhum usuário selecionado' : User::find(intval($request->input('idQuestion_'.$valueQuestion->id_questao,'')));
+                        default:
+                            $tmpQuestionResp    =   $request->input('idQuestion_'.$valueQuestion->id_questao,'');
+                            break;
+                    }
+
+                    if($valueQuestion->obrigatorio && ($tmpQuestionResp == null || trim($tmpQuestionResp) == '')) {
+                        // Remove o registro já que não deu certo.
+                        return view('page.solicitation.create',[
+                            'success'   =>  false,
+                            'data' =>  (object)[
+                                'code'      =>  'AXONT0007',
+                                'message'   =>  'Não foi possível gerar o ID# de solicitação! Verifique.',
+                            ]
+                        ]);
+                    } // if($valueQuestion->obrigatorio && ($tmpQuestionResp == null || trim($tmpQuestionResp) == '')) { ... }
+
+                    $tmpData    =   (object)[
+                        'tipo'          =>  $valueQuestion->tipo,
+                        'id_questao'    =>  $valueQuestion->id_questao,
+                        'obrigatorio'   =>  $valueQuestion->obrigatorio,
+                        'ordem'         =>  $keyQuestion,
+                        'questao'       =>  $valueQuestion->titulo,
+                        'resposta'      =>  $tmpQuestionResp,
+                        'realData'      =>  ($valueQuestion->tipo == 'user') ? $request->input('idQuestion_'.$valueQuestion->id_questao,'') : $tmpQuestionResp,
+                        'alt_data_ref'  =>  $valueQuestion->alt_data_vencimento,
+                    ];
+
+                    array_push($listQuestions, $tmpData);
+                } // foreach ($questionList as $keyQuestion => $valueQuestion) { ... }
+
+                // Gera o código do item do chamado
+                foreach ($listQuestions as $keyList => $valueList) {
+                    try {
+                        $newSSItem                  =   new AgendamentoItem;
+                        $newSSItem->id_agendamento  =   $agendamentoSS->id_agendamento;
+                        $newSSItem->tipo            =   $valueList->tipo;
+                        $newSSItem->id_questao      =   $valueList->id_questao;
+                        $newSSItem->obrigatorio     =   $valueList->obrigatorio;
+                        $newSSItem->ordem           =   $valueList->ordem;
+                        $newSSItem->questao         =   $valueList->questao;
+                        $newSSItem->resposta        =   $valueList->realData;
+                        $newSSItem->data_cria       =   Carbon::now();
+                        $newSSItem->data_alt        =   Carbon::now();
+                        $newSSItem->usr_cria        =   Auth::user()->id;
+                        $newSSItem->usr_alt         =   Auth::user()->id;
+                        $newSSItem->save();
+                    }
+                    catch(Exception $error) {
+                        // Remove o registro já que não deu certo.
+                        AgendamentoItem::where('id_agendamento',$agendamentoSS->id_agendamento)->delete();
+                        Agendamento::where('id_chamado',$agendamentoSS->id_agendamento)->delete();
+
+                        return view('page.solicitation.create',[
+                            'success'   =>  false,
+                            'data' =>  (object)[
+                                'code'      =>  'AXONT0009',
+                                'message'   =>  'Não foi possível armazenar os itens deste agendamento! Verifique.',
+                            ]
+                        ]);
+                    } // catch(Exception $error) { ... }
+                }
+                
+                return view('page.solicitation.create',[
+                    'success'   =>  true,
+                    'data'      =>  (object)[
+                        'idChamado' =>  $agendamentoSS->id_agendamento,
+                        'url'       =>  $agendamentoSS->url."/Task/Automatic"."/".$agendamentoSS->id_agendamento,
+                    ],
+                ]);
             }
         } // public function createData(Request $request) { ... }
     }
