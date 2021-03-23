@@ -19,10 +19,10 @@
                           <i class="fas fa-chart-pie mx-2"></i>
                           <small class="font-weight-bolder mx-2">Gráfico</small>
                       </a>
-                      <a href="/performance/report" class="dropdown-item text-primary d-flex justify-content-between">
+                      <!--<a href="/performance/report" class="dropdown-item text-primary d-flex justify-content-between">
                           <i class="fas fa-table mx-2"></i>
                           <small class="font-weight-bolder mx-2">Relatório</small>
-                      </a>
+                      </a>-->
                   </div>
               </li>
       
@@ -31,13 +31,13 @@
                       Solicitação
                   </a>
                   <div class="dropdown-menu border border-primary" aria-labelledby="menuRequest">
-                      <a href="/task/list" class="dropdown-item text-primary d-flex justify-content-between">
-                          <i class="fas fa-th-list mx-2"></i>
-                          <small class="font-weight-bolder mx-2">Lista</small>
-                      </a>
                       <a href="/task/create" class="dropdown-item text-primary d-flex justify-content-between">
                           <i class="fas fa-pencil-alt mx-2"></i>
                           <small class="font-weight-bolder mx-2">Abertura</small>
+                      </a>
+                      <a href="/task/list" class="dropdown-item text-primary d-flex justify-content-between">
+                          <i class="fas fa-th-list mx-2"></i>
+                          <small class="font-weight-bolder mx-2">Lista</small>
                       </a>
                   </div>
               </li>

@@ -7,7 +7,7 @@
         </div>
         <div class="row" v-else>
             <div class="col-12">
-                <div class="row was-validated" autocomplete="off">
+                <form class="row was-validated" autocomplete="off" method="POST" action="/task/createSS" >
                     <input type="hidden" name="_token" v-bind:value="token">
                     <input type="hidden" name="typeSS" value="1" required>
                     <!-- Primeira etapa - Seleção do tipo -->
@@ -148,8 +148,16 @@
                         <div class="form-group" v-for="(curreg, idx) in dataQuestionList" v-bind:key="curreg.id_pergunta_tipo">
                             <label v-bind:for="'idQuestion_' + curreg.id_questao">{{ curreg.titulo }}</label>
                                 <input v-if="curreg.tipo == 'date'" type="date" class="form-control form-control-sm" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" :required="curreg.obrigatorio">
-                                <input v-else-if="curreg.tipo == 'datetime'" type="date" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" :required="curreg.obrigatorio">
+                                <div class="row" v-else-if="curreg.tipo == 'datetime'">
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <input type="date" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao + '_date'" v-bind:name="'idQuestion_' + curreg.id_questao + '_date'" v-bind:placeholder="curreg.placeholder" @change="trimData" :required="curreg.obrigatorio">
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <input type="time" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao + '_time'" v-bind:name="'idQuestion_' + curreg.id_questao + '_time'" v-bind:placeholder="curreg.placeholder" @change="trimData" :required="curreg.obrigatorio">
+                                    </div>
+                                </div>
                                 <input v-else-if="curreg.tipo == 'text'" type="text" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" :required="curreg.obrigatorio">
+                                <input v-else-if="curreg.tipo == 'email'" type="email" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" :required="curreg.obrigatorio">
                                 <input v-else-if="curreg.tipo == 'number'" type="number" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="dataQuestionList[idx].valueData" @change="trimData" :required="curreg.obrigatorio">
                                 <select v-else-if="curreg.tipo === 'user'" class="form-control form-control-sm" v-bind:placeholder="curreg.placeholder" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-model="dataQuestionList[idx].valueData" :required="curreg.obrigatorio">
                                     <option>Nenhum usuário selecionado</option>
@@ -160,9 +168,9 @@
                     </div>
                 
                     <div class="col-12" v-if="opcaoDados">
-                        <button type="button" class="btn btn-block btn-sm btn-primary">Cadastrar troca de objetos</button>
+                        <button type="submit" class="btn btn-block btn-sm btn-primary">Cadastrar troca de objetos</button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>

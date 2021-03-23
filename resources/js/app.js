@@ -36,6 +36,7 @@ Vue.component('passport-personal-access-tokens',require('./components/passport/P
 Vue.component('filter-app', require('./components/layout/filter.vue').default);
 Vue.component('logo', require('./components/layout/logo.vue').default);
 Vue.component('menu-app', require('./components/layout/menu.vue').default);
+Vue.component('alert-axont', require('./components/layout/alertAxonT.vue').default);
 Vue.component('login', require('./components/auth/login.vue').default);
 Vue.component('performance', require('./components/performance/performance.vue').default);
 Vue.component('chart-axont', require('./components/performance/chartAxonT.vue').default);

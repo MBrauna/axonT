@@ -24,9 +24,13 @@
 
         Route::namespace('Task')->prefix('task')->name('task.')->group(function(){
             // [task.mainPage]
-
-            // [task.create] - Criação de solicitacoes, agendamentos
+            Route::any('/', function(){
+                return redirect()->route('tasks.create');
+            })->name('mainPage');
+            // [tasks.create] - Criação de solicitacoes, agendamentos
             Route::any('/create','Create@startPage')->name('create');
+            // [tasks.createSS] - Criação de solicitacoes, agendamentos
+            Route::any('/createSS','Create@createData')->name('createSS');
 
             // [task.create] - Sistema para criação das solicitações e agendamentos.
         }); // Route::namespace('Task')->prefix('task')->name('task.')->group(function(){ ... });

@@ -41,7 +41,7 @@
         </div>
 
         <!-- Etapa secundária - Preenchimento de informações -->
-        <form class="row was-validated" v-if="!loading && step == 1 && choiceCompany != null && choiceCompany != '' && choiceProccess != null && choiceProccess != '' && choiceType != null && choiceType != ''" @submit="validateData">
+        <form method="POST" action="/task/createSS" class="row was-validated" v-if="!loading && step == 1 && choiceCompany != null && choiceCompany != '' && choiceProccess != null && choiceProccess != '' && choiceType != null && choiceType != ''" @submit="validateData" autocomplete="off">
             <input type="hidden" name="_token" v-bind:value="token">
             <input type="hidden" name="typeSS" value="0" required>
             <input type="hidden" name="idCompany" v-bind:value="saveDataCompany.id" required>
