@@ -18,11 +18,12 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import VueToast from 'vue-toast-notification';
 import Vuetify from 'vuetify';
 import Vue from 'vue';
-
+import moment from 'moment'
 
 // Declaração de dados globais para a aplicação
 Vue.prototype.LAYOUT        =   LAYOUT;
 Vue.prototype.PREFERENCES   =   PREFERENCES;
+Vue.prototype.moment        =   moment;
 Vue.use(VueToast);
 Vue.use(Vuetify);
 Vue.use(BootstrapVue)
@@ -51,6 +52,7 @@ Vue.component('create-task', require('./components/tasks/create.vue').default);
 Vue.component('create-task-manual', require('./components/tasks/createManual.vue').default);
 Vue.component('create-task-automatic', require('./components/tasks/createAutomatic.vue').default);
 Vue.component('list-manual', require('./components/tasks/listManual.vue').default);
+Vue.component('list-automatic', require('./components/tasks/listAutomatic.vue').default);
 
 
 // -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- //

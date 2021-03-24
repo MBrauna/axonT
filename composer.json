@@ -36,6 +36,8 @@
     },
     "autoload": {
         "files": [
+            "app/Global/globalPeriodic.php",
+            "app/Global/globalSubordinate.php",
             "app/Global/globalToken.php",
             "app/Global/globalUser.php"
         ],

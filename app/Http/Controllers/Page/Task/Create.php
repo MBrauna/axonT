@@ -23,7 +23,18 @@
     {
         public function startPage(Request $request) {
             try {
-                return view('page.solicitation.create',[]);
+                $success    =   $request->input('success');
+                $data       =   $request->input('data');
+
+                if(!is_null($success) && !is_null($data)){
+                    return view('page.solicitation.create',[
+                        'success'   =>  $success,
+                        'data'      =>  (object)$data,
+                    ]);
+                } // if(!is_null($success) && !is_null($data)){ ... }
+                else {
+                    return view('page.solicitation.create');
+                } // else { ... }
             }
             catch(Exception $error) {
                 return view('page.errorPage');
@@ -43,7 +54,7 @@
 
                     // Valida os dados principais de entrada
                     if(is_null($idCompany)) {
-                        return view('page.solicitation.create',[
+                        return redirect()->route('task.create',[
                             'success'   =>  false,
                             'data' =>  (object)[
                                 'code'      =>  'AXONT0001',
@@ -52,7 +63,7 @@
                         ]);
                     }
 
-                    if(is_null($idProccess)) return view('page.solicitation.create',[
+                    if(is_null($idProccess)) return redirect()->route('task.create',[
                         'success'   =>  false,
                         'data' =>  (object)[
                             'code'      =>  'AXONT0002',
@@ -61,7 +72,7 @@
                     ]);
 
 
-                    if(is_null($idType)) return view('page.solicitation.create',[
+                    if(is_null($idType)) return redirect()->route('task.create',[
                         'success'   =>  false,
                         'data' =>  (object)[
                             'code'      =>  'AXONT0003',
@@ -69,7 +80,7 @@
                         ],
                     ]);
 
-                    if(is_null($title)) return view('page.solicitation.create',[
+                    if(is_null($title)) return redirect()->route('task.create',[
                         'success'   =>  false,
                         'data' =>  (object)[
                             'code'      =>  'AXONT0004',
@@ -90,7 +101,7 @@
                                     ->where('tipo_processo.id_tipo_processo',$idType)
                                     ->count();
 
-                    if($validate <= 0 || $validate > 1) return view('page.solicitation.create',[
+                    if($validate <= 0 || $validate > 1) return redirect()->route('task.create',[
                         'success'   =>  false,
                         'data' =>  (object)[
                             'code'      =>  'AXONT0005',
@@ -146,7 +157,7 @@
                         $newSS->save();
                     }
                     catch(Exception $error) {
-                        return view('page.solicitation.create',[
+                        return redirect()->route('task.create',[
                             'success'   =>  false,
                             'data' =>  (object)[
                                 'code'      =>  'AXONT0006',
@@ -184,7 +195,7 @@
                             // Remove o registro já que não deu certo.
                             Chamado::where('id_chamado',$newSS->id_chamado)->delete();
 
-                            return view('page.solicitation.create',[
+                            return redirect()->route('task.create',[
                                 'success'   =>  false,
                                 'data' =>  (object)[
                                     'code'      =>  'AXONT0007',
@@ -229,7 +240,7 @@
                             ChamadoItem::where('id_chamado',$newSS->id_chamado)->delete();
                             Chamado::where('id_chamado',$newSS->id_chamado)->delete();
 
-                            return view('page.solicitation.create',[
+                            return redirect()->route('task.create',[
                                 'success'   =>  false,
                                 'data' =>  (object)[
                                     'code'      =>  'AXONT0009',
@@ -243,7 +254,7 @@
                     // Salva os arquivos no sistema de chamados
                     
                 } catch (Exception $error) {
-                    return view('page.solicitation.create',[
+                    return redirect()->route('task.create',[
                         'success'   =>  false,
                         'data' =>  (object)[
                             'code'      =>  'AXONT0008',
@@ -252,7 +263,7 @@
                     ]);
                 }
 
-                return view('page.solicitation.create',[
+                return redirect()->route('task.create',[
                     'success'   =>  true,
                     'data'      =>  (object)[
                         'idChamado' =>  $newSS->id_chamado,
@@ -277,7 +288,7 @@
                 $periodicidade_hora     =   $request->input('periodicidade_hora');
                 $tipo                   =   $request->input('idTipo');
 
-                if(is_null($idProcessoReferencia) || is_null($tipo) || is_null($entregavel) || is_null($periodicidade) || is_null($qtde_periodicidade)) return view('page.solicitation.create',[
+                if(is_null($idProcessoReferencia) || is_null($tipo) || is_null($entregavel) || is_null($periodicidade) || is_null($qtde_periodicidade)) return redirect()->route('task.create',[
                     'success'   =>  false,
                     'data' =>  (object)[
                         'code'      =>  'AXONT0010',
@@ -355,7 +366,7 @@
 
                     if($valueQuestion->obrigatorio && ($tmpQuestionResp == null || trim($tmpQuestionResp) == '')) {
                         // Remove o registro já que não deu certo.
-                        return view('page.solicitation.create',[
+                        return redirect()->route('task.create',[
                             'success'   =>  false,
                             'data' =>  (object)[
                                 'code'      =>  'AXONT0007',
@@ -400,7 +411,7 @@
                         AgendamentoItem::where('id_agendamento',$agendamentoSS->id_agendamento)->delete();
                         Agendamento::where('id_chamado',$agendamentoSS->id_agendamento)->delete();
 
-                        return view('page.solicitation.create',[
+                        return redirect()->route('task.create',[
                             'success'   =>  false,
                             'data' =>  (object)[
                                 'code'      =>  'AXONT0009',
@@ -410,7 +421,7 @@
                     } // catch(Exception $error) { ... }
                 }
                 
-                return view('page.solicitation.create',[
+                return redirect()->route('task.create',[
                     'success'   =>  true,
                     'data'      =>  (object)[
                         'idChamado' =>  $agendamentoSS->id_agendamento,

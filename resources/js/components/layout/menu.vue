@@ -37,7 +37,11 @@
                       </a>
                       <a href="/task/list" class="dropdown-item text-primary d-flex justify-content-between">
                           <i class="fas fa-th-list mx-2"></i>
-                          <small class="font-weight-bolder mx-2">Lista</small>
+                          <small class="font-weight-bolder mx-2">Lista de Solicitação</small>
+                      </a>
+                      <a href="/task/listAutomatic" class="dropdown-item text-primary d-flex justify-content-between">
+                          <i class="fas fa-handshake mx-2"></i>
+                          <small class="font-weight-bolder mx-2">Troca de Objetos</small>
                       </a>
                   </div>
               </li>

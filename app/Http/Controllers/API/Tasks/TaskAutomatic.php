@@ -126,7 +126,7 @@
                                 ->get();
 
                 // Coleta os usuários que estao abaixo do usuário
-                $subordinate    =   [];
+                $subordinate    =   getSubordinates();
 
                 $vRetorno   =   [
                     'tipo'  =>  $typeList,

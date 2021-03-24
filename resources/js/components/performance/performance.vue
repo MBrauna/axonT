@@ -1,6 +1,9 @@
 <template>
     <div>
-        <div v-if="content === null" class="card shadow mt-3 mb-3 border-primary bg-white">
+        <button class="btn btn-sm btn-block btn-success" type="button" @click="initQuery" :disabled="loading">
+            Atualizar informações
+        </button>
+        <div v-if="loading" class="card shadow mt-3 mb-3 border-primary bg-white">
             <div class="card-header text-center bg-primary font-weight-bold text-light">
                 Carregando ...
             </div>
@@ -31,7 +34,7 @@
     import VueApexCharts from 'vue-apexcharts';
 
     export default {
-        props: ['token','bearer','auth'],
+        props: ['token','bearer'],
         components: {
             apexchart: VueApexCharts,
         },
@@ -53,6 +56,7 @@
             initQuery   :   function(){
                 try {
                     var vm      =   this;
+                    vm.loading  =   true;
                     vm.header   = {
                         'headers'   :   {
                             'Authorization' :   'Bearer ' + this.bearer,
@@ -62,10 +66,9 @@
                     vm.request = {
                         '_token'            :   vm.token,
                         'filter'            :   true,
-                        'idUser'            :   vm.userData.id,
                         'idCompany'         :   vm.PREFERENCES.getCompany(),
-                        'idProcess'         :   null,
-                        'idSituation'       :   null,
+                        'idProcess'         :   vm.PREFERENCES.getProccess(),
+                        'idType'            :   vm.PREFERENCES.getType(),
                     };
 
                     axios.post('/api/performance/graph',vm.request,vm.header)
@@ -73,6 +76,7 @@
                         if(response.status === 200) {
                             vm.content  =   response.data;
                         }
+                        vm.loading  =   false;
                     })
                     .catch(function(retorno){
                         console.log('Ocorreu um erro desconhecido! Verifique.');
@@ -90,7 +94,6 @@
             this.LAYOUT.initData();
             this.PREFERENCES.initData();
 
-            this.userData   =   JSON.parse(this.auth);
             this.initQuery();
         },
     }

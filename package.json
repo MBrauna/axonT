@@ -30,6 +30,7 @@
         "vuetify": "^2.4.0"
     },
     "dependencies": {
+        "moment": "^2.27.0",
         "vue-apexcharts": "^1.6.0",
         "vue2-datepicker": "^3.8.2"
     }

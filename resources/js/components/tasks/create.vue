@@ -1,7 +1,7 @@
 <template>
     <div class="card border border-primary shadow">
         <div class="card-header bg-primary text-white text-center">
-            Abertura de solicitação de serviço
+            Criação de solicitação de serviços e troca de objetos
         </div>
         <div class="card-body">
             <div class="row" v-if="step == 0">
@@ -57,12 +57,12 @@
                 'yearCopright'  :   new Date().getFullYear(),
                 'typeTasks'     :   [
                     {
-                        'title'     :   'Manual',
+                        'title'     :   'Solicitação de serviço',
                         'value'     :   0,
                         'disabled'  :   false,
                     },
                     {
-                        'title' :   'Automático',
+                        'title' :   'Troca de objetos',
                         'value' :   1,
                         'disabled'  :   true,
                     }
