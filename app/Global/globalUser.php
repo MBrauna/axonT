@@ -5,7 +5,7 @@
                 $return =   [];
 
                 // Verifica se o usuário é administrador do sistema, se for ... libera tudo ...
-                if(Auth::user()->administrador) {
+                /*if(Auth::user()->administrador) {
                     $return =   App\Models\Empresa::where('situacao',true)
                                 ->orderBy('descricao','asc')
                                 ->get();
@@ -53,7 +53,7 @@
                         } // foreach ($return[$keyCompany]->processos as $keyProccess => $valueProccess) { .. }
                     } // foreach ($return as $keyCompany => $valueCompany) { ... }
                 } // if(Auth::user()->administrador)  { ... }
-                else {
+                else {*/
 
                     $userConfig =   App\Models\UsuarioConfig::where('id_usuario', Auth::user()->id)->select('id_perfil');
                     $perfil     =   App\Models\Perfil::whereIn('id_perfil',$userConfig)->select('id_empresa');
@@ -113,7 +113,7 @@
                     } // foreach ($return as $key => $value) { ... }
 
 
-                } // else { ... }
+                //} // else { ... }
 
                 // Finaliza os dados retornando as informações
                 return $return;

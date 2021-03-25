@@ -53,6 +53,7 @@ Vue.component('create-task-manual', require('./components/tasks/createManual.vue
 Vue.component('create-task-automatic', require('./components/tasks/createAutomatic.vue').default);
 Vue.component('list-manual', require('./components/tasks/listManual.vue').default);
 Vue.component('list-automatic', require('./components/tasks/listAutomatic.vue').default);
+Vue.component('aceitar-acordo',require('./components/tasks/aceitarAcordo.vue').default);
 
 
 // -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- //

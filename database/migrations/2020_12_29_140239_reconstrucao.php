@@ -282,6 +282,8 @@ class Reconstrucao extends Migration
             $table->dateTime('data_final')->nullable();
             $table->dateTime('proximo_agendamento');
             $table->integer('qtde_criado')->default(0);
+            $table->boolean('aprova_origem')->default(false);
+            $table->boolean('aprova_destino')->default(false);
             $table->text('url');
             $table->text('titulo');
             $table->integer('tipo_objeto')->nullable();

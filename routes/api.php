@@ -29,6 +29,8 @@
             Route::any('/list','TaskList@list')->name('list');
             // [tasks.listAutomatic]
             Route::any('/listAutomatic','TaskList@listAutomatic')->name('listAutomatic');
+            // [tasks.changeAutomaticStatus]
+            Route::any('/changeAutomaticStatus','TaskList@changeAutomaticStatus')->name('changeAutomaticStatus');
         });
 
         Route::namespace('Util')->middleware('auth:api')->prefix('util')->name('util.')->group(function(){

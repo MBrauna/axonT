@@ -23,6 +23,8 @@
                                         'data_inicial',
                                         'data_final',
                                         'proximo_agendamento',
+                                        'aprova_origem',
+                                        'aprova_destino',
                                         'qtde_criado',
                                         'url',
                                         'titulo',

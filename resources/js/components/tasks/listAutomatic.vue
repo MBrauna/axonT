@@ -27,7 +27,9 @@
                         :sort-desc.sync="sortDesc"
                         sticky-header="55vh"
                     >
-                        
+                        <template v-slot:cell(btnAprovacao)="data">
+                            <aceitar-acordo :token="token" :bearer="bearer" :data="data.value"></aceitar-acordo>
+                        </template>
                     </b-table>
                 </div>
                 <div class="card-footer bg-primary">
@@ -48,7 +50,7 @@
                 filtroConteudo:{},
                 filter:{},
                 isBusy: true,
-                sortBy: 'id_agendamento',
+                sortBy: 'idDesc',
                 sortDesc: false,
                 requisicao : {},
                 perPage: 7,
@@ -56,7 +58,7 @@
                 totalRows: 0,
                 fields: [
                     { key: 'idDesc',            label: '#ID',                   sortable: true,   thStyle: { width: '5em !important', background: '#000A44', color: '#ffffff'},  },
-                    { key: '',                  label: 'Acordo',                sortable: true,   thStyle: { width: '20em !important', background: '#000A44', color: '#ffffff'},    stickyColumn: true, },
+                    { key: 'btnAprovacao',      label: 'Acordo',                sortable: true,   thStyle: { width: '20em !important', background: '#000A44', color: '#ffffff'},    stickyColumn: true, },
                     { key: 'tipoDesc',          label: 'Tipo',                  sortable: true,   thStyle: { width: '14em !important', background: '#000A44', color: '#ffffff'}, },
                     { key: 'procOrigem',        label: 'Processo Origem',       sortable: true,   thStyle: { width: '14em !important', background: '#000A44', color: '#ffffff'}, },
                     { key: 'tipoOrigem',        label: 'Tipo Processo Origem',  sortable: true,   thStyle: { width: '14em !important', background: '#000A44', color: '#ffffff'},    class: 'text-center',},
@@ -68,7 +70,7 @@
                     { key: 'dataIniDesc',       label: 'Primeiro Agendamento',  sortable: true,   thStyle: { width: '14em !important', background: '#000A44', color: '#ffffff'},    class: 'text-center',},
                     { key: 'qtde_criado',       label: 'Qtde. Criada',          sortable: true,   thStyle: { width: '10em !important', background: '#000A44', color: '#ffffff'},  },
                     { key: 'proxAgendDesc',     label: 'Próximo agendamento',   sortable: true,   thStyle: { width: '14em !important', background: '#000A44', color: '#ffffff'},  },
-                    { key: 'ações',             label: 'Ações',                 sortable: true,   thStyle: { width: '20em !important', background: '#000A44', color: '#ffffff'},  },
+                    { key: 'acao',              label: 'Ações',                 sortable: true,   thStyle: { width: '20em !important', background: '#000A44', color: '#ffffff'},  },
                 ],
                 items: [
                 ]
