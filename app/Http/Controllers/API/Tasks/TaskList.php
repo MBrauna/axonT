@@ -236,8 +236,8 @@
                         ->get();
 
             foreach ($lista as $conteudoLista) {
-                if(!is_null($idProccess) && (($conteudoLista->id_processo_referencia != $idProccess) || ($conteudoLista->id_processo_origem != $idProccess) || ($conteudoLista->id_processo_destino != $idProccess))) continue;
-                if(!is_null($idType) && (($conteudoLista->id_tipo_processo_origem != $idType) || ($conteudoLista->id_tipo_processo_destino != $idType))) continue;
+                if(!is_null($idProccess) && (($conteudoLista->id_processo_referencia != intval($idProccess)) || ($conteudoLista->id_processo_origem != intval($idProccess)) || ($conteudoLista->id_processo_destino != intval($idProccess)))) continue;
+                if(!is_null($idType) && (($conteudoLista->id_tipo_processo_origem != intval($idType)) || ($conteudoLista->id_tipo_processo_destino != intval($idType)))) continue;
 
                 // ID
                 $conteudoLista->idDesc          =   '#'.str_pad($conteudoLista->id_agendamento,4,'0',STR_PAD_LEFT);
@@ -266,6 +266,20 @@
                 $conteudoLista->dataFimDesc     =   Carbon::parse($conteudoLista->data_final)->format('d/m/Y h:i') ?? '';
                 $conteudoLista->proxAgendDesc   =   Carbon::parse($conteudoLista->proximo_agendamento)->format('d/m/Y h:i') ?? '';
 
+                $conteudoLista->btnAprovacao    =   (object)[
+                    'id'        =>  $conteudoLista->id_agendamento,
+                    'tipo'      =>  $conteudoLista->tipo,
+                    'trust'     =>  (object)[
+                        'origem'    =>  $conteudoLista->aprova_origem,
+                        'destino'   =>  $conteudoLista->aprova_destino,
+                    ],
+                    'permission'=>  (object)[
+                        'origem'    =>  (Processo::where('id_processo',$conteudoLista->id_processo_origem)->where('id_usuario_responsavel',Auth::user()->id)->count() <= 0) ? false : true,
+                        'destino'   =>  (Processo::where('id_processo',$conteudoLista->id_processo_destino)->where('id_usuario_responsavel',Auth::user()->id)->count() <= 0) ? false : true,
+                    ]
+
+                ];
+
                 $conteudoLista->listaQuestao    =   DB::table('agendamento_item')
                                                     ->where('id_agendamento',$conteudoLista->id_agendamento)
                                                     ->orderBy('ordem','asc')
@@ -277,4 +291,13 @@
 
             return response()->json($retorno,200);
         } // public function listAutomatic(Request $request) { ... }
+
+        public function changeAutomaticStatus(Request $request) {
+            try {
+                
+            } // try { ... }
+            catch(Exception $error) {
+
+            } // catch(Exception $error) { ... }
+        } // public function changeAutomaticStatus(Request $request) { ... }
     }
