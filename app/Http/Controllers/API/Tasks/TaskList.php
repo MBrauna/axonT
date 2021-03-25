@@ -9,6 +9,7 @@
     use Auth;
     use Carbon\Carbon;
 
+    use App\Models\Agendamento;
     use App\Models\Situacao;
     use App\Models\Processo;
     use App\Models\TipoProcesso;
@@ -294,10 +295,61 @@
 
         public function changeAutomaticStatus(Request $request) {
             try {
-                
+                $type           =   $request->input('type');
+                $idAgendamento  =   $request->input('idAgendamento');
+                $status         =   $request->input('status',false);
+
+                if(is_null($type)) {
+                    return response()->json([
+                        'error' =>  [
+                            'code'      =>  'AXONT0001',
+                            'message'   =>  'Tipo não informado! Verifique.',
+                        ],
+                    ],202);
+                } // if(is_null($type)) { ... } 
+
+                if(is_null($idAgendamento)) {
+                    return response()->json([
+                        'error' =>  [
+                            'code'      =>  'AXONT0002',
+                            'message'   =>  '#ID não informado! Verifique.',
+                        ],
+                    ],202);
+                } // if(is_null($idAgendamento)) { ... } 
+
+                if(is_null($status)) {
+                    return response()->json([
+                        'error' =>  [
+                            'code'      =>  'AXONT0003',
+                            'message'   =>  'Novo status não informado! Verifique.',
+                        ],
+                    ],202);
+                } // if(is_null($type)) { ... }
+
+                if($type == 1) {
+                    Agendamento::where('id_agendamento',$idAgendamento)
+                    ->update([
+                        'aprova_origem' =>  $status,
+                    ]);
+                }
+                else {
+                    Agendamento::where('id_agendamento',$idAgendamento)
+                    ->update([
+                        'aprova_destino' =>  $status,
+                    ]);
+                }
+
+                return response()->json([
+                    'success' =>  true,
+                ],200);
             } // try { ... }
             catch(Exception $error) {
-
+                return response()->json([
+                    'error' =>  [
+                        'code'      =>  'AXONT0004',
+                        'message'   =>  'Ocorreu um erro ao atualizar o registro! Verifique.',
+                    ],
+                ],202);
             } // catch(Exception $error) { ... }
         } // public function changeAutomaticStatus(Request $request) { ... }
     }
