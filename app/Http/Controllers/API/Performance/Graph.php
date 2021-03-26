@@ -443,7 +443,7 @@
                                 ->where('data_vencimento','<=',Carbon::now())
                                 ->select(
                                     'id_processo',
-                                    DB::raw('count(1) as atrasada'),
+                                    DB::raw('count(1) as atrasada')
                                 )
                                 ->groupBy([
                                     'id_processo',
@@ -610,7 +610,7 @@
                                 })
                                 ->select(
                                     'id_processo',
-                                    DB::raw('count(1) as saldo'),
+                                    DB::raw('count(1) as saldo')
                                 )
                                 ->groupBy([
                                     'id_processo',
@@ -795,7 +795,7 @@
                                 })
                                 ->select(
                                     'id_processo',
-                                    DB::raw('count(1) as saldo'),
+                                    DB::raw('count(1) as saldo')
                                 )
                                 ->groupBy([
                                     'id_processo',

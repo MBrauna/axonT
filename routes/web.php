@@ -39,3 +39,7 @@
             Route::any('/listAutomatic','ListSS@listAutomatic')->name('listAutomatic');
         }); // Route::namespace('Task')->prefix('task')->name('task.')->group(function(){ ... });
     }); // Route::namespace('Page')->middleware(['auth'])->group(function(){ ... });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
