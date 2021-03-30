@@ -12,10 +12,10 @@
         <!-- Meta Keyword -->
         <meta name="keywords" content="AxionT, Tarefas, Administração, Aplicação">
         <!-- meta character set -->
-        <meta charset="UTF-8">
+        <meta charset="utf-8">
         <!-- Token de sessão -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="useToken" content="{{ generateTokenOaut() }}"
+        <meta name="useToken" content="{{ generateTokenOaut() }}">
 
         <!-- Site Title -->
         <title>@yield('title') - {{ config('app.name', 'AxionT*') }}</title>

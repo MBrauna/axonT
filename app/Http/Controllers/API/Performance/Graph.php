@@ -43,7 +43,7 @@
                     ];
                 } // foreach ($empresa as $key => $value) { ... }
 
-                return response()->json($empresa,200);
+                return response()->json($empresa,200,['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],JSON_UNESCAPED_UNICODE);
             }
             catch(Exception $error){
                 return response()->json([
@@ -51,7 +51,7 @@
                         "code"      =>  "ERROR0001",
                         "message"   =>  "Não foi possível gerar os gráficos para a empresa [".$request->idEmpresa."]",
                     ]
-                ],200);
+                ],200,['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],JSON_UNESCAPED_UNICODE);
             }
         } // public function getGraphs(Request $request) { ... }
 
