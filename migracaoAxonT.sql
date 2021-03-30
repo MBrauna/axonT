@@ -156,3 +156,37 @@ select id_pergunta_tipo,
 		usr_alt
   from backup.pergunta_tipo
  order by id_pergunta_tipo asc;
+
+
+ insert into public.agendamento(id_agendamento, tipo, id_processo_referencia, id_processo_origem, id_tipo_processo_origem, id_usuario_origem,
+ 			id_solicitante, id_processo_destino, id_tipo_processo_destino, id_usuario_destino, 
+			 periodicidade, qtde_periodicidade, data_inicial, data_final, proximo_agendamento, qtde_criado, aprova_origem, 
+			 aprova_destino, url, titulo, tipo_objeto, meio, situacao, data_cria, data_alt, usr_cria, usr_alt)
+ select id_entrada_solicitacao,
+		tipo,
+		coalesce(id_processo_referencia,1),
+		id_processo_origem,
+		id_tipo_processo_origem,
+		id_responsavel_origem,
+		id_solicitante,
+		id_processo_destino,
+		id_tipo_processo_destino,
+		id_responsavel_destino,
+		periodicidade,
+		coalesce(qtde_chamado,9999),
+		data_criacao,
+		null,
+		data_proximo_agendamento,
+		coalesce(qtde_chamado,0),
+		sla_cliente,
+		sla_fornecedor,
+		url,
+		titulo,
+		tipo_objeto,
+		meio,
+		situacao,
+		data_cria,
+		data_alt,
+		usr_cria,
+		usr_alt
+   from backup.entrada_solicitacao;

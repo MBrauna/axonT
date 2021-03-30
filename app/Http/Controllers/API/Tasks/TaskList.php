@@ -237,9 +237,9 @@
                         ->get();
 
             foreach ($lista as $conteudoLista) {
-                if(!is_null($idProccess) && (($conteudoLista->id_processo_referencia != intval($idProccess)) || ($conteudoLista->id_processo_origem != intval($idProccess)) || ($conteudoLista->id_processo_destino != intval($idProccess)))) continue;
+                /*if(!is_null($idProccess) && (($conteudoLista->id_processo_referencia != intval($idProccess)) || ($conteudoLista->id_processo_origem != intval($idProccess)) || ($conteudoLista->id_processo_destino != intval($idProccess)))) continue;
                 if(!is_null($idType) && (($conteudoLista->id_tipo_processo_origem != intval($idType)) || ($conteudoLista->id_tipo_processo_destino != intval($idType)))) continue;
-
+                */
                 // ID
                 $conteudoLista->idDesc          =   '#'.str_pad($conteudoLista->id_agendamento,4,'0',STR_PAD_LEFT);
 
