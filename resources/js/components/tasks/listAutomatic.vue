@@ -30,6 +30,21 @@
                         <template v-slot:cell(btnAprovacao)="data">
                             <aceitar-acordo :token="token" :bearer="bearer" :data="data.value"></aceitar-acordo>
                         </template>
+
+                        <template v-slot:cell(acao)="data">
+                            <div class="row">
+                                <div class="col-12 col-sm-6 col-md-6">
+                                    <b-button @click="openModal(data.value.id)" class="btn btn-sm btn-block btn-success">
+                                        <i class="fas fa-eye"></i>
+                                    </b-button>
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-6">
+                                    <button type="button" class="btn btn-sm btn-block btn-danger" @click="removeItem(data.value.id)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
                     </b-table>
                 </div>
                 <div class="card-footer bg-primary">
@@ -37,6 +52,56 @@
                 </div>
             </div>
         </div>
+
+        <b-modal
+            v-for="(curinfo, iddx) in items"
+            v-bind:key="curinfo.acao.id"
+            v-model="curinfo.acao.modal"
+            centered
+            size="xl"
+            class="bg-primary text-center"
+            :title="(items[iddx].listaQuestao.length > 0) ? 'Ver/Editar objeto de troca' : null"
+            :hide-footer='true'
+            @close="curinfo.acao.modal = false"
+        >
+            <form method="POST" action="/api/task/editAutomatic" class="row" v-if="items[iddx].listaQuestao.length > 0">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <div class="form-group" v-for="(curreg, idx) in items[iddx].listaQuestao" v-bind:key="curreg.id_agendamento_item">
+                        <label v-bind:for="'idAgendamento_' + curreg.id_agendamento_item">{{ curreg.questao }}</label>
+
+                        <input v-if="curreg.tipo == 'date'" type="date" class="form-control form-control-sm" v-bind:name="'idAgendamento_' + curreg.id_questao" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="items[iddx].listaQuestao[idx].resposta" @change="trimData" :required="curreg.obrigatorio">
+                        <div class="row" v-else-if="curreg.tipo == 'datetime'">
+                            <div class="col-12 col-sm-6 col-md-6">
+                                <input type="date" class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao + '_date'" v-bind:name="'idAgendamento_' + curreg.id_questao + '_date'" v-bind:placeholder="curreg.placeholder" @change="trimData" :required="curreg.obrigatorio">
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-6">
+                                <input type="time" class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao + '_time'" v-bind:name="'idAgendamento_' + curreg.id_questao + '_time'" v-bind:placeholder="curreg.placeholder" @change="trimData" :required="curreg.obrigatorio">
+                            </div>
+                        </div>
+                        <input v-else-if="curreg.tipo == 'text'" type="text" class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:name="'idAgendamento_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="items[iddx].listaQuestao[idx].resposta" @change="trimData" :required="curreg.obrigatorio">
+                        <input v-else-if="curreg.tipo == 'email'" type="email" class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:name="'idAgendamento_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="items[iddx].listaQuestao[idx].resposta" @change="trimData" :required="curreg.obrigatorio">
+                        <input v-else-if="curreg.tipo == 'number'" type="number" class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:name="'idAgendamento_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="items[iddx].listaQuestao[idx].resposta" @change="trimData" :required="curreg.obrigatorio">
+                        <select v-else-if="curreg.tipo === 'user'" class="form-control form-control-sm" v-bind:placeholder="curreg.placeholder" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:name="'idAgendamento_' + curreg.id_questao" v-model="items[iddx].listaQuestao[idx].resposta" :required="curreg.obrigatorio">
+                            <option>Nenhum usuário selecionado</option>
+                            <option v-for="curuser in userList" v-bind:key="curuser.id" v-bind:value="curuser.id">{{ curuser.name }}</option>
+                        </select>
+                        <textarea rows="5" v-else class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-bind:name="'idAgendamento_' + curreg.id_questao" v-model="items[iddx].listaQuestao[idx].resposta" @change="trimData" :required="curreg.obrigatorio"></textarea>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary btn-sm btn-block">
+                        Confirmar alterações
+                    </button>
+                </div>
+            </form>
+            <div class="row" v-else>
+                <div class="col-12">
+                    <h3 class="text-primary text-center font-weight-bold">
+                        Não há questões cadastradas!
+                    </h3>
+                </div>
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -47,6 +112,7 @@
         ],
         data() {
             return {
+                exemplo: false,
                 filtroConteudo:{},
                 filter:{},
                 isBusy: true,
@@ -70,13 +136,73 @@
                     { key: 'dataIniDesc',       label: 'Primeiro Agendamento',  sortable: true,   thStyle: { width: '14em !important', background: '#000A44', color: '#ffffff'},    class: 'text-center',},
                     { key: 'qtde_criado',       label: 'Qtde. Criada',          sortable: true,   thStyle: { width: '10em !important', background: '#000A44', color: '#ffffff'},  },
                     { key: 'proxAgendDesc',     label: 'Próximo agendamento',   sortable: true,   thStyle: { width: '14em !important', background: '#000A44', color: '#ffffff'},  },
-                    { key: 'acao',              label: 'Ações',                 sortable: true,   thStyle: { width: '20em !important', background: '#000A44', color: '#ffffff'},  },
+                    { key: 'acao',              label: 'Ações',                 sortable: true,   thStyle: { width: '15em !important', background: '#000A44', color: '#ffffff'},  },
                 ],
                 items: [
                 ]
             }
         },
         methods: {
+            trimData    :   function(){
+                var vm  =   this;
+                vm.items[iddx].listaQuestao.forEach((element, index) => {
+                    if(vm.items[iddx].listaQuestao[index].resposta  !=  undefined) {
+                        vm.items[iddx].listaQuestao[index].resposta =   vm.items[iddx].listaQuestao[index].resposta.trim();
+                    }
+                });
+            },
+            openModal       :   function(id) {
+                try {
+                    var vm  =   this;
+
+                    vm.items.forEach((element)  =>  {
+                        if(element.acao.id == id) {
+                            element.acao.modal  =   true;
+                        } // if(element.acao.id == id) { ... }
+                    }); // vm.items.forEach((element)  =>  { .... }
+                }
+                catch(error) {
+                    Vue.$toast.success('Ocorreu um erro durante a operação! Informe ao administrador do sistema AxonT');
+                }
+            },
+            removeItem      :   function(idAgendamento) {
+                try {
+                    var vm      = this;
+                    vm.isBusy   = true;
+
+                    var header   = {
+                        'headers'   :   {
+                            'Authorization' :   'Bearer ' + this.bearer,
+                        },
+                    };
+
+                    var request = {
+                        '_token'        :   vm.token,
+                        'idAgendamento' :   idAgendamento,
+                    };
+
+                    axios.post('/api/tasks/removeScheduling',request, header)
+                    .then(function (response) {
+                        vm.isBusy = false;
+                        if(response.status === 200) {
+                            // Atualiza os dados
+                            vm.consultaDados();
+                            Vue.$toast.success('O registro [' + idAgendamento + '] foi inativado com sucesso! Verifique.');
+                        }
+                        else {
+                            Vue.$toast.error('Não foi possível remover o registro ['+ idAgendamento +'].');
+                        }
+                    })
+                    .catch(function (error) {
+                        Vue.$toast.error('Não foi possível remover o registro ['+ idAgendamento +'].');
+                        vm.isBusy   =   false;
+                    });
+                }
+                catch(error) {
+                    Vue.$toast.error('Não foi possível completar a operação! Verifique.');
+                    location.reload();
+                }
+            },
             coletaNome      :   function(chave){
                 var retorno     =   'padrão';
                 this.fields.forEach(element => {
@@ -115,6 +241,7 @@
                 .catch(function (error) {
                     Vue.$toast.error('Erro ao consultar os dados informe ao administrador!');
                     vm.isBusy   =   false;
+                    location.reload();
                 });
             },
         },

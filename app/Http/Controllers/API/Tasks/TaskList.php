@@ -172,14 +172,23 @@
             if($idCompany == 'null') {
                 $idCompany  =   null;
             } // if($idCompany == 'null') { ... }
+            else {
+                $idCompany  =   intval($idCompany);
+            }
 
             if($idProccess == 'null') {
                 $idProccess =   null;
             } // if($idProccess == 'null') { ... } 
+            else {
+                $idProccess =   intval($idProccess);
+            }
 
             if($idType == 'null') {
                 $idType =   null;
             } // if($idType == 'null') { ... }
+            else {
+                $idType =   intval($idType);
+            }
 
             $listPermissions    =   getCompanyPermission();
             $listSubordinates   =   getSubordinates();
@@ -188,9 +197,16 @@
 
             foreach ($listPermissions as $keyCompany => $valueCompany) {
                 foreach ($valueCompany->processos as $keyProccess => $valueProccess) {
-                    if(!in_array($valueProccess->id_processo, $tmpProccess)) {
-                        array_push($tmpProccess, $valueProccess->id_processo);
-                    } // if(!in_array($valueProccess->id_processo, $tmpProccess)) { ... }
+                    if($valueCompany->id_usuario_responsavel == Auth::user()->id) {
+                        if(!in_array($valueProccess->id_processo, $tmpProccess)) {
+                            array_push($tmpProccess, $valueProccess->id_processo);
+                        } // if(!in_array($valueProccess->id_processo, $tmpProccess)) { ... }
+                    }
+                    elseif($valueProccess->id_usuario_responsavel == Auth::user()->id) {
+                        if(!in_array($valueProccess->id_processo, $tmpProccess)) {
+                            array_push($tmpProccess, $valueProccess->id_processo);
+                        } // if(!in_array($valueProccess->id_processo, $tmpProccess)) { ... }
+                    }
                 } // foreach ($valueCompany->processos as $keyProccess => $valueProccess) { ... }
             } // foreach ($listPermissions as $keyCompany => $valueCompany) { ... }
 
@@ -199,6 +215,7 @@
                     array_push($tmpSubordinates, $valueSub->id);
                 }
             } // foreach ($listSubordinates as $keySub => $valueSub) { ... }
+
 
             $listaEntradaSub=   DB::table('agendamento')
                                 ->whereIn('id_usuario_origem',$tmpSubordinates)
@@ -212,6 +229,14 @@
                                 ->orderBy('tipo','asc')
                                 ->orderBy('titulo','asc');
 
+            $listaSolic     =   DB::table('agendamento')
+                                ->whereIn('id_solicitante',$tmpSubordinates)
+                                ->where('situacao',true)
+                                ->orderBy('tipo','asc')
+                                ->orderBy('titulo','asc');
+
+
+
             $listaEntrada   =   DB::table('agendamento')
                                 ->where('id_usuario_origem',Auth::user()->id)
                                 ->where('situacao',true)
@@ -224,24 +249,53 @@
                                 ->orderBy('tipo','asc')
                                 ->orderBy('titulo','asc');
 
+            $listaPermRef   =   DB::table('agendamento')
+                                ->whereIn('id_processo_referencia',$tmpProccess)
+                                ->where('situacao',true)
+                                ->orderBy('tipo','asc')
+                                ->orderBy('titulo','asc');
+
+            $listaPermEnt   =   DB::table('agendamento')
+                                ->whereIn('id_processo_origem',$tmpProccess)
+                                ->where('situacao',true)
+                                ->orderBy('tipo','asc')
+                                ->orderBy('titulo','asc');
+
+            $listaPermSaid  =   DB::table('agendamento')
+                                ->whereIn('id_processo_destino',$tmpProccess)
+                                ->where('situacao',true)
+                                ->orderBy('tipo','asc')
+                                ->orderBy('titulo','asc');
+
             $lista  =   DB::table('agendamento')
                         ->where('id_solicitante',Auth::user()->id)
                         ->where('situacao',true)
                         ->union($listaEntrada)
                         ->union($listaSaida)
+                        ->union($listaSolic)
                         ->union($listaEntradaSub)
                         ->union($listaSaidaSub)
+                        ->union($listaPermRef)
+                        ->union($listaPermEnt)
+                        ->union($listaPermSaid)
                         ->orderBy('tipo','asc')
                         ->orderBy('titulo','asc')
                         ->distinct()
                         ->get();
 
             foreach ($lista as $conteudoLista) {
-                /*if(!is_null($idProccess) && (($conteudoLista->id_processo_referencia != intval($idProccess)) || ($conteudoLista->id_processo_origem != intval($idProccess)) || ($conteudoLista->id_processo_destino != intval($idProccess)))) continue;
-                if(!is_null($idType) && (($conteudoLista->id_tipo_processo_origem != intval($idType)) || ($conteudoLista->id_tipo_processo_destino != intval($idType)))) continue;
-                */
+
+                //if((!is_null($idProccess)) && ($idProccess != $conteudoLista->id_processo_origem)) continue;
+                //if(!is_null($idType) && ($idType != $conteudoLista->id_tipo_processo_origem)) continue;
+                
                 // ID
                 $conteudoLista->idDesc          =   '#'.str_pad($conteudoLista->id_agendamento,4,'0',STR_PAD_LEFT);
+
+                // Ação coleta os dados
+                $conteudoLista->acao            =   [
+                    'id'    =>  $conteudoLista->id_agendamento,
+                    'modal' =>  false,
+                ];
 
                 // Descrição do tipo
                 if($conteudoLista->tipo == 1) {

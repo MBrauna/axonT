@@ -31,6 +31,10 @@
             Route::any('/listAutomatic','TaskList@listAutomatic')->name('listAutomatic');
             // [tasks.changeAutomaticStatus]
             Route::any('/changeAutomaticStatus','TaskList@changeAutomaticStatus')->name('changeAutomaticStatus');
+            // [tasks.removeScheduling]
+            Route::any('/removeScheduling','TaskAutomatic@removeScheduling')->name('removeScheduling');
+            // [tasks.editAutomatic]
+            Route::any('/editAutomatic','TaskAutomatic@editAutomatic')->name('editAutomatic');
         });
 
         Route::namespace('Util')->middleware('auth:api')->prefix('util')->name('util.')->group(function(){

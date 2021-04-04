@@ -9,6 +9,7 @@
     use DB;
     use Carbon\Carbon;
 
+    use App\Models\Agendamento;
     use App\Models\Empresa;
     use App\Models\Processo;
     use App\Models\TipoProcesso;
@@ -186,4 +187,19 @@
                 return response()->json([],200);
             } // catch(Exception $error) { ... }
         }
+
+        public function removeScheduling(Request $request) {
+            try {
+                Agendamento::where('id_agendamento',$request->idAgendamento)->update([
+                    'situacao'  =>  false,
+                ]);
+
+                return response()->json([
+                    'success'   =>  200
+                ],200);
+            } // try { ... }
+            catch(Exception $error) {
+                return response()->json([],202);
+            } // catch(Exception $error) { ... }
+        } // public function removeScheduling(Request $request) { ... }
     }

@@ -136,7 +136,8 @@
                 } // catch(error) { ... }
             },
             selectProccess : function(){
-                var vm      =   this;
+                this.PREFERENCES.setProccess(this.idProccess);
+                /*var vm      =   this;
                 vm.dataType     =   [];
 
                 this.PREFERENCES.setProccess(this.idProccess);
@@ -171,6 +172,7 @@
                 catch(error) {
                     console.log(error);
                 } // catch(error) { ... }
+                */
             },
             selectType : function(){
                 var vm = this;

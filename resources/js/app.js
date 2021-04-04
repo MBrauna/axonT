@@ -14,11 +14,11 @@ import '@fortawesome/fontawesome-free/js/all.js';
 // Dados globais para construção da aplicação
 import {LAYOUT} from './global/layout.js';
 import {PREFERENCES} from './global/preferences.js';
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import VueToast from 'vue-toast-notification';
 import Vuetify from 'vuetify';
 import Vue from 'vue';
-import moment from 'moment'
+import moment from 'moment';
 
 // Declaração de dados globais para a aplicação
 Vue.prototype.LAYOUT        =   LAYOUT;
@@ -26,8 +26,8 @@ Vue.prototype.PREFERENCES   =   PREFERENCES;
 Vue.prototype.moment        =   moment;
 Vue.use(VueToast);
 Vue.use(Vuetify);
-Vue.use(BootstrapVue)
-Vue.use(IconsPlugin)
+Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
 
 // -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- //
 
