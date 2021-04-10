@@ -168,6 +168,8 @@
             $idCompany  =   $request->input('idCompany');
             $idProccess =   $request->input('idProccess');
             $idType     =   $request->input('idType');
+            $minorHour  =   Carbon::now()->toDateString();
+            $periodiclist   =   getAllPeriodics();
 
             if($idCompany == 'null') {
                 $idCompany  =   null;
@@ -304,6 +306,9 @@
                 else {
                     $conteudoLista->tipoDesc    =   'Saída';
                 }
+
+                $conteudoLista->menorHora       =   $minorHour;
+                $conteudoLista->allPeriodics    =   $periodiclist;
 
                 $conteudoLista->procRef         =   (Processo::where('id_processo',$conteudoLista->id_processo_referencia)->first())->descricao ?? 'Não identificado';
                 $conteudoLista->procOrigem      =   (Processo::where('id_processo',$conteudoLista->id_processo_origem)->first())->descricao ?? 'Não identificado';

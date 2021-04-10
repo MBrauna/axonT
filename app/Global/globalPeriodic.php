@@ -25,3 +25,27 @@
             }
         }
     }
+
+    if(!function_exists('getAllPeriodics')){
+        function getAllPeriodics(){
+            try {
+                return [
+                    (object)[
+                        'id'    =>  1,
+                        'name'  =>  'dia(s)'
+                    ],
+                    (object)[
+                        'id'    =>  4,
+                        'name'  =>  'mes(es)'
+                    ],
+                    (object)[
+                        'id'    =>  7,
+                        'name'  =>  'ano(s)'
+                    ]
+                ];
+            }
+            catch(Exception $error) {
+                return [];
+            }
+        }
+    }

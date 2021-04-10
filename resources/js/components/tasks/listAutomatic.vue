@@ -65,6 +65,38 @@
             @close="curinfo.acao.modal = false"
         >
             <form method="POST" action="/api/task/editAutomatic" class="row" v-if="items[iddx].listaQuestao.length > 0">
+                <!-- Dados do entregável -->
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="form-group">
+                        <label for="entregavel">Entregável:</label>
+                        <input class="form-control form-control-sm" type="text" name="entregavel" minlength="10" maxlength="250" id="entregavel" placeholder="Informe o título do entregável" v-model="curinfo.titulo" @change="trimData()" required>
+                    </div>
+                </div>
+                <!-- Dados do entregável -->
+
+                <!-- Dados de periodicidade -->
+                <div class="col-12 col-sm-12 col-md-6">
+                    <div class="form-group">
+                        <label for="periodicidade">Periodicidade:</label>
+                        <select class="form-control form-control-sm" id="periodicidade" v-model="curinfo.periodicidade" required>
+                            <option value="">Nenhum período escolhido</option>
+                            <option v-for="conteudo in curinfo.allPeriodics" v-bind:key="conteudo.id" v-bind:value="conteudo.id">{{ conteudo.name }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6">
+                    <div class="form-group">
+                        <label for="qtde_periodicidade">Tempo {{ (curinfo.periodicidade == undefined || curinfo.periodicidade == 'null' || curinfo.periodicidade == null || curinfo.periodicidade == '') ? '' : 'em ' + curinfo.allPeriodics.find(element => curinfo.periodicidade == element.id)['name'] }}:</label>
+                        <input type="number" min="1" max="9999" class="form-control form-control-sm" id="qtde_periodicidade" name="qtde_periodicidade" v-bind:value="curinfo.qtde_periodicidade" required>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="periodicidade_data">Data de início:</label>
+                        <input type="datetime" v-bind:min="curinfo.menorHora" class="form-control form-control-sm" id="periodicidade_data" name="periodicidade_data" v-bind:value="curinfo.data_inicial" required>
+                    </div>
+                </div>
+                <!-- Dados de periodicidade -->
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                     <div class="form-group" v-for="(curreg, idx) in items[iddx].listaQuestao" v-bind:key="curreg.id_agendamento_item">
                         <label v-bind:for="'idAgendamento_' + curreg.id_agendamento_item">{{ curreg.questao }}</label>
@@ -89,7 +121,7 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary btn-sm btn-block">
+                    <button type="buttom" class="btn btn-primary btn-sm btn-block">
                         Confirmar alterações
                     </button>
                 </div>
@@ -97,7 +129,7 @@
             <div class="row" v-else>
                 <div class="col-12">
                     <h3 class="text-primary text-center font-weight-bold">
-                        Não há questões cadastradas!
+                        <i class="fas fa-frown-open"></i> Não há questões cadastradas!
                     </h3>
                 </div>
             </div>
@@ -123,7 +155,7 @@
                 currentPage: 1,
                 totalRows: 0,
                 fields: [
-                    { key: 'idDesc',            label: '#ID',                   sortable: true,   thStyle: { width: '5em !important', background: '#000A44', color: '#ffffff'},  },
+                    { key: 'idDesc',            label: '#ID',                   sortable: true,   thStyle: { width: '5em !important',  background: '#000A44', color: '#ffffff'},  },
                     { key: 'btnAprovacao',      label: 'Acordo',                sortable: true,   thStyle: { width: '20em !important', background: '#000A44', color: '#ffffff'},    stickyColumn: true, },
                     { key: 'tipoDesc',          label: 'Tipo',                  sortable: true,   thStyle: { width: '14em !important', background: '#000A44', color: '#ffffff'}, },
                     { key: 'procOrigem',        label: 'Processo Origem',       sortable: true,   thStyle: { width: '14em !important', background: '#000A44', color: '#ffffff'}, },
@@ -233,10 +265,10 @@
                     if(response.status === 200) {
                         vm.items    =   response.data;
                         vm.totalRows=   vm.items.length;
-                    }
+                    } // if(response.status === 200) { ... }
                     else {
                         Vue.$toast.error('Não foi possível obter a lista de objetos de troca.');
-                    }
+                    } // else { ... }
                 })
                 .catch(function (error) {
                     Vue.$toast.error('Erro ao consultar os dados informe ao administrador!');
