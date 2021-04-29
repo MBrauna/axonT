@@ -41,4 +41,8 @@
             } // else { ... }
 
         } // public function listAutomatic(Request $request) { ... }
+
+        public function editAutomatic(Request $request) {
+            dd($request);
+        } // public function editAutomatic(Request $request) { ... }
     }

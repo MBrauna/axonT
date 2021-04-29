@@ -64,7 +64,7 @@
             :hide-footer='true'
             @close="curinfo.acao.modal = false"
         >
-            <form method="POST" action="/api/task/editAutomatic" class="row" v-if="items[iddx].listaQuestao.length > 0">
+            <form method="POST" action="/task/editAutomatic" class="row was-validated" v-if="items[iddx].listaQuestao.length > 0">
                 <!-- Dados do entregável -->
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="form-group">
@@ -90,10 +90,16 @@
                         <input type="number" min="1" max="9999" class="form-control form-control-sm" id="qtde_periodicidade" name="qtde_periodicidade" v-bind:value="curinfo.qtde_periodicidade" required>
                     </div>
                 </div>
-                <div class="col-12">
+                <div class="col-12 col-sm-6">
                     <div class="form-group">
                         <label for="periodicidade_data">Data de início:</label>
-                        <input type="datetime" v-bind:min="curinfo.menorHora" class="form-control form-control-sm" id="periodicidade_data" name="periodicidade_data" v-bind:value="curinfo.data_inicial" required>
+                        <input type="date" v-bind:min="curinfo.menorHora" class="form-control form-control-sm" id="periodicidade_data" name="periodicidade_data" v-bind:value="curinfo.data_inicial" required>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <div class="form-group">
+                        <label for="periodicidade_data">Hora de início:</label>
+                        <input type="time" class="form-control form-control-sm" id="periodicidade_data" name="periodicidade_data" v-bind:value="moment(String(curinfo.data_inicial)).format('hh:mm')" required>
                     </div>
                 </div>
                 <!-- Dados de periodicidade -->
@@ -101,23 +107,23 @@
                     <div class="form-group" v-for="(curreg, idx) in items[iddx].listaQuestao" v-bind:key="curreg.id_agendamento_item">
                         <label v-bind:for="'idAgendamento_' + curreg.id_agendamento_item">{{ curreg.questao }}</label>
 
-                        <input v-if="curreg.tipo == 'date'" type="date" class="form-control form-control-sm" v-bind:name="'idAgendamento_' + curreg.id_questao" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="items[iddx].listaQuestao[idx].resposta" @change="trimData" :required="curreg.obrigatorio">
+                        <input v-if="curreg.tipo == 'date'" type="date" class="form-control form-control-sm" v-bind:name="'idAgendamento_' + curreg.id_questao" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" @change="trimData" :required="curreg.obrigatorio" v-bind:value="curreg.resposta">
                         <div class="row" v-else-if="curreg.tipo == 'datetime'">
                             <div class="col-12 col-sm-6 col-md-6">
-                                <input type="date" class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao + '_date'" v-bind:name="'idAgendamento_' + curreg.id_questao + '_date'" v-bind:placeholder="curreg.placeholder" @change="trimData" :required="curreg.obrigatorio">
+                                <input type="date" class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao + '_date'" v-bind:name="'idAgendamento_' + curreg.id_questao + '_date'" v-bind:placeholder="curreg.placeholder" :required="curreg.obrigatorio" v-bind:value="moment(String(curreg.resposta)).format('L')">
                             </div>
                             <div class="col-12 col-sm-6 col-md-6">
-                                <input type="time" class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao + '_time'" v-bind:name="'idAgendamento_' + curreg.id_questao + '_time'" v-bind:placeholder="curreg.placeholder" @change="trimData" :required="curreg.obrigatorio">
+                                <input type="time" class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao + '_time'" v-bind:name="'idAgendamento_' + curreg.id_questao + '_time'" v-bind:placeholder="curreg.placeholder" :required="curreg.obrigatorio" v-bind:value="moment(String(items[iddx].listaQuestao[idx].resposta)).format('hh:mm')">
                             </div>
                         </div>
-                        <input v-else-if="curreg.tipo == 'text'" type="text" class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:name="'idAgendamento_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="items[iddx].listaQuestao[idx].resposta" @change="trimData" :required="curreg.obrigatorio">
-                        <input v-else-if="curreg.tipo == 'email'" type="email" class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:name="'idAgendamento_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="items[iddx].listaQuestao[idx].resposta" @change="trimData" :required="curreg.obrigatorio">
-                        <input v-else-if="curreg.tipo == 'number'" type="number" class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:name="'idAgendamento_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-model="items[iddx].listaQuestao[idx].resposta" @change="trimData" :required="curreg.obrigatorio">
-                        <select v-else-if="curreg.tipo === 'user'" class="form-control form-control-sm" v-bind:placeholder="curreg.placeholder" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:name="'idAgendamento_' + curreg.id_questao" v-model="items[iddx].listaQuestao[idx].resposta" :required="curreg.obrigatorio">
+                        <input v-else-if="curreg.tipo == 'text'" type="text" class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:name="'idAgendamento_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-bind:value="items[iddx].listaQuestao[idx].resposta" :required="curreg.obrigatorio">
+                        <input v-else-if="curreg.tipo == 'email'" type="email" class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:name="'idAgendamento_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-bind:value="items[iddx].listaQuestao[idx].resposta" :required="curreg.obrigatorio">
+                        <input v-else-if="curreg.tipo == 'number'" type="number" class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:name="'idAgendamento_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-bind:value="items[iddx].listaQuestao[idx].resposta" :required="curreg.obrigatorio">
+                        <select v-else-if="curreg.tipo === 'user'" class="form-control form-control-sm" v-bind:placeholder="curreg.placeholder" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:name="'idAgendamento_' + curreg.id_questao" v-bind:value="items[iddx].listaQuestao[idx].resposta" :required="curreg.obrigatorio">
                             <option>Nenhum usuário selecionado</option>
                             <option v-for="curuser in userList" v-bind:key="curuser.id" v-bind:value="curuser.id">{{ curuser.name }}</option>
                         </select>
-                        <textarea rows="5" v-else class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-bind:name="'idAgendamento_' + curreg.id_questao" v-model="items[iddx].listaQuestao[idx].resposta" @change="trimData" :required="curreg.obrigatorio"></textarea>
+                        <textarea rows="5" v-else class="form-control form-control-sm" v-bind:id="'idAgendamento_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-bind:name="'idAgendamento_' + curreg.id_questao" v-bind:value="items[iddx].listaQuestao[idx].resposta" :required="curreg.obrigatorio"></textarea>
                     </div>
                 </div>
                 <div class="col-12">

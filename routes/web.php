@@ -37,9 +37,7 @@
 
             // [tasks.listAutomatic] - Sistema para troca de objetos
             Route::any('/listAutomatic','ListSS@listAutomatic')->name('listAutomatic');
+            // [task.editAutomatic]
+            Route::any('/editAutomatic','ListSS@editAutomatic')->name('editAutomatic');
         }); // Route::namespace('Task')->prefix('task')->name('task.')->group(function(){ ... });
     }); // Route::namespace('Page')->middleware(['auth'])->group(function(){ ... });
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
