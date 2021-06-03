@@ -122,12 +122,10 @@ class Reconstrucao extends Migration
             $table->foreign('id_empresa')->references('id_empresa')->on('empresa');
         });
 
-        Schema::create('usuario_config', function (Blueprint $table) {
-            $table->bigIncrements('id_usuario_config');
+        Schema::create('usuario_processo', function (Blueprint $table) {
+            $table->bigIncrements('id_usuario_processo');
             $table->integer('id_usuario');
             $table->integer('id_processo');
-            $table->integer('id_superior')->nullable();
-            $table->integer('id_perfil')->nullable();
             $table->dateTime('data_cria');
             $table->dateTime('data_alt');
             $table->integer('usr_cria');
@@ -135,16 +133,67 @@ class Reconstrucao extends Migration
 
             $table->index(['id_usuario']);
             $table->index(['id_processo']);
-            $table->index(['id_perfil']);
-            $table->index(['id_superior']);
-    
-            $table->unique(['id_usuario','id_processo','id_perfil','id_superior']);
 
-            $table->foreign('id_processo')->references('id_processo')->on('processo');
-            $table->foreign('id_perfil')->references('id_perfil')->on('perfil');
+            $table->unique(['id_usuario','id_processo']);
+
             $table->foreign('id_usuario')->references('id')->on('users');
-            $table->foreign('id_superior')->references('id')->on('users');
+            $table->foreign('id_processo')->references('id_processo')->on('processo');
         });
+
+
+        Schema::create('configuracao', function (Blueprint $table) {
+            $table->bigIncrements('id_configuracao');
+            $table->text('nome');
+            $table->boolean('situacao')->default(true);
+            $table->dateTime('data_cria');
+            $table->dateTime('data_alt');
+            $table->integer('usr_cria');
+            $table->integer('usr_alt');
+
+            $table->index(['nome']);
+            $table->index(['situacao']);
+        });
+
+        Schema::create('usuario_config', function (Blueprint $table) {
+            $table->bigIncrements('id_usuario_config');
+            $table->integer('id_usuario');
+            $table->integer('id_configuracao');
+            $table->dateTime('data_cria');
+            $table->dateTime('data_alt');
+            $table->integer('usr_cria');
+            $table->integer('usr_alt');
+
+            $table->index(['id_usuario']);
+            $table->index(['id_configuracao']);
+    
+            $table->unique(['id_usuario','id_configuracao']);
+
+            $table->foreign('id_usuario')->references('id')->on('users');
+            $table->foreign('id_configuracao')->references('id_configuracao')->on('configuracao');
+        });
+
+
+        Schema::create('usuario_perfil', function (Blueprint $table) {
+            $table->bigIncrements('id_usuario_perfil');
+            $table->integer('id_usuario');
+            $table->integer('id_perfil');
+            $table->integer('id_processo');
+            $table->dateTime('data_cria');
+            $table->dateTime('data_alt');
+            $table->integer('usr_cria');
+            $table->integer('usr_alt');
+
+            $table->index(['id_usuario']);
+            $table->index(['id_perfil']);
+            $table->index(['id_processo']);
+    
+            $table->unique(['id_usuario','id_perfil','id_processo']);
+
+            $table->foreign('id_usuario')->references('id')->on('users');
+            $table->foreign('id_perfil')->references('id_perfil')->on('perfil');
+            $table->foreign('id_processo')->references('id_processo')->on('processo');
+        });
+
 
         Schema::create('situacao', function (Blueprint $table) {
             $table->bigIncrements('id_situacao');

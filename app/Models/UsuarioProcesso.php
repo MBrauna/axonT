@@ -4,11 +4,11 @@
 
     use Illuminate\Database\Eloquent\Model;
 
-    class UsuarioConfig extends Model
+    class UsuarioProcesso extends Model 
     {
-        protected $table        =   'usuario_config';
-        protected $primaryKey   =   'id_usuario_config';
-        protected $fillable     =   ['id_usuario','id_configuracao','data_alt','usr_alt'];
+        protected $table        =   'usuario_processo';
+        protected $primaryKey   =   'id_usuario_processo';
+        protected $fillable     =   ['id_usuario','id_processo','data_alt','usr_alt'];
         protected $hidden       =   [];
         protected $casts        =   [];
         protected $attributes   =   [];
