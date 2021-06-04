@@ -5,13 +5,14 @@
 
 
     Route::namespace('API')->group(function(){
+
         Route::namespace('Auth')->prefix('auth')->name('auth.')->group(function(){
             // [auth.login]
             Route::any('/login','Login@verifyAccess')->name('login');
         });
 
         Route::namespace('Performance')->middleware('auth:api')->prefix('performance')->name('performance.')->group(function(){
-            Route::post('/graph','Graph@getGraphs')->name('graph');
+            Route::post('/graph','PerformanceChat@getChart')->name('graph');
         });
 
         Route::namespace('Tasks')->middleware('auth:api')->prefix('tasks')->name('tasks.')->group(function(){
@@ -39,7 +40,7 @@
 
         Route::namespace('Util')->middleware('auth:api')->prefix('util')->name('util.')->group(function(){
             // [util.company]
-            Route::any('/company','Company@getCompany')->name('company');
+            Route::any('/company','AccessCompany@getCompanies')->name('company');
         });
 
     });

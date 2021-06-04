@@ -1,36 +1,66 @@
 <template>
-    <div class="row d-flex justify-content-center">
-        <div v-for="curreg in graphs" v-bind:key="curreg.content.id" class="col-12 col-sm-12 col-md-6" v-bind:id="'chart-' + idCompany + '-' + curreg.content.id">
+    <div class="row">
+        <div class="col-12" v-if="loading">
+            <center><logo :size="100"></logo></center>
+        </div>
+
+        <div v-else class="col-12">
+            <div class="row d-flex justify-content-center">
+                <div class="col-12 col-sm-6 col-md-6" v-for="curreg in content" v-bind:key="curreg.content.id">
+                    <apexchart v-bind:height="curreg.chart.height" v-bind:type="curreg.chart.type" :options="curreg" :series="curreg.series"></apexchart>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-    import ApexCharts from 'apexcharts';
-    
+    import VueApexCharts from 'vue-apexcharts';
+
     export default {
-        props: ['token','bearer','auth','graphs','idCompany'],
+        props: ['token','bearer','company'],
         components: {
-            apexchart: ApexCharts,
+            apexchart: VueApexCharts,
         },
         data() {
             return {
-                loading: false,
+                loading: true,
+                content: [],
             }
         },
         methods: {
-            startChart      :   function(curreg){
-                var vm      =   this;
-                var chart   =   new ApexCharts(document.querySelector('#chart-' + idCompany + '-' + curreg.content.id));
-
-                chart.render();
-            }, // startChart      :   function(contentchart){ ... }
             chartAtt        :   function(){
-                var vm      =   this;
+                try {
+                    var vm      =   this;
+                    vm.loading  =   true;
+                    vm.header   = {
+                        'headers'   :   {
+                            'Authorization' :   'Bearer ' + this.bearer,
+                        },
+                    };
 
-                vm.graphs.forEach(element => {
-                    vm.startChart(element);
-                }); // vm.graphs.forEach(element => { ...});
+                    vm.request = {
+                        '_token'            :   vm.token,
+                        'idCompany'         :   vm.company,
+                    };
+
+                    axios.post('/api/performance/graph',vm.request,vm.header)
+                    .then(function (response) {
+                        if(response.status === 200) {
+                            vm.content  =   response.data;
+                            vm.loading  =   false;
+                        }
+                        else {
+                            vm.loading  =   true;
+                        }
+                    })
+                    .catch(function(retorno){
+                        Vue.$toast.error('Não foi possível obter os dados da requisição! Verifique permissões.');
+                    });
+                } // try { ... }
+                catch(error) {
+                    Vue.$toast.error('Erro desconhecido durante a execução! Verifique com o administrador do sistema.');
+                } // catch(error) { ... }
             }, // chartAtt        :   function(){ ... }
             
             

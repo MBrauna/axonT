@@ -122,22 +122,22 @@ class Reconstrucao extends Migration
             $table->foreign('id_empresa')->references('id_empresa')->on('empresa');
         });
 
-        Schema::create('usuario_processo', function (Blueprint $table) {
-            $table->bigIncrements('id_usuario_processo');
+        Schema::create('usuario_empresa', function (Blueprint $table) {
+            $table->bigIncrements('id_usuario_empresa');
             $table->integer('id_usuario');
-            $table->integer('id_processo');
+            $table->integer('id_empresa');
             $table->dateTime('data_cria');
             $table->dateTime('data_alt');
             $table->integer('usr_cria');
             $table->integer('usr_alt');
 
             $table->index(['id_usuario']);
-            $table->index(['id_processo']);
+            $table->index(['id_empresa']);
 
-            $table->unique(['id_usuario','id_processo']);
+            $table->unique(['id_usuario','id_empresa']);
 
             $table->foreign('id_usuario')->references('id')->on('users');
-            $table->foreign('id_processo')->references('id_processo')->on('processo');
+            $table->foreign('id_empresa')->references('id_empresa')->on('empresa');
         });
 
 

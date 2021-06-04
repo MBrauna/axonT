@@ -191,9 +191,6 @@
                     };
                     vm.request = {
                         '_token'    :   vm.token,
-                        'idCompany' :   vm.idCompany,
-                        'idProccess':   vm.idProccess,
-                        'idType'    :   vm.idType,
                     };
 
                     axios.post('/api/util/company',vm.request,vm.header)

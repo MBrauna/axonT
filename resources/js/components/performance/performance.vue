@@ -15,14 +15,28 @@
             </div>
         </div>
 
-        <div v-else v-for="curreg in content" v-bind:key="curreg.id_empresa" class="card shadow mt-3 mb-3 border-primary bg-white">
-            <div class="card-header text-center bg-primary font-weight-bold text-light">
-                {{ curreg.descricao }}
+        <div v-else>
+            <div v-if="content == null || content.length <= 0">
+                <div class="card shadow mt-3 mb-3 border-primary bg-white">
+                    <div class="card-header text-center bg-primary font-weight-bold text-light">
+                        Nenhuma informação disponível
+                    </div>
+                    <div class="card-body">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-12 text-center">
+                                <span>Verifique permissões e tente novamente.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="row d-flex justify-content-center">
-                    <div v-for="datacurreg in curreg.graphs" class="col-12 col-sm-12 col-md-6" v-bind:key="datacurreg.content.id" >
-                        <apexchart v-bind:height="datacurreg.chart.height" v-bind:type="datacurreg.chart.type" :options="datacurreg" :series="datacurreg.series"></apexchart>
+            <div v-else v-for="curreg in content" v-bind:key="curreg.id_empresa" class="card shadow mt-3 mb-3 border-primary bg-white">
+                <div class="card-header text-center bg-primary font-weight-bold text-light">
+                    {{ curreg.descricao }}
+                </div>
+                <div class="card-body">
+                    <div class="row d-flex justify-content-center">
+                        <chart-axont :company="curreg.id_empresa" :token="token" :bearer="bearer"></chart-axont>
                     </div>
                 </div>
             </div>
@@ -31,13 +45,9 @@
 </template>
 
 <script>
-    import VueApexCharts from 'vue-apexcharts';
-
     export default {
         props: ['token','bearer'],
-        components: {
-            apexchart: VueApexCharts,
-        },
+        components: {},
         data() {
             return {
                 loading: false,
@@ -71,7 +81,7 @@
                         'idType'            :   vm.PREFERENCES.getType(),
                     };
 
-                    axios.post('/api/performance/graph',vm.request,vm.header)
+                    axios.post('/api/util/company',vm.request,vm.header)
                     .then(function (response) {
                         if(response.status === 200) {
                             vm.content  =   response.data;
@@ -79,13 +89,11 @@
                         vm.loading  =   false;
                     })
                     .catch(function(retorno){
-                        console.log('Ocorreu um erro desconhecido! Verifique.');
-                        console.log(retorno);
+                        Vue.$toast.error('Não foi possível obter os dados da requisição! Verifique permissões.');
                     });
                 } // try { ... }
                 catch(error) {
-                    console.log('Ocorreu um erro desconhecido! Verifique.');
-                    console.log(error);
+                    Vue.$toast.error('Erro desconhecido durante a execução! Verifique com o administrador do sistema.');
                 } // catch(error) { ... }
             },
         },
