@@ -6,7 +6,7 @@
 
         <div v-else class="col-12">
             <div class="row d-flex justify-content-center">
-                <div class="col-12 col-sm-6 col-md-6" v-for="curreg in content" v-bind:key="curreg.content.id">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6" v-for="curreg in content" v-bind:key="curreg.content.id">
                     <apexchart v-bind:height="curreg.chart.height" v-bind:type="curreg.chart.type" :options="curreg" :series="curreg.series"></apexchart>
                 </div>
             </div>

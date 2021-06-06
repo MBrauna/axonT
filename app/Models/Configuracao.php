@@ -8,7 +8,7 @@
     {
         protected $table        =   'configuracao';
         protected $primaryKey   =   'id_configuracao';
-        protected $fillable     =   ['nome', 'situacao','data_alt','usr_alt'];
+        protected $fillable     =   ['nome', 'id_tipo_configuracao','situacao','data_alt','usr_alt'];
         protected $hidden       =   [];
         protected $casts        =   [];
         protected $attributes   =   [

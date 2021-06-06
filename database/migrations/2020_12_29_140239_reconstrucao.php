@@ -140,10 +140,24 @@ class Reconstrucao extends Migration
             $table->foreign('id_empresa')->references('id_empresa')->on('empresa');
         });
 
+        Schema::create('tipo_configuracao', function (Blueprint $table) {
+            $table->bigIncrements('id_tipo_configuracao');
+            $table->text('nome');
+            $table->boolean('situacao')->default(true);
+            $table->dateTime('data_cria');
+            $table->dateTime('data_alt');
+            $table->integer('usr_cria');
+            $table->integer('usr_alt');
+
+            $table->index(['nome']);
+            $table->index(['situacao']);
+        });
+
 
         Schema::create('configuracao', function (Blueprint $table) {
             $table->bigIncrements('id_configuracao');
             $table->text('nome');
+            $table->integer('id_tipo_configuracao');
             $table->boolean('situacao')->default(true);
             $table->dateTime('data_cria');
             $table->dateTime('data_alt');

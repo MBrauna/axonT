@@ -13,9 +13,22 @@
 
         Route::namespace('Performance')->middleware('auth:api')->prefix('performance')->name('performance.')->group(function(){
             Route::post('/graph','PerformanceChat@getChart')->name('graph');
-        });
+        }); // Route::namespace('Performance')->middleware('auth:api')->prefix('performance')->name('performance.')->group(function(){ ... })
+
+        Route::namespace('Util')->middleware('auth:api')->prefix('util')->name('util.')->group(function(){
+            // [util.company]
+            Route::any('/company','AccessCompany@getCompanies')->name('company');
+            // [util.tasksOptions]
+            Route::any('/getUserOptions','GetUserOptions@getOptions')->name('getUserOptions');
+        }); // Route::namespace('Util')->middleware('auth:api')->prefix('util')->name('util.')->group(function(){ ... }
 
         Route::namespace('Tasks')->middleware('auth:api')->prefix('tasks')->name('tasks.')->group(function(){
+            // 
+
+
+
+
+
             // [tasks.search]
             Route::any('/verifyTaskAutomatic','TaskAutomatic@verifyTaskAutomatic')->name('verifyTaskAutomatic');
             // [tasks.resp]
@@ -38,9 +51,6 @@
             Route::any('/editAutomatic','TaskAutomatic@editAutomatic')->name('editAutomatic');
         });
 
-        Route::namespace('Util')->middleware('auth:api')->prefix('util')->name('util.')->group(function(){
-            // [util.company]
-            Route::any('/company','AccessCompany@getCompanies')->name('company');
-        });
+        
 
     });
