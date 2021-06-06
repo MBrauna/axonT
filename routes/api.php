@@ -20,6 +20,8 @@
             Route::any('/company','AccessCompany@getCompanies')->name('company');
             // [util.tasksOptions]
             Route::any('/getUserOptions','GetUserOptions@getOptions')->name('getUserOptions');
+            // [util.tasksOptions]
+            Route::any('/getPermission','GetUserOptions@getPermission')->name('getPermission');
         }); // Route::namespace('Util')->middleware('auth:api')->prefix('util')->name('util.')->group(function(){ ... }
 
         Route::namespace('Tasks')->middleware('auth:api')->prefix('tasks')->name('tasks.')->group(function(){

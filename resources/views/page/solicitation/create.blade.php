@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','Criar solicitação')
+@section('title','Selecione uma opção')
 
 @section('body')
     @isset($data)

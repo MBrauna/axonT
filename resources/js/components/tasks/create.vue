@@ -1,40 +1,37 @@
 <template>
     <div class="card border border-primary shadow">
         <div class="card-header bg-primary text-white text-center">
-            Criação de solicitação de serviços e troca de objetos
+            Escolha uma opção abaixo:
         </div>
         <div class="card-body">
-            <div class="row" v-if="step == 0">
-                <div v-bind:class="'col-' + (12/typeTasks.length)" v-for="curreg in typeTasks" v-bind:key="curreg.value" >
-                    <button v-bind:class="'btn btn-s btn-block ' + (choice == curreg.value ? 'btn-primary' : 'btn-outline-primary')" @click="selectChoice(curreg)" :disabled="curreg.disabled">
-                        {{ curreg.title }}
-                    </button>
+            <div v-if="loading" class="row">
+                <div class="col-12">
+                    <center><logo :size="100"></logo></center>
                 </div>
             </div>
-
-            <div class="row" v-if="step == 1">
-                <div class="col-12">
-                    <button class="btn btn-sm btn-block btn-primary" @click="reselectChoice()">
-                        <i class="fas fa-reply-all"></i>
-                        <span>Desfazer seleção</span>
-                        <i class="fas fa-reply-all"></i>
-                    </button>
+            <div v-else class="row">
+                <div v-if="content.length <= 0" class="col-12 d-flex justify-content-center text-center">
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 class="text-center text-primary font-weight-bold">
+                                Usuário não possui permissão!
+                            </h3>
+                            <br>
+                        </div>
+                        <div class="col-12">
+                            <span>Verifique com o administrador do sistema</span>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- Conteúdo do sistema -->
-                <div class="col-12" v-if="choice == 0">
-                    <create-task-manual
-                        :token='token'
-                        :bearer='bearer'
-                    ></create-task-manual>
+                <div v-else class="col-12 col-sm-6 col-md-6 col-lg-6" v-for="curreg in content" v-bind:key="curreg.id_usuario_config">
+                    <form method="POST" action="">
+                        <input type="hidden" name="_token" v-bind:value="token">
+                        <input v-if="curreg.permission"  type="hidden" name="id_configuracao" v-bind:value="curreg.id_configuracao">
+                        <button v-bind:type="curreg.permission ? 'submit' : 'button'" class="btn btn-outline-primary btn-block btn-sm" :disabled="!curreg.permission">
+                            {{ curreg.configData.titulo }}
+                        </button>
+                    </form>
                 </div>
-                <div class="col-12" v-if="choice == 1">
-                    <create-task-automatic
-                        :token='token'
-                        :bearer='bearer'
-                    ></create-task-automatic>
-                </div>
-                <!-- Conteúdo do sistema -->
             </div>
         </div>
         <div class="card-footer text-center">
@@ -55,21 +52,11 @@
         data() {
             return {
                 'yearCopright'  :   new Date().getFullYear(),
-                'typeTasks'     :   [
-                    {
-                        'title'     :   'Solicitação de serviço',
-                        'value'     :   0,
-                        'disabled'  :   false,
-                    },
-                    {
-                        'title' :   'Troca de objetos',
-                        'value' :   1,
-                        'disabled'  :   true,
-                    }
-                ],
                 'typeChoice'    :   null,
                 'choice'        :   -1,
                 'step'          :   0,
+                'content'       :   [],
+                'loading'       :   true,
             }
         },
         methods: {
@@ -88,6 +75,10 @@
             initFilter       :   function(){
                 try {
                     var vm      =   this;
+
+                    vm.loading  =   true;
+                    vm.content  =   [];
+
                     var header   = {
                         'headers'   :   {
                             'Authorization' :   'Bearer ' + this.bearer,
@@ -97,24 +88,18 @@
                         '_token'            :   vm.token,
                     };
 
-                    axios.post('/api/tasks/verifyTaskAutomatic',request,header)
+                    axios.post('/api/util/getUserOptions',request,header)
                     .then(function (response) {
-                        vm.typeTasks.forEach(function(element, index){
-                            if(element.value == 1) {
-                                vm.typeTasks[index].disabled    =   response.verificador;
-                                console.log(response.verificador);
-                            }
-                        }); // vm.typeTasks.forEach(function(element){ ... }
+                        vm.loading  =   false;
+                        vm.content  =   response.data;
 
                     })
                     .catch(function(retorno){
-                        console.log('Ocorreu um erro desconhecido! Verifique.');
-                        console.log(retorno);
+                        vm.loading  =   false;
                     });
                 } // try { ... }
                 catch(error) {
-                    console.log('Ocorreu um erro desconhecido! Verifique.');
-                    console.log(error);
+                    vm.loading  =   false;
                 } // catch(error) { ... }
             }
         },

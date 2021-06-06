@@ -11,6 +11,7 @@
 
     use App\Models\Chamado;
     use App\Models\ChamadoItem;
+    use App\Models\Configuracao;
     use App\Models\Empresa;
     use App\Models\Processo;
     use App\Models\Questao;
@@ -23,17 +24,28 @@
     {
         public function startPage(Request $request) {
             try {
-                $success    =   $request->input('success');
-                $data       =   $request->input('data');
+                $typeData   =   $request->input('id_configuracao');
 
-                if(!is_null($success) && !is_null($data)){
-                    return view('page.solicitation.create',[
-                        'success'   =>  $success,
-                        'data'      =>  (object)$data,
-                    ]);
-                } // if(!is_null($success) && !is_null($data)){ ... }
-                else {
+                if(is_null($typeData)) {
+                    // Se não tiver um código de configuração então é o primeiro acesso, envia para a página de cadastro
                     return view('page.solicitation.create');
+                } // if(is_null($typeData)) { ... }
+                else {
+                    $typeData   =   intval($typeData);
+
+                    switch ($typeData) {
+                        case 1:
+                            // Configuração para ID=1 --> Solicitação de serviço
+                            return view('page.solicitation.createService');
+                            break;
+                        case 2:
+                            // Configuração para ID=1 --> Troca de objetos
+                            return view('page.solicitation.createObject');
+                            break;
+                        default:
+                            return view('page.solicitation.create');
+                            break;
+                    } // switch ($typeData) { ... }
                 } // else { ... }
             }
             catch(Exception $error) {

@@ -157,7 +157,8 @@ class Reconstrucao extends Migration
         Schema::create('configuracao', function (Blueprint $table) {
             $table->bigIncrements('id_configuracao');
             $table->text('nome');
-            $table->integer('id_tipo_configuracao');
+            $table->text('titulo')->nullable();
+            $table->integer('id_tipo_configuracao')->nullable();
             $table->boolean('situacao')->default(true);
             $table->dateTime('data_cria');
             $table->dateTime('data_alt');
