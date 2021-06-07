@@ -3,7 +3,8 @@
 @section('title','Criar solicitação de serviço')
 
 @section('body')
-    <form method="GET">
+    <form method="POST">
+        @csrf
         <button class="btn btn-sm btn-block btn-primary" type="submit">
             <i class="fas fa-reply-all"></i>
             <span>Desfazer seleção</span>

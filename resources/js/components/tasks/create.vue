@@ -96,10 +96,12 @@
                     })
                     .catch(function(retorno){
                         vm.loading  =   false;
+                        Vue.$toast.error('Não foi possível coletar as opções de usuário.');
                     });
                 } // try { ... }
                 catch(error) {
                     vm.loading  =   false;
+                    Vue.$toast.error('Erro, não foi possível iniciar o sistema.');
                 } // catch(error) { ... }
             }
         },
