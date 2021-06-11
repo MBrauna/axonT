@@ -14,8 +14,52 @@
                             <h3>Você não tem permissão para acessar esta página</h3>
                         </div>
                     </div>
-                    <div v-else class="row">
-                        123
+                    <div v-else>
+                        <div v-if="step==0" class="row">
+                            <!-- Step 0 -->
+                            <!-- Seleção de configurações -->
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <label for="companyTask">Empresa: {{ companyChoice }}</label>
+                                <select class="form-control form-control-sm" v-model="companyChoice" @change="proccessChoice = null; typeChoice = null;">
+                                    <option v-bind:value="null">Nenhuma opção selecionada</option>
+                                    <option v-for="curreg in content" v-bind:key="curreg.id_empresa" v-bind:value="curreg.id_empresa">{{ curreg.descricao }}</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <label for="companyTask">Processo: </label>
+                                <select class="form-control form-control-sm" v-model="proccessChoice" :disabled="companyChoice == null" @change="typeChoice = null;">
+                                    <option v-bind:value="null">Nenhuma opção selecionada</option>
+                                    <option v-for="curreg in content.filter(function(item){ return (item.id_empresa === companyChoice)}).length === 0 ? [] : content.filter(function(item){ return (item.id_empresa === companyChoice)})[0].allProccess" v-bind:key="curreg.id_processo" v-bind:value="curreg.id_processo">{{ curreg.descricao }}</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <label for="companyTask">Tipo:</label>
+                                <select class="form-control form-control-sm" v-model="typeChoice" :disabled="((companyChoice == null) || (proccessChoice == null))">
+                                    <option v-bind:value="null">Nenhuma opção selecionada</option>
+                                    <option v-for="curreg in content.filter(function(item){ return (item.id_empresa === companyChoice)}).length === 0 ? [] : (content.filter(function(item){ return (item.id_empresa === companyChoice)})[0].allProccess.filter(function(item) { return item.id_processo === proccessChoice }).length === 0 ? [] : content.filter(function(item){ return (item.id_empresa === companyChoice)})[0].allProccess.filter(function(item) { return item.id_processo === proccessChoice })[0].manualType)" v-bind:key="curreg.id_tipo_processo" v-bind:value="curreg.id_tipo_processo">{{ curreg.titulo }}</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                <button class="btn btn-primary btn-sm btn-block" @click="step=1;">Abrir solicitação de serviço</button>
+                            </div>
+                            <!-- Step 0 -->
+                            <!-- Seleção de configurações -->
+                        </div>
+                        <form method="POST" v-if="step===1" class="row was-validated" autocomplete="off">
+                            <!-- Step 1 -->
+                            <!-- Abertura do chamado -->
+                            <input type="hidden" name="_token" v-bind:value="token">
+                            <input type="hidden" name="idCompany" v-bind:value="companyChoice" required>
+                            <input type="hidden" name="idProccess" v-bind:value="proccessChoice" required>
+                            <input type="hidden" name="idType" v-bind:value="typeChoice" required>
+
+
+                            123
+
+
+                            <!-- Abertura do chamado -->
+                            <!-- Step 1 -->
+                        </form>
                     </div>
                 </div>
             </div>
@@ -40,6 +84,12 @@
                 'loading'       :   true,
                 'yearCopright'  :   new Date().getFullYear(),
                 'permission'    :   false,
+                'step'          :   0,
+
+                'content'       :   null,
+                'companyChoice' :   null,
+                'proccessChoice':   null,
+                'typeChoice'    :   null,
             }
         },
         methods: {
@@ -61,10 +111,6 @@
                     axios.post('/api/util/getPermission',request,header)
                     .then(function (response) {
                         if(response.status === 200) {
-                            vm.loading      =   false;
-
-                            console.log(response.data)
-                            
                             if(!response.data.permission) {
                                 vm.loading      = false;
                                 vm.permission   = false;
@@ -86,35 +132,26 @@
                     Vue.$toast.error('Ocorreu um erro desconhecido! Verifique.');
                 } // catch(error) { ... }
             }, // verifyPermission : function(){ ... }
-            getData : function(){
+
+            getData  :   function(){
                 try {
                     var vm      =   this;
-                    vm.loading  =   false;
+                    vm.loading  =   true;
 
                     var header   = {
                         'headers'   :   {
-                            'Authorization' :   'Bearer ' + this.bearer,
+                            'Authorization' :   'Bearer ' + vm.bearer,
                         },
                     };
                     var request = {
                         '_token'            :   vm.token,
                     };
 
-                    axios.post('/api/util/getPermission',request,header)
+                    axios.post('/api/task/getDataManual',request,header)
                     .then(function (response) {
                         if(response.status === 200) {
                             vm.loading      =   false;
-
-                            console.log(response.data)
-                            
-                            if(!response.data.permission) {
-                                vm.loading      = false;
-                                vm.permission   = false;
-                            }
-                            else {
-                                vm.permission   = true;
-                                vm.getData();
-                            }
+                            vm.content      =   response.data;
                         } // if(response.status === 200) { ... }
                         else {
                             Vue.$toast.error('Não foi possível validar as permissões! Verifique com o administrador.');
@@ -125,9 +162,9 @@
                     });
                 } // try { ... }
                 catch(error) {
-                    Vue.$toast.error('Erro ao coletar os dados de solicitação de serviço! Verifique.');
-                }
-            } // getData : function(){ ... }
+                    Vue.$toast.error('Ocorreu um erro desconhecido! Verifique.');
+                } // catch(error) { ... }
+            }, // getData : function(){ ... }
         },
         mounted() {
             this.LAYOUT.initData();

@@ -24,6 +24,11 @@
             Route::any('/getPermission','GetUserOptions@getPermission')->name('getPermission');
         }); // Route::namespace('Util')->middleware('auth:api')->prefix('util')->name('util.')->group(function(){ ... }
 
+        Route::namespace('Task')->middleware('auth:api')->prefix('task')->name('task.')->group(function(){
+            // [task.getDataManual]
+            Route::any('/getDataManual','GetDataManual@getData')->name('getDataManual');
+        }); // Route::namespace('Task')->middleware('auth:api')->prefix('task')->name('task.')->group(function(){ ... });
+
         Route::namespace('Tasks')->middleware('auth:api')->prefix('tasks')->name('tasks.')->group(function(){
             // [tasks.getDataManual]
             Route::any('/getDataManual','GetUserOptions@getPermission')->name('getDataManual');
