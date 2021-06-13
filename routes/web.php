@@ -25,17 +25,17 @@
         Route::namespace('Task')->prefix('task')->name('task.')->group(function(){
             // [task.mainPage]
             Route::any('/', function(){
-                return redirect()->route('tasks.create');
+                return redirect()->route('task.list');
             })->name('mainPage');
 
             // [tasks.create] - Criação de solicitacoes, agendamentos
             Route::any('/create','Create@startPage')->name('create');
-
             // [tasks.createSS] - Criação de solicitacoes, agendamentos
             Route::any('/createSS','Create@createData')->name('createSS');
-
             // [task.list] - Sistema para criação das solicitações e agendamentos.
             Route::any('/list','ListSS@listPage')->name('list');
+            // [task.idTask]
+            Route::any('/{idTask}','ShowTask@getID')->name('idTask');
 
             // [tasks.listAutomatic] - Sistema para troca de objetos
             Route::any('/listAutomatic','ListSS@listAutomatic')->name('listAutomatic');
