@@ -192,7 +192,9 @@ class Reconstrucao extends Migration
             $table->bigIncrements('id_usuario_perfil');
             $table->integer('id_usuario');
             $table->integer('id_perfil');
+            $table->integer('id_superior')->nullable();
             $table->integer('id_processo');
+            $table->boolean('situacao')->default(false);
             $table->dateTime('data_cria');
             $table->dateTime('data_alt');
             $table->integer('usr_cria');
@@ -200,11 +202,14 @@ class Reconstrucao extends Migration
 
             $table->index(['id_usuario']);
             $table->index(['id_perfil']);
+            $table->index(['id_superior']);
             $table->index(['id_processo']);
+            $table->index(['situacao']);
     
-            $table->unique(['id_usuario','id_perfil','id_processo']);
+            $table->unique(['id_usuario','id_superior','id_perfil','id_processo']);
 
             $table->foreign('id_usuario')->references('id')->on('users');
+            $table->foreign('id_superior')->references('id')->on('users');
             $table->foreign('id_perfil')->references('id_perfil')->on('perfil');
             $table->foreign('id_processo')->references('id_processo')->on('processo');
         });

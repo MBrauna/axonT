@@ -27,16 +27,24 @@
         Route::namespace('Task')->middleware('auth:api')->prefix('task')->name('task.')->group(function(){
             // [task.getDataManual]
             Route::any('/getDataManual','GetDataManual@getData')->name('getDataManual');
+            // [task.createSS]
+            Route::any('/createSS','CreateSolicitation@setData')->name('createSS');
+            // [tasks.list]
+            Route::any('/list','GetDataManual@list')->name('list');
         }); // Route::namespace('Task')->middleware('auth:api')->prefix('task')->name('task.')->group(function(){ ... });
+
+
+
+
+
+
+
+
+
 
         Route::namespace('Tasks')->middleware('auth:api')->prefix('tasks')->name('tasks.')->group(function(){
             // [tasks.getDataManual]
             Route::any('/getDataManual','GetUserOptions@getPermission')->name('getDataManual');
-
-
-
-
-
             // [tasks.search]
             Route::any('/verifyTaskAutomatic','TaskAutomatic@verifyTaskAutomatic')->name('verifyTaskAutomatic');
             // [tasks.resp]

@@ -18,7 +18,7 @@
                         'name'      =>  'AUTOMATICO',
                         'permission'=>  false, // Por padrão qualquer opção que não seja manual fica desabilitado
                     ],
-                ]
+                ];
             } // try { ... }
             catch(Exception $error) {
 

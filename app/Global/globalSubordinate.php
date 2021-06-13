@@ -2,7 +2,7 @@
     if(!function_exists('getHigher')){
         function getHigher(){
             $return     =   [];
-
+            /*
             $listHigher =   App\Models\UsuarioConfig::where('id_usuario',Auth::user()->id)
                             ->whereNotNull('id_superior')
                             ->get();
@@ -14,6 +14,7 @@
                     array_push($return, $tmpUser);
                 } // if(!in_array($tmpUser, $return)) { ... };
             } // foreach ($listHigher as $keyHigher => $valueHigher) { ... }
+            */
 
             return $return;
         } // function getHigher(){ ... }
@@ -50,7 +51,7 @@
         function getSubordinate($idUser) {
             $return  =   [];
 
-            $userData   =   App\Models\UsuarioConfig::where('id_superior',$idUser)
+            /*$userData   =   App\Models\UsuarioConfig::where('id_superior',$idUser)
                             ->get();
 
             foreach ($userData as $key => $value) {
@@ -60,6 +61,7 @@
                     array_push($return, $tmpUser);
                 } // if(!in_array($tmpUser, $return)) { ... };
             } // foreach ($userData as $key => $value) { ... }
+            */
 
             return $return;
         } // function getSubordinate() { ... }

@@ -124,7 +124,7 @@
                     'idType'        :   vm.PREFERENCES.getType(),
                 };
 
-                axios.post('/api/tasks/list',request, header)
+                axios.post('/api/task/list',request, header)
                 .then(function (response) {
                     vm.isBusy = false;
                     if(response.status === 200) {

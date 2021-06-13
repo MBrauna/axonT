@@ -27,8 +27,10 @@
             Route::any('/', function(){
                 return redirect()->route('tasks.create');
             })->name('mainPage');
+
             // [tasks.create] - Criação de solicitacoes, agendamentos
             Route::any('/create','Create@startPage')->name('create');
+
             // [tasks.createSS] - Criação de solicitacoes, agendamentos
             Route::any('/createSS','Create@createData')->name('createSS');
 

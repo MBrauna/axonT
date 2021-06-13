@@ -159,9 +159,10 @@ select id_pergunta_tipo,
 
 
  insert into public.agendamento(id_agendamento, tipo, id_processo_referencia, id_processo_origem, id_tipo_processo_origem, id_usuario_origem,
- 			id_solicitante, id_processo_destino, id_tipo_processo_destino, id_usuario_destino, 
-			 periodicidade, qtde_periodicidade, data_inicial, data_final, proximo_agendamento, qtde_criado, aprova_origem, 
-			 aprova_destino, url, titulo, tipo_objeto, meio, situacao, data_cria, data_alt, usr_cria, usr_alt)
+								id_solicitante, id_processo_destino, id_tipo_processo_destino, id_usuario_destino, 
+								periodicidade, qtde_periodicidade, data_inicial, data_final, proximo_agendamento, qtde_criado, aprova_origem, 
+								aprova_destino, url, titulo, tipo_objeto, meio, situacao, data_cria, data_alt, usr_cria, usr_alt
+							)
  select id_entrada_solicitacao,
 		tipo,
 		coalesce(id_processo_referencia,1),

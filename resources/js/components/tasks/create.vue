@@ -1,5 +1,5 @@
 <template>
-    <div class="card border border-primary shadow">
+    <div class="card border border-primary shadow mb-3">
         <div class="card-header bg-primary text-white text-center">
             Escolha uma opção abaixo:
         </div>
