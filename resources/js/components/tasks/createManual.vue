@@ -45,7 +45,7 @@
                             <!-- Step 0 -->
                             <!-- Seleção de configurações -->
                         </div>
-                        <form method="POST" action="/task/createSS" v-if="step===1" class="row was-validated" autocomplete="off">
+                        <form method="POST" action="/task/createSS" v-if="step===1" class="row was-validated" autocomplete="off" enctype="multipart/form-data">
                             <!-- Step 1 -->
                             <!-- Abertura do chamado -->
                             <input type="hidden" name="_token" v-bind:value="token">
@@ -175,6 +175,7 @@
                                 </ul>
                             </div>
 
+                            <input type="hidden" name="arquivoBPMS[]">
                             
                             <div class="col-12">
                                 <ul class="list-group border border-primary">
@@ -195,6 +196,10 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    <tr v-for="(curreg, idx) in fileList" v-bind:key="idx">
+                                                        <td><b-form-file  name="arquivoBPMS[]" size="sm" placeholder="Selecione o(s) arquivo(s) ..." drop-placeholder="Solte seu(s) arquivo(s) aqui ..." required></b-form-file></td>
+                                                        <td><button type="button" class="btn btn-sm btn-block btn-outline-danger" @click="removeRegister(idx)"><i class="fas fa-trash"></i></button></td>
+                                                    </tr>
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
@@ -302,7 +307,7 @@
 
             newRegister :   function(){
                 var vm                  =   this;
-                var hash                =   Math.floor(Math.random() * 999999);
+                /*var hash                =   Math.floor(Math.random() * 999999);
 
                 var tbodyRef            =   document.getElementById('tableFile').getElementsByTagName('tbody')[0];
                 var newRow              =   tbodyRef.insertRow();
@@ -310,10 +315,14 @@
                 var cellFile            =   newRow.insertCell(0);
                 var cellAction          =   newRow.insertCell(1);
 
-                cellFile.innerHTML      =   '<div class="custom-file b-form-file b-custom-control-sm is-invalid" id="__BVID__' + hash + '__BV_file_outer_"><input type="file" name="arquivoBPMS[]" multiple="multiple" class="custom-file-input is-invalid" style="z-index: -5;" id="__BVID__' + hash + '"><label data-browse="Browse" class="custom-file-label" for="__BVID__' + hash + '"><span class="d-block form-file-text" style="pointer-events: none;">Selecione o(s) arquivo(s) ...</span></label></div>';
-                cellAction.innerHTML    =   '<button type="button" class="btn btn-sm btn-block btn-outline-danger" onclick="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode);"><i class="fas fa-trash"></i></button>';
+                cellFile.innerHTML      =   '';
+                cellAction.innerHTML    =   '';*/
+                this.fileList.push(1);
             },
-
+            removeRegister  :   function(counter){
+                var vm = this;
+                vm.fileList.splice(counter,1);
+            },
             trimData    :   function(){
                 var vm  =   this;
                 vm.listQuestions.forEach((element, index) => {

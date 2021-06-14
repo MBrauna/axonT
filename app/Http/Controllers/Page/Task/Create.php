@@ -256,7 +256,32 @@
 
 
                 // Salva os arquivos no sistema de chamados
-                dd($request->arquivoBPMS);
+                $files = $request->file('arquivoBPMS');
+                if($files){
+                    foreach($files as $chave => $file) {
+                        if($file->isValid()) {
+                            $nomeServidor       =   Carbon::now()->timestamp.'-'.$chave.'.'.$file->getClientOriginalExtension();
+
+                            DB::beginTransaction();
+                            DB::table('arquivo')
+                            ->insert([
+                                'id_chamado'    =>  $chamadoID->id_chamado,
+                                'nome_servidor' =>  $nomeServidor,
+                                'nome_arquivo'  =>  $arquivo->getClientOriginalName(),
+                                'extensao'      =>  $arquivo->getClientOriginalExtension(),
+                                'mime'          =>  $arquivo->getMimeType(),
+                                'tamanho'       =>  $arquivo->getSize(),
+                                'data_cria'     =>  Carbon::now(),
+                                'data_alt'      =>  Carbon::now(),
+                                'usr_cria'      =>  Auth::user()->id,
+                                'usr_alt'       =>  Auth::user()->id,
+                            ]);
+                            DB::commit();
+
+                            $upload = $arquivo->storeAs('chamado', $nomeServidor);
+                        } // if($file->isValid()) { ... }
+                    }
+                }
 
 
             } catch (Exception $error) {
