@@ -175,6 +175,7 @@
                                 </ul>
                             </div>
 
+                            
                             <div class="col-12">
                                 <ul class="list-group border border-primary">
                                     <li class="list-group-item">
@@ -301,6 +302,7 @@
 
             newRegister :   function(){
                 var vm                  =   this;
+                var hash                =   Math.floor(Math.random() * 999999);
 
                 var tbodyRef            =   document.getElementById('tableFile').getElementsByTagName('tbody')[0];
                 var newRow              =   tbodyRef.insertRow();
@@ -308,7 +310,7 @@
                 var cellFile            =   newRow.insertCell(0);
                 var cellAction          =   newRow.insertCell(1);
 
-                cellFile.innerHTML      =   '<input class="form-control form-control-sm" name="arquivo[]" type="file" required>';
+                cellFile.innerHTML      =   '<div class="custom-file b-form-file b-custom-control-sm is-invalid" id="__BVID__' + hash + '__BV_file_outer_"><input type="file" name="arquivoBPMS[]" multiple="multiple" class="custom-file-input is-invalid" style="z-index: -5;" id="__BVID__' + hash + '"><label data-browse="Browse" class="custom-file-label" for="__BVID__' + hash + '"><span class="d-block form-file-text" style="pointer-events: none;">Selecione o(s) arquivo(s) ...</span></label></div>';
                 cellAction.innerHTML    =   '<button type="button" class="btn btn-sm btn-block btn-outline-danger" onclick="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode);"><i class="fas fa-trash"></i></button>';
             },
 

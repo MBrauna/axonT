@@ -5,10 +5,192 @@
         </div>
 
         <div v-else class="col-12">
-            <div class="row d-flex justify-content-center">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-6" v-for="curreg in content" v-bind:key="curreg.content.id">
-                    <apexchart v-bind:height="curreg.chart.height" v-bind:type="curreg.chart.type" :options="curreg" :series="curreg.series"></apexchart>
+            <div class="row" v-if="content == []">
+                <h6 class="text-primary text-center font-weight-bold">Dados não localizados</h6>
+            </div>
+            <div class="row" v-else>
+                <div class="col-12">
+                    <div class="card border-primary">
+                        <div class="card-header bg-primary text-center">
+                            <span class="text-white font-weight-bold text-center">
+                                {{ content.titulo }}
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <label class="font-weight-bold" for="empresaBPMS">Empresa</label>
+                                    <input type="text" class="form-control form-control-sm" id="empresaBPMS" name="empresaBPMS" v-bind:value="(content.descriptions.empresa == [] ? 'Nenhuma empresa' : content.descriptions.empresa.descricao)" readonly>
+                                </div>
+
+                                <input type="hidden" name="idProcessoBPMS">
+                                <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <label class="font-weight-bold" for="processoBPMS">Processo</label>
+                                    <input type="text" class="form-control form-control-sm" id="processoBPMS" name="processoBPMS" v-bind:value="(content.descriptions.processo == [] ? 'Nenhum processo' : content.descriptions.processo.descricao)" readonly>
+                                </div>
+
+                                <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <label class="font-weight-bold" for="tipoBPMS">Fluxo</label>
+                                    <input type="text" class="form-control form-control-sm" name="tipoBPMS" v-bind:value="(content.descriptions.tipoProcesso == [] ? 'Nenhum fluxo' : content.descriptions.tipoProcesso.titulo)" readonly>
+                                </div>
+
+                                <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <label class="font-weight-bold" for="tipoBPMS">Situação atual</label>
+                                    <input type="text" class="form-control form-control-sm" name="tipoBPMS" v-bind:value="(content.descriptions.situacao == [] ? 'Nenhuma situação' : content.descriptions.situacao.descricao)" readonly>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                    <div class="card border-primary">
+                        <div class="card-header bg-primary text-center">
+                            <span class="text-white font-weight-bold text-center">
+                                Responsável
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="form-group col-12">
+                                    <label class="font-weight-bold" for="empresaBPMS">Solicitante</label>
+                                    <input type="text" class="form-control form-control-sm" id="empresaBPMS" name="empresaBPMS" v-bind:value="(content.descriptions.solicitante == [] ? 'Nenhum solicitante' : content.descriptions.solicitante.name)" readonly>
+                                </div>
+
+                                <input type="hidden" name="idProcessoBPMS">
+                                <div class="form-group col-12">
+                                    <label class="font-weight-bold" for="processoBPMS">Responsável pelo processo</label>
+                                    <input type="text" class="form-control form-control-sm" id="processoBPMS" name="processoBPMS" v-bind:value="content.descriptions.processo.descriptions.responsavel.name" readonly>
+                                </div>
+
+                                <div class="form-group col-12">
+                                    <label class="font-weight-bold" for="tipoBPMS">Responsável pelo atendimento</label>
+                                    <input type="text" class="form-control form-control-sm" name="tipoBPMS" v-bind:value="(content.descriptions.responsavel == null ? 'Espera entre tarefas' : content.descriptions.responsavel.name)" readonly>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="card border-primary">
+                        <div class="card-header bg-primary text-center">
+                            <span class="text-white font-weight-bold text-center">
+                                Prazos
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="form-group col-12 col-sm-12">
+                                    <label class="font-weight-bold" for="tipoBPMS">Data abertura</label>
+                                    <input type="text" class="form-control form-control-sm" name="tipoBPMS" v-bind:value="content.descriptions.dataCria" readonly>
+                                </div>
+
+                                <div class="form-group col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                    <label class="font-weight-bold" for="tipoBPMS">Data conclusão</label>
+                                    <input type="text" class="form-control form-control-sm" name="tipoBPMS" v-bind:value="content.descriptions.dataConclusao" readonly>
+                                </div>
+
+                                <div class="form-group col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                    <label class="font-weight-bold" for="tipoBPMS">Data limite</label>
+                                    <input type="text" class="form-control form-control-sm" name="tipoBPMS" v-bind:value="content.descriptions.dataVencimento" readonly>
+                                </div>
+
+                                <div class="form-group col-12">
+                                    <label class="font-weight-bold" for="tipoBPMS">Prazo</label>
+                                    <input type="text" v-bind:class="'form-control form-control-sm ' + content.descriptions.prazoColor"  name="tipoBPMS" v-bind:value="content.descriptions.prazo" readonly>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="col-12 col-sm-12 col-md-12">
+                    <div class="card border-primary">
+                        <div class="card-header bg-primary text-center">
+                            <span class="text-white font-weight-bold text-center">
+                                Necessidades
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" v-for="(curreg) in content.itemChamado" v-bind:key="curreg.id_questao">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <label v-bind:for="'idQuestion_' + curreg.id_questao">{{ curreg.questao }}</label>
+                                                    <input v-if="curreg.tipo == 'date'" type="date" class="form-control form-control-sm" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:value="curreg.respostaFormatada" readonly>
+                                                    <input v-if="curreg.tipo == 'datetime'" type="date" class="form-control form-control-sm" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:value="curreg.respostaFormatada" readonly>
+                                                    <input v-else-if="curreg.tipo == 'text'" type="text" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:value="curreg.respostaFormatada" readonly>
+                                                    <input v-else-if="curreg.tipo == 'email'" type="email" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:value="curreg.respostaFormatada" readonly>
+                                                    <input v-else-if="curreg.tipo == 'number'" type="number" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:value="curreg.respostaFormatada" readonly>
+                                                    <input v-else-if="curreg.tipo == 'user'" type="text" class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:value="curreg.respostaFormatada" readonly>
+                                                    <textarea rows="5" v-else class="form-control form-control-sm" v-bind:id="'idQuestion_' + curreg.id_questao" v-bind:placeholder="curreg.placeholder" v-bind:name="'idQuestion_' + curreg.id_questao" v-bind:value="curreg.respostaFormatada" readonly></textarea>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-12 col-sm-12 col-md-12">
+                    <div class="card border-primary">
+                        <div class="card-header bg-primary text-center">
+                            <span class="text-white font-weight-bold text-center">
+                                Adicionais
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link active" id="arquivo-tab" data-toggle="pill" href="#arquivo" role="tab" aria-controls="arquivo" aria-selected="true">
+                                                Arquivos enviados
+                                            </a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link" id="taefa-tab" data-toggle="pill" href="#tarefa" role="tab" aria-controls="tarefa" aria-selected="true">
+                                                Histórico
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content" id="pills-tabContent">
+                                        <div class="tab-pane fade" id="arquivo" role="tabpanel" aria-labelledby="arquivo-tab">
+                                            <ul class="list-group">
+                                                <li v-if="content.archives.length <= 0" class="list-group-item">Nenhum arquivo anexado a esta solicitação de serviço</li>
+                                                <li v-else class="list-group-item">
+                                                    <ul class="list-group">
+                                                        <!-- Arquivos anexados na abertura do chamado -->
+                                                        <li class="list-group-item d-flex justify-content-between" v-for="curreg in content.archives" v-bind:key="curreg.id_arquivo">
+                                                            <a v-bind:href="curreg.url" target="_blank">
+                                                                <span>Arquivo anexado por {{ curreg.createdBy.name }}</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
             </div>
         </div>
     </div>
@@ -16,7 +198,7 @@
 
 <script>
     export default {
-        props: ['token','bearer','company'],
+        props: ['token','bearer','id'],
         components: {
         },
         data() {
@@ -38,10 +220,10 @@
 
                     vm.request = {
                         '_token'    :   vm.token,
-                        'idTask'    :   vm.company,
+                        'idTask'    :   parseInt(vm.id),
                     };
 
-                    axios.post('/api/task/idTask',vm.request,vm.header)
+                    axios.post('/api/task/id',vm.request,vm.header)
                     .then(function (response) {
                         if(response.status === 200) {
                             vm.content  =   response.data;
@@ -49,6 +231,7 @@
                         }
                         else {
                             vm.loading  =   true;
+                            Vue.$toast.error('Requisição retornou um erro! Contate o administrador.');
                         }
                     })
                     .catch(function(retorno){

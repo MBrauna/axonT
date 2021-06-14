@@ -31,5 +31,8 @@
         "vue-toast-notification": "^0.6.0",
         "vue2-datepicker": "^3.8.2",
         "vuetify": "^2.4.0"
+    },
+    "dependencies": {
+        "crypto-js": "^4.0.0"
     }
 }

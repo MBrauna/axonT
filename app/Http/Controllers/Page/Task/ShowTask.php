@@ -10,19 +10,31 @@
     use Carbon\Carbon;
 
     use App\Models\Chamado;
-    use App\Models\ChamadoItem;
-    use App\Models\Empresa;
-    use App\Models\Processo;
-    use App\Models\Tarefa;
-    use App\Models\TipoProcesso;
-    use App\Models\User;
-    use App\Models\Situacao;
 
-    class ShowTask extends Controller
-    {
+    class ShowTask extends Controller {
         public function getID(Request $request) {
-            
+            if(is_null($request->idTask) || !is_numeric($request->idTask)) {
+                return redirect()->route('task.list');
+            } // if(is_null($request->idTask) || !is_numeric($request->idTask)) { ... }
 
-             
+            $listPermission =   [];
+
+            foreach (getAccess() as $keyAccess => $valueAccess) {
+                foreach ($valueAccess->proccessData as $keyProccess => $valueProccess) {
+                    if(!in_array($valueProccess->id_processo, $listPermission)) {
+                        array_push($listPermission,$valueProccess->id_processo);
+                    } // if(!in_array($valueProccess, $listPermission)) { ... }
+                } // foreach ($valueAccess->proccessData as $keyProccess => $valueProccess) { ... }
+            } // foreach (getAccess() as $keyAccess => $valueAccess) { ... }
+
+            $chamado = Chamado::where('id_chamado',intval($request->idTask))->first();
+
+            if(is_null($chamado) || !isset($chamado->id_chamado) || !in_array($chamado->id_processo, $listPermission)) {
+                return redirect()->route('task.list');
+            } // if(is_null($chamado) || !isset($chamado->id_chamado) || !in_array($chamado->id_processo, $listPermission)) { ... }
+
+             return view('page.solicitation.task',[
+                'idTask'    =>  intval($request->idTask),
+             ]);
         } // public function getID(Request $request) { ... }
-    }
+    } // class ShowTask extends Controller { ... }

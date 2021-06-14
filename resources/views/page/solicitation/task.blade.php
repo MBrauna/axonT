@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title','Tarefa')
+@section('title','Solicitação de serviço #'.$idTask)
 
 @section('body')
-    <filter-app token="{{ csrf_token() }}" bearer="{{ Auth::user()->token }}" auth="{{ json_encode(Auth::user()) }}"></filter-app>
+    <id-task token="{{ csrf_token() }}" bearer="{{ Auth::user()->token }}" id="{{ $idTask }}"></filter-app>
 @endsection

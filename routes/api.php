@@ -29,8 +29,10 @@
             Route::any('/getDataManual','GetDataManual@getData')->name('getDataManual');
             // [task.createSS]
             Route::any('/createSS','CreateSolicitation@setData')->name('createSS');
-            // [tasks.list]
+            // [task.list]
             Route::any('/list','GetDataManual@list')->name('list');
+            // [task.id]
+            Route::any('/id','ShowTask@getID')->name('id');
         }); // Route::namespace('Task')->middleware('auth:api')->prefix('task')->name('task.')->group(function(){ ... });
 
 
