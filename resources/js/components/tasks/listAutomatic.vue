@@ -219,7 +219,7 @@
                         'idAgendamento' :   idAgendamento,
                     };
 
-                    axios.post('/api/tasks/removeScheduling',request, header)
+                    axios.post('/api/task/removeScheduling',request, header)
                     .then(function (response) {
                         vm.isBusy = false;
                         if(response.status === 200) {
@@ -238,7 +238,6 @@
                 }
                 catch(error) {
                     Vue.$toast.error('Não foi possível completar a operação! Verifique.');
-                    location.reload();
                 }
             },
             coletaNome      :   function(chave){
@@ -265,7 +264,7 @@
                     'idType'        :   vm.PREFERENCES.getType(),
                 };
 
-                axios.post('/api/tasks/listAutomatic',request, header)
+                axios.post('/api/task/listAutomatic',request, header)
                 .then(function (response) {
                     vm.isBusy = false;
                     if(response.status === 200) {
@@ -279,7 +278,6 @@
                 .catch(function (error) {
                     Vue.$toast.error('Erro ao consultar os dados informe ao administrador!');
                     vm.isBusy   =   false;
-                    location.reload();
                 });
             },
         },

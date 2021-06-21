@@ -7,6 +7,7 @@
 
     use Auth;
     use Carbon\Carbon;
+    use Storage;
 
     use App\Models\Arquivo;
     use App\Models\Chamado;
@@ -101,13 +102,13 @@
                 } // foreach ($task->taskEntry as $keyData => $valueData) { ... }
 
                 foreach ($task->archives as $keyData => $valueData) {
-                    $task->archives[$keyData]->createdBy    =   User::where('id',$valueData->usr_cria)->find();
+                    $task->archives[$keyData]->createdBy    =   User::where('id',$valueData->usr_cria)->first();
 
                     if(is_null($valueData->id_tarefa)) {
-                        $task->archives[$keyData]->url  =   Storage::url('chamado/'.$valueData->nome_servidor);
+                        $task->archives[$keyData]->url      =   Storage::url('chamado/'.$valueData->nome_servidor);
                     } // if(is_null($valueData->id_tarefa)) { ... }
                     else {
-                        $task->archives[$keyData]->url  =   Storage::url('tarefa/'.$valueData->nome_servidor);
+                        $task->archives[$keyData]->url      =   Storage::url('tarefa/'.$valueData->nome_servidor);
                     } // else { ... }
                 } // foreach ($task->archives as $keyData => $valueData) { ... }
 

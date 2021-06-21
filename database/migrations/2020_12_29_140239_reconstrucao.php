@@ -337,7 +337,7 @@ class Reconstrucao extends Migration
         Schema::create('agendamento', function (Blueprint $table) {
             $table->bigIncrements('id_agendamento');
             $table->integer('tipo')->default(1); // [1] - Entrada, [2] - Saída
-            $table->integer('id_processo_referencia');
+            $table->integer('id_processo_referencia')->nullable();
             $table->integer('id_processo_origem');
             $table->integer('id_tipo_processo_origem');
             $table->integer('id_usuario_origem')->nullable();
@@ -396,6 +396,7 @@ class Reconstrucao extends Migration
             $table->boolean('obrigatorio')->default(true);
             $table->text('questao');
             $table->text('resposta')->nullable();
+            $table->text('original')->nullable();
             $table->integer('ordem')->default(999);
             $table->boolean('situacao')->default(true);
             $table->dateTime('data_cria');
@@ -465,6 +466,7 @@ class Reconstrucao extends Migration
             $table->integer('ordem')->default(999);
             $table->text('questao');
             $table->text('resposta')->nullable();
+            $table->text('original')->nullable();
             $table->dateTime('data_cria');
             $table->dateTime('data_alt');
             $table->integer('usr_cria');
@@ -507,6 +509,7 @@ class Reconstrucao extends Migration
             $table->integer('id_usuario');
             $table->integer('id_usuario_alvo')->nullable();
             $table->integer('id_chamado')->nullable();
+            $table->integer('id_agendamento')->nullable();
             $table->integer('id_tarefa')->nullable();
             $table->text('nome_servidor')->nullable();
             $table->text('nome_arquivo');
@@ -521,6 +524,7 @@ class Reconstrucao extends Migration
             $table->index(['id_usuario']);
             $table->index(['id_usuario_alvo']);
             $table->index(['id_chamado']);
+            $table->index(['id_agendamento']);
             $table->index(['id_tarefa']);
             $table->index(['nome_arquivo']);
             $table->index(['extensao']);
@@ -529,6 +533,7 @@ class Reconstrucao extends Migration
             $table->foreign('id_usuario')->references('id')->on('users');
             $table->foreign('id_usuario_alvo')->references('id')->on('users');
             $table->foreign('id_chamado')->references('id_chamado')->on('chamado');
+            $table->foreign('id_agendamento')->references('agendamento')->on('id_agendamento');
             $table->foreign('id_tarefa')->references('id_tarefa')->on('tarefa');
         });
     }

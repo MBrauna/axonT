@@ -27,48 +27,19 @@
         Route::namespace('Task')->middleware('auth:api')->prefix('task')->name('task.')->group(function(){
             // [task.getDataManual]
             Route::any('/getDataManual','GetDataManual@getData')->name('getDataManual');
-            // [task.createSS]
-            Route::any('/createSS','CreateSolicitation@setData')->name('createSS');
+            // [task.getDataManual]
+            Route::any('/getDataAutomatic','GetDataAutomatic@getData')->name('getDataAutomatic');
             // [task.list]
             Route::any('/list','GetDataManual@list')->name('list');
-            // [task.id]
-            Route::any('/id','ShowTask@getID')->name('id');
-        }); // Route::namespace('Task')->middleware('auth:api')->prefix('task')->name('task.')->group(function(){ ... });
-
-
-
-
-
-
-
-
-
-
-        Route::namespace('Tasks')->middleware('auth:api')->prefix('tasks')->name('tasks.')->group(function(){
-            // [tasks.getDataManual]
-            Route::any('/getDataManual','GetUserOptions@getPermission')->name('getDataManual');
-            // [tasks.search]
-            Route::any('/verifyTaskAutomatic','TaskAutomatic@verifyTaskAutomatic')->name('verifyTaskAutomatic');
-            // [tasks.resp]
-            Route::any('/resp','TaskAutomatic@dataOrignDestiny')->name('resp');
-            // [tasks.objType]
-            Route::any('/objType','TaskAutomatic@filterObjectType')->name('objType');
-            // [tasks.question]
-            Route::any('/question','TaskAutomatic@filterQuestion')->name('question');
-            // [tasks.validateManual]
-            Route::any('/validateManual','TaskCreate@validateDataManual')->name('validateManual');
-            // [tasks.list]
-            Route::any('/list','TaskList@list')->name('list');
             // [tasks.listAutomatic]
             Route::any('/listAutomatic','TaskList@listAutomatic')->name('listAutomatic');
+            // [task.id]
+            Route::any('/id','ShowTask@getID')->name('id');
             // [tasks.changeAutomaticStatus]
             Route::any('/changeAutomaticStatus','TaskList@changeAutomaticStatus')->name('changeAutomaticStatus');
             // [tasks.removeScheduling]
             Route::any('/removeScheduling','TaskAutomatic@removeScheduling')->name('removeScheduling');
             // [tasks.editAutomatic]
             Route::any('/editAutomatic','TaskAutomatic@editAutomatic')->name('editAutomatic');
-        });
-
-        
-
+        }); // Route::namespace('Task')->middleware('auth:api')->prefix('task')->name('task.')->group(function(){ ... });
     });

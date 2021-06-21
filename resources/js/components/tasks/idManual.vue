@@ -101,7 +101,7 @@
 
                                 <div class="form-group col-12">
                                     <label class="font-weight-bold" for="tipoBPMS">Prazo</label>
-                                    <input type="text" v-bind:class="'form-control form-control-sm ' + content.descriptions.prazoColor"  name="tipoBPMS" v-bind:value="content.descriptions.prazo" readonly>
+                                    <input type="text" v-bind:class="'form-control form-control-sm font-weight-bold ' + content.descriptions.prazoColor"  name="tipoBPMS" v-bind:value="content.descriptions.prazo" readonly>
                                 </div>
                                 
                             </div>
@@ -161,22 +161,38 @@
                                             </a>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <a class="nav-link" id="taefa-tab" data-toggle="pill" href="#tarefa" role="tab" aria-controls="tarefa" aria-selected="true">
+                                            <a class="nav-link" id="tarefa-tab" data-toggle="pill" href="#tarefa" role="tab" aria-controls="tarefa" aria-selected="true">
                                                 Histórico
                                             </a>
                                         </li>
                                     </ul>
                                     <div class="tab-content" id="pills-tabContent">
-                                        <div class="tab-pane fade" id="arquivo" role="tabpanel" aria-labelledby="arquivo-tab">
+                                        <div class="tab-pane fade show active" id="arquivo" role="tabpanel" aria-labelledby="arquivo-tab">
                                             <ul class="list-group">
                                                 <li v-if="content.archives.length <= 0" class="list-group-item">Nenhum arquivo anexado a esta solicitação de serviço</li>
                                                 <li v-else class="list-group-item">
                                                     <ul class="list-group">
                                                         <!-- Arquivos anexados na abertura do chamado -->
-                                                        <li class="list-group-item d-flex justify-content-between" v-for="curreg in content.archives" v-bind:key="curreg.id_arquivo">
+                                                        <li class="list-group-item d-flex justify-content-between text-primary font-weigth-bold" v-for="curreg in content.archives" v-bind:key="curreg.id_arquivo">
+                                                            <i class="fas fa-file-alt"></i>
                                                             <a v-bind:href="curreg.url" target="_blank">
                                                                 <span>Arquivo anexado por {{ curreg.createdBy.name }}</span>
                                                             </a>
+                                                            <i class="fas fa-file-alt"></i>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="tab-pane fade" id="tarefa" role="tabpanel" aria-labelledby="tarefa-tab">
+                                            <ul class="list-group">
+                                                <li v-if="content.archives.length <= 0" class="list-group-item">Nenhum arquivo anexado a esta solicitação de serviço</li>
+                                                <li v-else class="list-group-item">
+                                                    <ul class="list-group">
+                                                        <!-- Arquivos anexados na abertura do chamado -->
+                                                        <li class="list-group-item d-flex justify-content-between border-primary" v-for="curreg in content.archives" v-bind:key="curreg.id_arquivo">
+                                                            123
                                                         </li>
                                                     </ul>
                                                 </li>

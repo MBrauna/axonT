@@ -10,6 +10,8 @@
     use Storage;
     use Carbon\Carbon;
 
+    use App\Models\Agendamento;
+    use App\Models\AgendamentoItem;
     use App\Models\Chamado;
     use App\Models\ChamadoItem;
     use App\Models\Configuracao;
@@ -18,8 +20,6 @@
     use App\Models\Questao;
     use App\Models\TipoProcesso;
     use App\Models\User;
-    use App\Models\Agendamento;
-    use App\Models\AgendamentoItem;
 
     class Create extends Controller
     {
@@ -205,13 +205,7 @@
                         // Remove o registro já que não deu certo.
                         Chamado::where('id_chamado',$newSS->id_chamado)->delete();
 
-                        return redirect()->route('task.create',[
-                            'success'   =>  false,
-                            'data' =>  (object)[
-                                'code'      =>  'AXONT0007',
-                                'message'   =>  'Não foi possível gerar o ID# de solicitação! Verifique.',
-                            ]
-                        ]);
+                        return redirect()->route('task.create');
                     } // if($valueQuestion->obrigatorio && ($tmpQuestionResp == null || trim($tmpQuestionResp) == '')) { ... }
 
                     $tmpData    =   (object)[
@@ -250,7 +244,7 @@
                         ChamadoItem::where('id_chamado',$newSS->id_chamado)->delete();
                         Chamado::where('id_chamado',$newSS->id_chamado)->delete();
 
-                        dd($erro);
+                        return redirect()->route('task.create');
                     } // catch(Exception $error) { ... }
                 }
 
@@ -265,12 +259,13 @@
                             DB::beginTransaction();
                             DB::table('arquivo')
                             ->insert([
-                                'id_chamado'    =>  $chamadoID->id_chamado,
+                                'id_chamado'    =>  $newSS->id_chamado,
+                                'id_usuario'    =>  Auth::user()->id,
                                 'nome_servidor' =>  $nomeServidor,
-                                'nome_arquivo'  =>  $arquivo->getClientOriginalName(),
-                                'extensao'      =>  $arquivo->getClientOriginalExtension(),
-                                'mime'          =>  $arquivo->getMimeType(),
-                                'tamanho'       =>  $arquivo->getSize(),
+                                'nome_arquivo'  =>  $file->getClientOriginalName(),
+                                'extensao'      =>  $file->getClientOriginalExtension(),
+                                'mime'          =>  $file->getMimeType(),
+                                'tamanho'       =>  $file->getSize(),
                                 'data_cria'     =>  Carbon::now(),
                                 'data_alt'      =>  Carbon::now(),
                                 'usr_cria'      =>  Auth::user()->id,
@@ -278,7 +273,7 @@
                             ]);
                             DB::commit();
 
-                            $upload = $arquivo->storeAs('chamado', $nomeServidor);
+                            $upload = $file->storeAs('chamado', $nomeServidor);
                         } // if($file->isValid()) { ... }
                     }
                 }
@@ -287,14 +282,208 @@
             } catch (Exception $error) {
                 ChamadoItem::where('id_chamado',$newSS->id_chamado)->delete();
                 Chamado::where('id_chamado',$newSS->id_chamado)->delete();
+                return redirect()->route('task.create');
             }
 
-            return redirect()->route('task.create',[
-                'success'   =>  true,
-                'data'      =>  (object)[
-                    'idChamado' =>  $newSS->id_chamado,
-                    'url'       =>  $newSS->url."/Task/ID"."/".$newSS->id_chamado,
-                ],
-            ]);
+            return redirect()->route('task.idTask', ['idTask' => $newSS->id_chamado]);
         } // public function createData(Request $request) { ... }
-    }
+
+        public function createObject(Request $request) {
+            try {
+                $typeProccess       =   intval($request->input('typeProccess',0));
+
+                $originCompany      =   $request->input('originCompany');
+                $originProccess     =   $request->input('originProccess');
+                $originType         =   $request->input('originType');
+                $originResponsible  =   $request->input('originResponsible');
+
+                $destinyCompany     =   $request->input('destinyCompany');
+                $destinyProccess    =   $request->input('destinyProccess');
+                $destinyType        =   $request->input('destinyType');
+                $destinyResponsible =   $request->input('destinyResponsible');
+
+                $entregavel         =   $request->input('entregavel');
+                $periodicidade      =   $request->input('periodicidade');
+                $qtde_periodicidade =   $request->input('qtde_periodicidade');
+                $periodicidade_data =   $request->input('periodicidade_data');
+                $periodicidade_hora =   $request->input('periodicidade_hora');
+
+                $fileList           =   $request->file('arquivoBPMS');
+
+                // # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- #
+                // Lista de dados obrigatórios do sistema
+                // # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- #
+                switch ($typeProccess) {
+                    case 1:
+                        // Para informações de entrada
+                        if(is_null($originCompany) || is_null($originProccess) || is_null($originType)) {
+                            return back();
+                        } // if(is_null($originCompany) || is_null($originProccess) || is_null($originType)) { ... }
+                        break;
+                    case 2:
+                        // Para informações de saída
+                        if(is_null($originCompany) || is_null($originProccess) || is_null($originType)) {
+                            return back();
+                        } // if(is_null($originCompany) || is_null($originProccess) || is_null($originType)) { ... }
+
+                        if(is_null($destinyCompany) || is_null($destinyProccess) || is_null($destinyType)) {
+                            return back();
+                        } // if(is_null($destinyCompany) || is_null($destinyProccess) || is_null($destinyType)) { ... }
+                        break;
+                    default:
+                        return back();
+                        break;
+                } // switch ($typeProccess) { ... }
+
+                if(is_null($entregavel) || is_null($qtde_periodicidade) || is_null($periodicidade_data) || is_null($periodicidade_hora)) {
+                    return back();
+                } // if(is_null($entregavel) || is_null($qtde_periodicidade) || is_null($periodicidade_data) || is_null($periodicidade_hora)) { ... }
+
+                // # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- #
+                // Lista de dados obrigatórios do sistema
+                // # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- #
+
+                $questionData       =   Questao::where('id_tipo_processo',$originType)
+                                        ->where('situacao',true)
+                                        ->orderBy('ordem','asc')
+                                        ->get();
+
+                foreach ($questionData as $keyQuestion => $valueQuestion) {
+                    if($valueQuestion->tipo == 'datetime') {
+                        $dataHora       =   $request->input('idQuestion_'.$valueQuestion->id_questao.'_data').' '.$request->input('idQuestion_'.$valueQuestion->id_questao.'_hora');
+
+                        $questionData[$keyQuestion]->valuesRequest  =   (object)[
+                            'original'  =>  $dataHora,
+                            'parsed'    =>  Carbon::parse($dataHora)
+                        ]; // $questionData[$keyQuestion]->valuesRequest  =   (object)[ ... ]
+                    }
+                    elseif($valueQuestion->tipo == 'date') {
+                        $questionData[$keyQuestion]->valuesRequest  =   (object)[
+                            'original'  =>  $request->input('idQuestion_'.$valueQuestion->id_questao),
+                            'parsed'    =>  Carbon::parse($request->input('idQuestion_'.$valueQuestion->id_questao))->startOfDay(),
+                        ]; // $questionData[$keyQuestion]->valuesRequest  =   (object)[ ... ]
+                    }
+                    elseif($valueQuestion->tipo == 'user') {
+                        $userData   =   User::where('id',$request->input('idQuestion_'.$valueQuestion->id_questao))->first();
+
+                        if(is_null($userData)) {
+                            $questionData[$keyQuestion]->valuesRequest  =   (object)[
+                                'original'  =>  $request->input('idQuestion_'.$valueQuestion->id_questao),
+                                'parsed'    =>  $request->input('idQuestion_'.$valueQuestion->id_questao),
+                            ]; // $questionData[$keyQuestion]->valuesRequest  =   (object)[ ... ]
+                        } // if(is_null($userData)) { ... }
+                        else {
+                            $questionData[$keyQuestion]->valuesRequest  =   (object)[
+                                'original'  =>  $request->input('idQuestion_'.$valueQuestion->id_questao),
+                                'parsed'    =>  $userData->name,
+                            ]; // $questionData[$keyQuestion]->valuesRequest  =   (object)[ ... ]
+                        } // else { ... }
+                        
+                    }
+                    else  {
+                        $questionData[$keyQuestion]->valuesRequest  =   (object)[
+                            'original'  =>  $request->input('idQuestion_'.$valueQuestion->id_questao),
+                            'parsed'    =>  $request->input('idQuestion_'.$valueQuestion->id_questao),
+                        ]; // $questionData[$keyQuestion]->valuesRequest  =   (object)[ ... ]
+                    }
+                } // foreach ($questionData as $keyQuestion => $valueQuestion) { ... }
+
+
+                if(is_null($periodicidade_data) && is_null($periodicidade_hora)) {
+                    $data   =   Carbon::now();
+                } // if(is_null($periodicidade_data) && is_null($periodicidade_hora)) { ... }
+                elseif(!is_null($periodicidade_data) && is_null($periodicidade_hora)) {
+                    $data   =   Carbon::parse($periodicidade_data.' '.Carbon::now()->hour.':'.Carbon::now()->minute);
+                } // elseif if(is_null($periodicidade_data) && is_null($periodicidade_hora)) { ... }
+                elseif(is_null($periodicidade_data) && !is_null($periodicidade_hora)) {
+                    $data   =   Carbon::now()->startOfDay();
+                    $data   =   $data->addHours(explode(':',$periodicidade_hora)[0]);
+                    $data   =   $data->addMinutes(explode(':',$periodicidade_hora)[1]);
+                } // elseif if(is_null($periodicidade_data) && is_null($periodicidade_hora)) { ... }
+                else {
+                    $data   =   Carbon::parse($periodicidade_data.' '.$periodicidade_hora);
+                } // else { ... }
+
+                $schudule                               =   new Agendamento;
+                $schudule->tipo                         =   intval($typeProccess);
+                $schudule->id_processo_origem           =   is_null($originProccess) ? null : intval($originProccess);
+                $schudule->id_processo_destino          =   is_null($destinyProccess) ? null : intval($destinyProccess);
+                $schudule->id_tipo_processo_origem      =   is_null($originType) ? null : intval($originType);
+                $schudule->id_tipo_processo_destino     =   is_null($destinyType) ? null : intval($destinyType);
+                $schudule->data_inicial                 =   $data;
+                $schudule->data_final                   =   Carbon::now();
+                $schudule->proximo_agendamento          =   $data;
+                $schudule->qtde_criado                  =   0;
+                $schudule->aprova_origem                =   false;
+                $schudule->aprova_destino               =   false;
+                $schudule->id_solicitante               =   Auth::user()->id;
+                $schudule->id_usuario_origem            =   is_null($originResponsible) ? null : intval($originResponsible);
+                $schudule->id_usuario_destino           =   is_null($destinyResponsible) ? null : intval($destinyResponsible);
+                $schudule->id_processo_referencia       =   null;//intval($idProcessoReferencia);
+                $schudule->url                          =   $_SERVER['HTTP_HOST'];
+                $schudule->titulo                       =   $entregavel;
+                $schudule->tipo_objeto                  =   null; //intval($tipoObjeto),
+                $schudule->meio                         =   null; //intval($meio),
+                $schudule->periodicidade                =   intval($periodicidade);
+                $schudule->qtde_periodicidade           =   intval($qtde_periodicidade);
+                $schudule->situacao                     =   true;
+                $schudule->data_cria                    =   Carbon::now();
+                $schudule->data_alt                     =   Carbon::now();
+                $schudule->usr_cria                     =   Auth::user()->id;
+                $schudule->usr_alt                      =   Auth::user()->id;
+                $schudule->save();
+
+
+                foreach ($questionData as $keyData => $valueData) {
+                    $schuduleItem                   =   new AgendamentoItem;
+                    $schuduleItem->id_agendamento   =   $schudule->id_agendamento;
+                    $schuduleItem->tipo             =   $valueData->tipo;
+                    $schuduleItem->id_questao       =   $valueData->id_questao;
+                    $schuduleItem->obrigatorio      =   $valueData->obrigatorio;
+                    $schuduleItem->questao          =   $valueData->titulo;
+                    $schuduleItem->resposta         =   $valueData->valuesRequest->parsed;
+                    $schuduleItem->original         =   $valueData->valuesRequest->original;
+                    $schuduleItem->ordem            =   $valueData->ordem;
+                    $schuduleItem->situacao         =   true;
+                    $schuduleItem->data_cria        =   Carbon::now();
+                    $schuduleItem->data_alt         =   Carbon::now();
+                    $schuduleItem->usr_alt          =   Auth::user()->id;
+                    $schuduleItem->usr_cria         =   Auth::user()->id;
+                    $schuduleItem->save();
+                } // foreach ($questionData as $keyData => $valueData) { ... }
+
+
+                if($fileList){
+                    foreach($fileList as $chave => $file) {
+                        if($file->isValid()) {
+                            $nomeServidor       =   Carbon::now()->timestamp.'-'.$chave.'.'.$file->getClientOriginalExtension();
+
+                            DB::beginTransaction();
+                            DB::table('arquivo')
+                            ->insert([
+                                'id_agendamento'=>  $schuduleItem->id_agendamento,
+                                'id_usuario'    =>  Auth::user()->id,
+                                'nome_servidor' =>  $nomeServidor,
+                                'nome_arquivo'  =>  $file->getClientOriginalName(),
+                                'extensao'      =>  $file->getClientOriginalExtension(),
+                                'mime'          =>  $file->getMimeType(),
+                                'tamanho'       =>  $file->getSize(),
+                                'data_cria'     =>  Carbon::now(),
+                                'data_alt'      =>  Carbon::now(),
+                                'usr_cria'      =>  Auth::user()->id,
+                                'usr_alt'       =>  Auth::user()->id,
+                            ]);
+                            DB::commit();
+
+                            $upload = $file->storeAs('chamado', $nomeServidor);
+                        } // if($file->isValid()) { ... }
+                    }
+                }
+
+                return redirect()->route('task.listAutomatic');
+            } // try { ... }
+            catch(Exception $error) {
+                return redirect()->route('mainPage');
+            } // catch(Exception $error) { ... }
+        } // public function createObject(Request $request) { ... }
+    } // class Create extends Controller { ... }

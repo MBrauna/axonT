@@ -174,8 +174,6 @@
                                     </li>
                                 </ul>
                             </div>
-
-                            <input type="hidden" name="arquivoBPMS[]">
                             
                             <div class="col-12">
                                 <ul class="list-group border border-primary">

@@ -93,7 +93,7 @@
                     case 2:
                         // Código para criação de troca de objetos
                         $userPerm   =   UsuarioConfig::where('id_usuario',Auth::user()->id)
-                                        ->where('id_configuracao',1) // [1] - Solicitação de serviço
+                                        ->where('id_configuracao',2) // [2] - Troca de objetos
                                         ->count();
                         
                         // Verifica se a solicitação de serviço está disponível para o usuário
@@ -101,7 +101,7 @@
                             return response()->json(['permission'    =>  false,],200);
                         } // if($userPerm <= 0) { ... }
                         else {
-                            $adminConfig    =   User::where('id',Auth::user()->id)->first();
+                            /*$adminConfig    =   User::where('id',Auth::user()->id)->first();
                             $adminConfig    =   $adminConfig->administrador;
 
                             // Verifica se o usuário é dono de alguma empresa
@@ -121,7 +121,8 @@
                             } // if($adminConfig || $qtdeEmpresa || $qtdeProcesso) { ... }
                             else {
                                 return response()->json(['permission'    =>  false,],200);
-                            } // else { ... }
+                            } // else { ... }*/
+                            return response()->json(['permission'    =>  true,],200);
                         } // else { ... }
 
                         break;

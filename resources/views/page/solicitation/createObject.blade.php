@@ -15,5 +15,6 @@
     <create-task-automatic
         token="{{ csrf_token() }}"
         bearer="{{ Auth::user()->token }}"
+        greatehour="{{ \Carbon\Carbon::now()->toDateString() }}"
     ></create-task-automatic>
 @endsection
