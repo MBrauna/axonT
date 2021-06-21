@@ -5,25 +5,33 @@
   */
 
 /*!
- * ApexCharts v3.25.0
+ * ApexCharts v3.26.0
  * (c) 2018-2021 Juned Chhipa
  * Released under the MIT License.
  */
 
 /*!
- * Font Awesome Free 5.15.2 by @fontawesome - https://fontawesome.com
+ * BootstrapVue Icons, generated from Bootstrap Icons 1.2.2
+ *
+ * @link https://icons.getbootstrap.com/
+ * @license MIT
+ * https://github.com/twbs/icons/blob/master/LICENSE.md
+ */
+
+/*!
+ * Font Awesome Free 5.15.3 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
 
 /*!
- * Sizzle CSS Selector Engine v2.3.5
+ * Sizzle CSS Selector Engine v2.3.6
  * https://sizzlejs.com/
  *
  * Copyright JS Foundation and other contributors
  * Released under the MIT license
  * https://js.foundation/
  *
- * Date: 2020-03-14
+ * Date: 2021-02-16
  */
 
 /*!
@@ -33,17 +41,28 @@
  */
 
 /*!
- * jQuery JavaScript Library v3.5.1
+ * jQuery JavaScript Library v3.6.0
  * https://jquery.com/
  *
  * Includes Sizzle.js
  * https://sizzlejs.com/
  *
- * Copyright JS Foundation and other contributors
+ * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2020-05-04T22:49Z
+ * Date: 2021-03-02T17:08Z
+ */
+
+/*! 
+  * portal-vue © Thorsten Lünborg, 2019 
+  * 
+  * Version: 2.1.7
+  * 
+  * LICENCE: MIT 
+  * 
+  * https://github.com/linusborg/portal-vue
+  * 
  */
 
 /*! ../../../directives/resize */
@@ -197,6 +216,8 @@
 /*! ../../util/dateTimeUtils */
 
 /*! ../../util/dedupeModelListeners */
+
+/*! ../../util/dom */
 
 /*! ../../util/helpers */
 
@@ -960,6 +981,8 @@
 
 /*! ./ru */
 
+/*! ./sanitizeDateString */
+
 /*! ./scroll */
 
 /*! ./services */
@@ -1222,6 +1245,8 @@
 
 /*! exports provided: af, ar, bg, ca, ckb, cs, de, el, en, es, et, fa, fi, fr, hr, hu, he, id, it, ja, ko, lv, lt, nl, no, pl, pt, ro, ru, sk, sl, srCyrl, sv, th, tr, az, uk, zhHans, zhHant */
 
+/*! exports provided: attachedRoot */
+
 /*! exports provided: checkCollinear, getDistance, moveTo */
 
 /*! exports provided: column */
@@ -1230,7 +1255,7 @@
 
 /*! exports provided: convertToComponentDeclarations, default */
 
-/*! exports provided: createItemTypeListeners, createItemTypeNativeListeners, createNativeLocaleFormatter, monthChange, pad */
+/*! exports provided: createItemTypeListeners, createItemTypeNativeListeners, createNativeLocaleFormatter, monthChange, sanitizeDateString, pad */
 
 /*! exports provided: createItemTypeNativeListeners, createItemTypeListeners */
 
@@ -1296,17 +1321,9 @@
   * https://github.com/svgdotjs/svg.draggable.js
   * Copyright (c) 2019 Wout Fierens; Licensed MIT */
 
-/*! svg.draggable.js - v2.2.2 - 2019-01-08
-* https://github.com/svgdotjs/svg.draggable.js
-* Copyright (c) 2019 Wout Fierens; Licensed MIT */
-
 /*! svg.filter.js - v2.0.2 - 2016-02-24
   * https://github.com/wout/svg.filter.js
   * Copyright (c) 2016 Wout Fierens; Licensed MIT */
-
-/*! svg.filter.js - v2.0.2 - 2016-02-24
-* https://github.com/wout/svg.filter.js
-* Copyright (c) 2016 Wout Fierens; Licensed MIT */
 
 /*! vue */
 
@@ -1317,6 +1334,10 @@
 /*!************************!*\
   !*** ./src/install.ts ***!
   \************************/
+
+/*!*************************!*\
+  !*** ./src/util/dom.ts ***!
+  \*************************/
 
 /*!**************************!*\
   !*** ./src/framework.ts ***!
@@ -3123,6 +3144,10 @@
   \***************************************************************/
 
 /*!***************************************************************!*\
+  !*** ./src/components/VDatePicker/util/sanitizeDateString.ts ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
   !*** ./src/components/VNavigationDrawer/VNavigationDrawer.ts ***!
   \***************************************************************/
 
@@ -3207,3 +3232,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+//! moment.js
+
+//! moment.js locale configuration
