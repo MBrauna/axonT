@@ -117,7 +117,7 @@ select distinct
 							   );
 
 
-insert into public.usuario_config(id_usuario, id_processo, id_superior, id_perfil, data_cria, data_alt, usr_cria, usr_alt)
+insert into public.usuario_perfil(id_usuario, id_processo,id_superior, id_perfil, data_cria, data_alt, usr_cria, usr_alt)
 select distinct bpu.id_usuario,
  		bpa.id_processo,
 		bpu.id_superior,
@@ -136,6 +136,7 @@ where bp.situacao = true
 							      from backup.perfil_acesso pera
 							     where pera.id_perfil = bp.id_perfil
 							   )
+	and 0 < (select count(1) from perfil where perfil.id_perfil = bp.id_perfil)
  order by bpu.id_usuario, bpa.id_processo, bp.id_perfil, bpu.id_superior;
 
 
@@ -191,3 +192,38 @@ select id_pergunta_tipo,
 		usr_cria,
 		usr_alt
    from backup.entrada_solicitacao;
+
+
+
+insert into usuario_perfil(id_usuario, id_perfil,id_processo, data_cria, data_alt, usr_cria, usr_alt, id_superior, situacao)
+select distinct
+		pu.id_usuario, ua.id_perfil, p.id_processo,
+		current_timestamp,
+		current_timestamp,1,1,
+		pu.id_superior, true
+   from backup.perfil_acesso ua
+        inner join backup.perfil_usuario pu on pu.id_perfil = ua.id_perfil
+   	    inner join backup.processo p on p.id_processo = ua.id_processo
+		inner join perfil pp on pp.id_perfil = ua.id_perfil
+ where pp.situacao = true;
+
+insert into configuracao values(1,'SS','Solicitação de serviço',1,TRUE,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,1,1);
+insert into configuracao values(2,'OBJ','Troca de objetos',1,TRUE,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,1,1);
+
+
+insert into usuario_config(id_usuario, id_configuracao, data_cria, data_alt, usr_cria, usr_alt)
+SELECT ID,1,current_timestamp, current_timestamp, 1,1
+  FROM backup.users
+UNION ALL
+SELECT ID,2,current_timestamp, current_timestamp, 1,1
+  FROM backup.users;
+
+
+insert into usuario_empresa(id_usuario, id_empresa, data_cria, data_alt, usr_cria, usr_alt)
+select distinct
+		pu.id_usuario, p.id_empresa,
+		current_timestamp,
+		current_timestamp,1,1
+   from backup.perfil_acesso ua
+        inner join backup.perfil_usuario pu on pu.id_perfil = ua.id_perfil
+   	    inner join backup.processo p on p.id_processo = ua.id_processo;
