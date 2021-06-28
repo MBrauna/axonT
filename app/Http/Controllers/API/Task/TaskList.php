@@ -412,4 +412,21 @@
                 ],202);
             } // catch(Exception $error) { ... }
         } // public function changeAutomaticStatus(Request $request) { ... }
+
+        public function removeScheduling(Request $request) {
+            try {
+                if(!isset($request->idAgendamento) || is_null($request->idAgendamento) || !is_numeric($request->idAgendamento)) {
+                    return response()->json(['resposta' => false],200);
+                } // if(!isset($request->idAgendamento) || is_null($request->idAgendamento) || !is_numeric($request->idAgendamento)) { ... }
+
+                $schudule   =   Agendamento::find($request->idAgendamento);
+                $schudule->situacao =   false;
+                $schudule->save();
+
+                return response()->json(['resposta' => true],200);
+            } // try { ... }
+            catch(Exception $error) {
+                return response()->json(['resposta' => false, 'error' => $error],500);
+            } // catch(Exception $error) { ... }
+        } // public function removeScheduling(Request $request) { ... }
     }

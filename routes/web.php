@@ -34,13 +34,13 @@
             Route::any('/createSS','Create@createData')->name('createSS');
             // [tasks.createObject] - Criação de solicitacoes, agendamentos
             Route::any('/createObject','Create@createObject')->name('createObject');
+            // [tasks.editObject] - Criação de solicitacoes, agendamentos
+            Route::any('/editObject','Create@editObject')->name('editObject');
             // [task.list] - Sistema para criação das solicitações e agendamentos.
             Route::any('/list','ListSS@listPage')->name('list');
             // [task.listAutomatic] - Sistema para troca de objetos
             Route::any('/listAutomatic','ListSS@listAutomatic')->name('listAutomatic');
             // [task.idTask]
             Route::any('/{idTask}','ShowTask@getID')->name('idTask');
-            // [task.editAutomatic]
-            Route::any('/editAutomatic','ListSS@editAutomatic')->name('editAutomatic');
         }); // Route::namespace('Task')->prefix('task')->name('task.')->group(function(){ ... });
     }); // Route::namespace('Page')->middleware(['auth'])->group(function(){ ... });

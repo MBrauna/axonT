@@ -378,7 +378,6 @@
                                 'parsed'    =>  $userData->name,
                             ]; // $questionData[$keyQuestion]->valuesRequest  =   (object)[ ... ]
                         } // else { ... }
-                        
                     }
                     else  {
                         $questionData[$keyQuestion]->valuesRequest  =   (object)[
@@ -486,4 +485,88 @@
                 return redirect()->route('mainPage');
             } // catch(Exception $error) { ... }
         } // public function createObject(Request $request) { ... }
+
+        public function editObject(Request $request) {
+            try {
+                if(!isset($request->idTask)) {
+                    return back();
+                } // if(!isset($request->idTask)) { ... }
+    
+                if(!isset($request->entregavel) || trim($request->entregavel) == "") {
+                    return back();
+                } // if(!isset($request->entregavel) || trim($request->entregavel) == "") { ... }
+    
+                if(!isset($request->periodicidade)) {
+                    return back();
+                }
+    
+                if(is_null($request->periodicidade_data) && is_null($request->periodicidade_hora)) {
+                    $data   =   Carbon::now();
+                } // if(is_null($periodicidade_data) && is_null($periodicidade_hora)) { ... }
+                elseif(!is_null($request->periodicidade_data) && is_null($request->periodicidade_hora)) {
+                    $data   =   Carbon::parse($request->periodicidade_data.' '.Carbon::now()->hour.':'.Carbon::now()->minute);
+                } // elseif if(is_null($periodicidade_data) && is_null($periodicidade_hora)) { ... }
+                elseif(is_null($request->periodicidade_data) && !is_null($request->periodicidade_hora)) {
+                    $data   =   Carbon::now()->startOfDay();
+                    $data   =   $data->addHours(explode(':',$request->periodicidade_hora)[0]);
+                    $data   =   $data->addMinutes(explode(':',$request->periodicidade_hora)[1]);
+                } // elseif if(is_null($periodicidade_data) && is_null($periodicidade_hora)) { ... }
+                else {
+                    $data   =   Carbon::parse($request->periodicidade_data.' '.$request->periodicidade_hora);
+                } // else { ... }
+    
+                $schudule                       =   Agendamento::find($request->idTask);
+                $schudule->titulo               =   trim($request->entregavel);
+                $schudule->periodicidade        =   intval($request->periodicidade);
+                $schudule->qtde_periodicidade   =   intval($request->qtde_periodicidade);
+                $schudule->data_inicial         =   $data;
+                $schudule->save();
+    
+                $schuduleItem                   =   AgendamentoItem::where('id_agendamento',$request->idTask)->get();
+    
+                foreach ($schuduleItem as $keyQuestion => $valueQuestion) {
+                    $parsed     =   null;
+                    $original   =   null;
+    
+    
+                    if($valueQuestion->tipo == 'datetime') {
+                        $dataHora       =   $request->input('idAgendamento_'.$valueQuestion->id_questao.'_data').' '.$request->input('idAgendamento_'.$valueQuestion->id_questao.'_hora');
+    
+                        $parsed         =   Carbon::parse($dataHora);
+                        $original       =   $dataHora;
+                    }
+                    elseif($valueQuestion->tipo == 'date') {
+                        $parsed         =   Carbon::parse($request->input('idAgendamento_'.$valueQuestion->id_questao))->startOfDay();
+                        $original       =   $request->input('idAgendamento_'.$valueQuestion->id_questao);
+                    }
+                    elseif($valueQuestion->tipo == 'user') {
+                        $userData   =   User::where('id',$request->input('idAgendamento_'.$valueQuestion->id_questao))->first();
+    
+                        if(is_null($userData)) {
+                            $parsed         =   $request->input('idAgendamento_'.$valueQuestion->id_questao);
+                            $original       =   $request->input('idAgendamento_'.$valueQuestion->id_questao);
+                        } // if(is_null($userData)) { ... }
+                        else {
+                            $parsed         =   $userData->name;
+                            $original       =   $request->input('idAgendamento_'.$valueQuestion->id_questao);
+                        } // else { ... }
+                    }
+                    else  {
+                        $parsed         =   $request->input('idAgendamento_'.$valueQuestion->id_questao);
+                        $original       =   $request->input('idAgendamento_'.$valueQuestion->id_questao);
+                    }
+    
+    
+                    $tmpSchuduleItem            =   AgendamentoItem::find($valueQuestion->id_agendamento_item);
+                    $tmpSchuduleItem->original  =   $original;
+                    $tmpSchuduleItem->resposta  =   $parsed;
+                    $tmpSchuduleItem->save();
+                } // foreach ($schuduleItem as $keyData => $valueData) { ... }
+    
+                return redirect()->route('task.listAutomatic');
+            } // try { ... }
+            catch(Exception $error) {
+                dd($error);
+            }
+        } // public function editObject(Request $request) { ... }
     } // class Create extends Controller { ... }

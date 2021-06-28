@@ -64,7 +64,7 @@
             :hide-footer='true'
             @close="curinfo.acao.modal = false"
         >
-            <form method="POST" action="/task/editAutomatic" class="row was-validated" v-if="items[iddx].listaQuestao.length > 0">
+            <form method="POST" action="/task/editObject" class="row was-validated" v-if="items[iddx].listaQuestao.length > 0">
                 <input type="hidden" name="_token" v-bind:value="token">
                 <input type="hidden" name="idTask" v-bind:value="curinfo.id_agendamento">
                 <!-- Dados do entregável -->
@@ -80,7 +80,7 @@
                 <div class="col-12 col-sm-12 col-md-6">
                     <div class="form-group">
                         <label for="periodicidade">Periodicidade:</label>
-                        <select class="form-control form-control-sm" id="periodicidade" v-model="curinfo.periodicidade" required>
+                        <select class="form-control form-control-sm" id="periodicidade" v-model="curinfo.periodicidade" required name="periodicidade">
                             <option value="">Nenhum período escolhido</option>
                             <option v-for="conteudo in curinfo.allPeriodics" v-bind:key="conteudo.id" v-bind:value="conteudo.id">{{ conteudo.name }}</option>
                         </select>
@@ -101,7 +101,7 @@
                 <div class="col-12 col-sm-6">
                     <div class="form-group">
                         <label for="periodicidade_data">Hora de início:</label>
-                        <input type="time" class="form-control form-control-sm" id="periodicidade_data" name="periodicidade_data" v-bind:value="moment(String(curinfo.data_inicial)).format('hh:mm')" required>
+                        <input type="time" class="form-control form-control-sm" id="periodicidade_data" name="periodicidade_hora" v-bind:value="moment(String(curinfo.data_inicial)).format('hh:mm')" required>
                     </div>
                 </div>
                 <!-- Dados de periodicidade -->
@@ -225,9 +225,14 @@
                     .then(function (response) {
                         vm.isBusy = false;
                         if(response.status === 200) {
-                            // Atualiza os dados
-                            vm.consultaDados();
-                            Vue.$toast.success('O registro [' + idAgendamento + '] foi inativado com sucesso! Verifique.');
+                            if(response.data.resposta) {
+                                // Atualiza os dados
+                                vm.consultaDados();
+                                Vue.$toast.success('O registro [' + idAgendamento + '] foi inativado com sucesso! Verifique.');
+                            }
+                            else {
+                                Vue.$toast.error('Não foi possível remover o registro ['+ idAgendamento +'].');
+                            }
                         }
                         else {
                             Vue.$toast.error('Não foi possível remover o registro ['+ idAgendamento +'].');
