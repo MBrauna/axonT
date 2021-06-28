@@ -113,41 +113,44 @@
                     <div class="form-group">
                         <label for="periodicidade">Periodicidade:</label>
                         <select class="form-control form-control-sm" id="periodicidade" name="periodicidade" v-model="periodicity" required>
-                            <option v-for="conteudo in periodicityList" v-bind:key="conteudo.id" v-bind:value="conteudo">{{ conteudo.description }}</option>
+                            <option v-for="conteudo in periodicityList" v-bind:key="conteudo.id" v-bind:value="conteudo.id">{{ conteudo.description }}</option>
                         </select>
                     </div>
                 </div>
                 <div class="col-12 col-sm-12 col-md-6" v-if="((typeProccess == 1 && originCompany !== null && originProccess !== null && originType !== null) || (typeProccess == 2 && originCompany !== null && originProccess !== null && originType !== null && destinyCompany !== null && destinyProccess !== null && destinyType !== null))">
                     <div class="form-group">
-                        <label for="qtde_periodicidade">Tempo {{ (periodicity.id == undefined) ? '' : 'em ' + periodicity.description }}:</label>
+                        <label for="qtde_periodicidade">Tempo:</label>
                         <input type="number" min="1" max="9999" class="form-control form-control-sm" id="qtde_periodicidade" name="qtde_periodicidade" value="" required>
                     </div>
                 </div>
 
-                <div class="col-12" v-if="periodicity.date">
+
+                <!--
+                <div class="col-12" v-if="periodicity != null && periodicityList.filter(function(item){ return (item.id === periodicity);}).date">
                     <div class="form-group">
                         <label for="periodicidade_data">Data de início:</label>
                         <input type="date" v-bind:min="menorHora" class="form-control form-control-sm" id="periodicidade_data" name="periodicidade_data" required>
                     </div>
                 </div>
-                <div class="col-12" v-if="periodicity.hour">
+                <div class="col-12" v-if="periodicity != null && periodicityList.filter(function(item){ return (item.id === periodicity);}).hour">
                     <div class="form-group">
                         <label for="periodicidade_hora">Horário de início:</label>
                         <input type="time" class="form-control form-control-sm" id="periodicidade_hora" name="periodicidade_hora" required>
                     </div>
-                </div>
-                <div class="col-12 col-sm-12 col-md-6 col-lg-6" v-if="periodicity.datetime">
+                </div>-->
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6" v-if="periodicity != null">
                     <div class="form-group">
                         <label for="periodicidade_data">Data de início:</label>
                         <input type="date" v-bind:min="greatehour" class="form-control form-control-sm" id="periodicidade_data" name="periodicidade_data" required>
                     </div>
                 </div>
-                <div class="col-12 col-sm-12 col-md-6 col-lg-6" v-if="periodicity.datetime">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6" v-if="periodicity != null">
                     <div class="form-group">
                         <label for="periodicidade_hora">Horário de início:</label>
                         <input type="time" class="form-control form-control-sm" id="periodicidade_hora" name="periodicidade_hora" required>
                     </div>
                 </div>
+
                 <!-- Dados de periodicidade -->
 
                 <!-- Dados do questionário -->
@@ -279,7 +282,7 @@
                         "datetime" : true,
                     },
                 ],
-                'periodicity'   :   {},
+                'periodicity'   :   null,
             }
         },
         methods: {
@@ -394,7 +397,7 @@
             this.PREFERENCES.initData();
 
             this.loading    =   true;
-            this.periodicity=   this.periodicityList[0];
+            this.periodicity=   this.periodicityList[0].id;
             this.verifyPermission();
         }
     }
