@@ -42,5 +42,18 @@
             Route::any('/listAutomatic','ListSS@listAutomatic')->name('listAutomatic');
             // [task.idTask]
             Route::any('/{idTask}','ShowTask@getID')->name('idTask');
+            // [task.allTasks]
+            Route::any('/allTasks','TaskData@listTask')->name('allTasks');
+        }); // Route::namespace('Task')->prefix('task')->name('task.')->group(function(){ ... });
+
+
+        Route::namespace('Cards')->prefix('card')->name('card.')->group(function(){
+            // [card.mainPage]
+            Route::any('/', function(){
+                return redirect()->route('card.list');
+            })->name('mainPage');
+
+            // [task.list] - Sistema para criação das cards
+            Route::any('/list','CardsData@listCard')->name('list');
         }); // Route::namespace('Task')->prefix('task')->name('task.')->group(function(){ ... });
     }); // Route::namespace('Page')->middleware(['auth'])->group(function(){ ... });

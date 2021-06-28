@@ -46,7 +46,7 @@
                   </div>
               </li>
               <li class="nav-item">
-                  <a class="nav-link text-primary" href="/task/tasks">Tarefa</a>
+                  <a class="nav-link text-primary" href="/card/list">Tarefa</a>
               </li>
           </ul>
       </div>

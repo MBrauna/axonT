@@ -40,4 +40,10 @@
             // [tasks.removeScheduling]
             Route::any('/removeScheduling','TaskList@removeScheduling')->name('removeScheduling');
         }); // Route::namespace('Task')->middleware('auth:api')->prefix('task')->name('task.')->group(function(){ ... });
+
+
+        Route::namespace('Card')->middleware('auth:api')->prefix('card')->name('card.')->group(function(){
+            // [card.list]
+            Route::any('/list','CardsData@getCards')->name('list');
+        }); // Route::namespace('Util')->middleware('auth:api')->prefix('util')->name('util.')->group(function(){ ... }
     });
