@@ -533,7 +533,7 @@ class Reconstrucao extends Migration
             $table->foreign('id_usuario')->references('id')->on('users');
             $table->foreign('id_usuario_alvo')->references('id')->on('users');
             $table->foreign('id_chamado')->references('id_chamado')->on('chamado');
-            $table->foreign('id_agendamento')->references('agendamento')->on('id_agendamento');
+            $table->foreign('id_agendamento')->references('id_agendamento')->on('agendamento');
             $table->foreign('id_tarefa')->references('id_tarefa')->on('tarefa');
         });
     }
