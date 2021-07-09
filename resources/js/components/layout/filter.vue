@@ -110,24 +110,24 @@
                 try {
                     vm.fulldata.forEach((elementCompany) => {
                         if(elementCompany.id_empresa == vm.idCompany || vm.idCompany == null || vm.idCompany == '' || vm.idCompany == 'null') {
-                            elementCompany.processos.forEach((elementProccess) => {
+                            elementCompany.proccessData.forEach((elementProccess) => {
                                 if(elementCompany.id_processo == vm.idProccess || vm.idProccess == null || vm.idProccess == '' || vm.idProccess == 'null') {
                                     if(!vm.dataProccess.includes(elementProccess)){
                                         vm.dataProccess.push(elementProccess);
                                     } // if(!vm.dataProccess.includes(elementProccess)){ ... }
 
-                                    elementProccess.tipoAutomatico.forEach((elementType) => {
+                                    elementProccess.automaticType.forEach((elementType) => {
                                         if(!vm.dataType.includes(elementType)) {
                                             vm.dataType.push(elementType);
                                         } // if(!vm.dataType.includes(elementType)) { ... }
-                                    }); // elementProccess.tipoManual.forEach((elementType) => { ...});
-                                    elementProccess.tipoManual.forEach((elementType) => {
+                                    }); // elementProccess.automaticType.forEach((elementType) => { ...});
+                                    elementProccess.manualType.forEach((elementType) => {
                                         if(!vm.dataType.includes(elementType)) {
                                             vm.dataType.push(elementType);
                                         } // if(!vm.dataType.includes(elementType)) { ... }
-                                    }); // elementProccess.tipoManual.forEach((elementType) => { ... });
+                                    }); // elementProccess.manualType.forEach((elementType) => { ... });
                                 }
-                            }); // elementCompany.processos.forEach((elementProccess) => { ... });
+                            }); // elementCompany.proccessData.forEach((elementProccess) => { ... });
                         } // if(elementCompany.id_empresa == vm.idCompany || vm.idCompany == null || vm.idCompany == '' || vm.idCompany == 'null') { ... }
                     }); // vm.fulldata.forEach((elementCompany) => { ... });
                 } // try { ... }
@@ -137,42 +137,6 @@
             },
             selectProccess : function(){
                 this.PREFERENCES.setProccess(this.idProccess);
-                /*var vm      =   this;
-                vm.dataType     =   [];
-
-                this.PREFERENCES.setProccess(this.idProccess);
-                
-                this.PREFERENCES.setType(null);
-                vm.idType       =   null;
-
-                try {
-                    vm.fulldata.forEach((elementCompany) => {
-                        if(elementCompany.id_empresa == vm.idCompany || vm.idCompany == null || vm.idCompany == '' || vm.idCompany == 'null') {
-                            elementCompany.processos.forEach((elementProccess) => {
-                                if(elementCompany.id_processo == vm.idProccess || vm.idProccess == null || vm.idProccess == '' || vm.idProccess == 'null') {
-                                    if(!vm.dataProccess.includes(elementProccess)){
-                                        vm.dataProccess.push(elementProccess);
-                                    } // if(!vm.dataProccess.includes(elementProccess)){ ... }
-
-                                    elementProccess.tipoAutomatico.forEach((elementType) => {
-                                        if(!vm.dataType.includes(elementType)) {
-                                            vm.dataType.push(elementType);
-                                        } // if(!vm.dataType.includes(elementType)) { ... }
-                                    }); // elementProccess.tipoManual.forEach((elementType) => { ...});
-                                    elementProccess.tipoManual.forEach((elementType) => {
-                                        if(!vm.dataType.includes(elementType)) {
-                                            vm.dataType.push(elementType);
-                                        } // if(!vm.dataType.includes(elementType)) { ... }
-                                    }); // elementProccess.tipoManual.forEach((elementType) => { ... });
-                                }
-                            }); // elementCompany.processos.forEach((elementProccess) => { ... });
-                        } // if(elementCompany.id_empresa == vm.idCompany || vm.idCompany == null || vm.idCompany == '' || vm.idCompany == 'null') { ... }
-                    }); // vm.fulldata.forEach((elementCompany) => { ... });
-                } // try { ... }
-                catch(error) {
-                    console.log(error);
-                } // catch(error) { ... }
-                */
             },
             selectType : function(){
                 var vm = this;
@@ -202,35 +166,39 @@
                             vm.dataProccess =   [];
                             vm.dataType     =   [];
 
-                            try {
-                                vm.fulldata.forEach((elementCompany) => {
-                                    if(elementCompany.id_empresa == vm.idCompany || vm.idCompany == null || vm.idCompany == '' || vm.idCompany == 'null') {
-                                        elementCompany.processos.forEach((elementProccess) => {
-                                            if(elementCompany.id_processo == vm.idProccess || vm.idProccess == null || vm.idProccess == '' || vm.idProccess == 'null') {
-                                                if(!vm.dataProccess.includes(elementProccess)){
-                                                    vm.dataProccess.push(elementProccess);
-                                                } // if(!vm.dataProccess.includes(elementProccess)){ ... }
-
-                                                elementProccess.tipoAutomatico.forEach((elementType) => {
-                                                    if(!vm.dataType.includes(elementType)) {
-                                                        vm.dataType.push(elementType);
-                                                    } // if(!vm.dataType.includes(elementType)) { ... }
-                                                }); // elementProccess.tipoManual.forEach((elementType) => { ...});
-                                                elementProccess.tipoManual.forEach((elementType) => {
-                                                    if(!vm.dataType.includes(elementType)) {
-                                                        vm.dataType.push(elementType);
-                                                    } // if(!vm.dataType.includes(elementType)) { ... }
-                                                }); // elementProccess.tipoManual.forEach((elementType) => { ... });
-                                            }
-                                        }); // elementCompany.processos.forEach((elementProccess) => { ... });
-                                    } // if(elementCompany.id_empresa == vm.idCompany || vm.idCompany == null || vm.idCompany == '' || vm.idCompany == 'null') { ... }
-                                }); // vm.fulldata.forEach((elementCompany) => { ... });
-                            } // try { ... }
-                            catch(error) {
-                                console.log(error);
-                            } // catch(error) { ... }
-
                             vm.loading  = false;
+
+                            if(vm.fulldata.length > 0) {
+                                try {
+                                    response.data.forEach((elementCompany) => {
+                                        if(elementCompany.id_empresa == vm.idCompany || vm.idCompany == null || vm.idCompany == '' || vm.idCompany == 'null') {
+                                            elementCompany.proccessData.forEach((elementProccess) => {
+                                                if(elementCompany.id_processo == vm.idProccess || vm.idProccess == null || vm.idProccess == '' || vm.idProccess == 'null') {
+                                                    if(!vm.dataProccess.includes(elementProccess)){
+                                                        vm.dataProccess.push(elementProccess);
+                                                    } // if(!vm.dataProccess.includes(elementProccess)){ ... }
+
+                                                    elementProccess.automaticType.forEach((elementType) => {
+                                                        if(!vm.dataType.includes(elementType)) {
+                                                            vm.dataType.push(elementType);
+                                                        } // if(!vm.dataType.includes(elementType)) { ... }
+                                                    }); // elementProccess.tipoManual.forEach((elementType) => { ...});
+                                                    elementProccess.manualType.forEach((elementType) => {
+                                                        if(!vm.dataType.includes(elementType)) {
+                                                            vm.dataType.push(elementType);
+                                                        } // if(!vm.dataType.includes(elementType)) { ... }
+                                                    }); // elementProccess.tipoManual.forEach((elementType) => { ... });
+                                                }
+                                            }); // elementCompany.proccessData.forEach((elementProccess) => { ... });
+                                        } // if(elementCompany.id_empresa == vm.idCompany || vm.idCompany == null || vm.idCompany == '' || vm.idCompany == 'null') { ... }
+                                    }); // vm.fulldata.forEach((elementCompany) => { ... });
+                                } // try { ... }
+                                catch(error) {
+                                    Vue.$toast.error('Erro no mapeamento dos dados! Verifique filtros.');
+                                    console.log(error);
+                                } // catch(error) { ... }
+
+                            }
                         }
                     })
                     .catch(function(retorno){

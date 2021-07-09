@@ -10962,3 +10962,53 @@ a.text-dark:focus {
   }
 }
 
+.axon-border-blue {
+  border-left: 0.5em solid #000a44;
+  border-right: 0.5em solid #000a44;
+}
+
+.axon-border-indigo {
+  border-left: 0.5em solid #02126e;
+  border-right: 0.5em solid #02126e;
+}
+
+.axon-border-purple {
+  border-left: 0.5em solid #3d0099;
+  border-right: 0.5em solid #3d0099;
+}
+
+.axon-border-pink {
+  border-left: 0.5em solid #ff0077;
+  border-right: 0.5em solid #ff0077;
+}
+
+.axon-border-red {
+  border-left: 0.5em solid #ff0800;
+  border-right: 0.5em solid #ff0800;
+}
+
+.axon-border-orange {
+  border-left: 0.5em solid #ff8000;
+  border-right: 0.5em solid #ff8000;
+}
+
+.axon-border-yellow {
+  border-left: 0.5em solid #ffe600;
+  border-right: 0.5em solid #ffe600;
+}
+
+.axon-border-green {
+  border-left: 0.5em solid #025022;
+  border-right: 0.5em solid #025022;
+}
+
+.axon-border-teal {
+  border-left: 0.5em solid #00ffe5;
+  border-right: 0.5em solid #00ffe5;
+}
+
+.axon-border-cyan {
+  border-left: 0.5em solid #144c7b;
+  border-right: 0.5em solid #144c7b;
+}
+

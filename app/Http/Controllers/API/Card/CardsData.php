@@ -49,55 +49,97 @@
                     $idType  =   intval($idType);
                 } // else { ... }
 
-                $perfilProcesso =   UsuarioPerfil::where('id_usuario',Auth::user()->id)
+
+                # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- #
+
+
+                $listProccess   =   [];
+                $listPerfil     =   UsuarioPerfil::where('id_usuario',Auth::user()->id)
                                     ->where('situacao',true)
                                     ->select('id_perfil','id_processo')
                                     ->get();
+                
+                foreach ($listPerfil as $keyPerfil => $valuePerfil) {
+                    if(!in_array($valuePerfil->id_processo, $listProccess)) {
+                        array_push($listProccess,$valuePerfil->id_processo);
+                    } // if(!in_array($valuePerfil->id_processo, $listProccess)) { ... }
+                } // foreach ($listPerfil as $keyPerfil => $valuePerfil) { ... }
 
-                $listPermissions    =   getAccess();
+                $listStatusActive   =   [];
+                $listStatus         =   Situacao::whereIn('id_processo',$listProccess)
+                                        ->where('conclusiva',false)
+                                        ->where('situacao',true)
+                                        ->get();
+
+                foreach ($listStatus as $keyStatus => $valueStatus) {
+                    $verifyProccess =   Processo::where('id_processo',$valueStatus->id_processo)
+                                        ->first();
+                    
+                    if(isset($verifyProccess->id_processo) && !is_null($verifyProccess) && $verifyProccess->situacao) {
+                        $verifyCompany  =   Empresa::where('id_empresa',$verifyProccess->id_empresa)
+                                            ->where('situacao',true)
+                                            ->first();
+
+                        if(isset($verifyCompany->id_empresa) && !is_null($verifyCompany) && $verifyCompany->situacao) {
+                            if(!in_array($valueStatus, $listStatusActive)) {
+                                array_push($listStatusActive,$valueStatus);
+                            } // if(!in_array($valueStatus->id_situacao, $listStatusActive)) { ... }
+                        } // if(isset($verifyCompany->id_empresa) && !is_null($verifyCompany) && $verifyCompany->situacao) { ... }
+                    } // if(isset($verifyProccess) && $verifyProccess->situacao) { ... }
+                } // foreach ($listStatus as $keyStatus => $valueStatus) { ... }
+
+                $listUser           =   [];
                 $listSubordinates   =   getSubordinates();
-                $tmpProccess        =   [];
-                $tmpSubordinates    =   [];
-                $tmpPerfil          =   [];
-
-                foreach ($listPermissions as $keyCompany => $valueCompany) {
-                    foreach ($valueCompany->proccessData as $keyProccess => $valueProccess) {
-                        if(!in_array($valueProccess->id_processo, $tmpProccess)) {
-                            array_push($tmpProccess, $valueProccess->id_processo);
-                        } // if(!in_array($valueProccess->id_processo, $tmpProccess)) { ... }
-                    } // foreach ($valueCompany->processos as $keyProccess => $valueProccess) { ... }
-                } // foreach ($listPermissions as $keyCompany => $valueCompany) { ... }
-
-                $perfilSituacao =   Situacao::where('situacao',true)
-                                    ->where('conclusiva',false)
-                                    ->whereIn('id_processo',$tmpProccess)
-                                    ->select('id_situacao');
 
                 foreach ($listSubordinates as $keySub => $valueSub) {
                     if(!in_array($valueSub->id, $tmpSubordinates)) {
                         array_push($tmpSubordinates, $valueSub->id);
-                    }
+                    } // if(!in_array($valueSub->id, $tmpSubordinates)) { ... }
                 } // foreach ($listSubordinates as $keySub => $valueSub) { ... }
 
-                foreach($perfilProcesso as $keyData => $valueData) {
-                    /*$tmpInfoPerfil  =   (object)[
-                        'id_perfil'     =>  $valueData->id_perfil,
-                        'id_processo'   =>  $valueData->id_processo,
-                    ];*/
+                $queryUserResponsible   =   Chamado::where('id_responsavel',Auth::user()->id)
+                                            ->where('situacao',true)
+                                            ->get();
+                
+                $queryProccess          =   Chamado::whereIn('id_processo',$listProccess)
+                                            ->whereNull('id_responsavel')
+                                            ->where('situacao',true)
+                                            ->get();
+                
+                $querySubordinates      =   Chamado::whereIn('id_responsavel',$listUser)
+                                            ->where('situacao',true)
+                                            ->get();
 
-                    if(!in_array($valueData->id_processo,$tmpPerfil)) {
-                        array_push($tmpPerfil,$valueData->id_processo);
-                    } // if(!in_array($tmpInfoPerfil,$tmpPerfil)) { ... }
-                } // foreach($perfilProcesso as $keyData => $valueData) { ... }
+                # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- #
+                
+                $returnData =   [];
 
-                // Tudo que é para o usuário e que ele esteja vinculado
-                $taskPerfilProcessUser  =   Chamado::where('situacao',true)
-                                            ->whereIn('id_processo',$tmpPerfil)
+                foreach ($queryUserResponsible as $keyReturn => $valueReturn) {
+                    if(!in_array($valueReturn, $returnData)) {
+                        $valueReturn['classCard']   =   'axon-border-indigo';
+                        array_push($returnData,$valueReturn);
+                    } // if(!in_array($valueReturn, $returnData)) { ... }
+                } // foreach ($queryUserResponsible as $keyReturn => $valueReturn) { ... }
 
+                foreach ($queryProccess as $keyReturn => $valueReturn) {
+                    if(!in_array($valueReturn, $returnData)) {
+                        $valueReturn['classCard']   =   'axon-border-orange';
+                        array_push($returnData,$valueReturn);
+                    } // if(!in_array($valueReturn, $returnData)) { ... }
+                } // foreach ($queryProccess as $keyReturn => $valueReturn) { ... }
+
+                foreach ($querySubordinates as $keyReturn => $valueReturn) {
+                    if(!in_array($valueReturn, $returnData)) {
+                        $valueReturn['classCard']   =   'axon-border-teal';
+                        array_push($returnData,$valueReturn);
+                    } // if(!in_array($valueReturn, $returnData)) { ... }
+                } // foreach ($querySubordinates as $keyReturn => $valueReturn) { ... }
+
+                return response()->json($returnData,200);
                 
             }
             catch(Exception $error) {
-
+                return response()->json([],200);
             }
         }
     }

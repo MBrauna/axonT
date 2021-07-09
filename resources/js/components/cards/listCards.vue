@@ -8,8 +8,15 @@
                 <div class="col-12" v-if="loading">
                     <center><logo :size="100"></logo></center>
                 </div>
+                <div class="col-12 text-center text-primary font-weight-bold" v-else-if="!loading && content == []">
+                    Não há cartões disponíveis para seu usuário
+                </div>
                 <div class="col-12" v-else>
-                    123
+                    <ul class="list-group">
+                        <li v-bind:class="'list-group-item ' + curreg.classCard" v-for="curreg in content" v-bind:key="curreg.id_chamado">
+                            123
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -51,17 +58,18 @@
 
                     axios.post('/api/card/list',request, header)
                     .then(function (response) {
-                        vm.loading  =   false;
                         if(response.status === 200) {
-                            vm.content  =   respose.data;
+                            vm.loading  =   false;
+                            vm.content  =   response.data;
                         }
                         else {
                             Vue.$toast.error('Não foi possível coletar informações de cartões');
                         }
                     })
                     .catch(function (error) {
+                        console.log(error);
                         Vue.$toast.error('Não foi possível coletar informações de cartões');
-                        vm.isBusy   =   false;
+                        vm.loading   =   false;
                     });
                 }
                 catch(error) {
