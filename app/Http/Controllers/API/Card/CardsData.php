@@ -13,6 +13,7 @@
     use App\Models\Chamado;
     use App\Models\ChamadoItem;
     use App\Models\Empresa;
+    use App\Models\Fluxo;
     use App\Models\Processo;
     use App\Models\TipoProcesso;
     use App\Models\Situacao;
@@ -111,26 +112,174 @@
                                             ->get();
 
                 # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- #
-                
+
                 $returnData =   [];
+                $urlChamado =   '/task/';
 
                 foreach ($queryUserResponsible as $keyReturn => $valueReturn) {
                     if(!in_array($valueReturn, $returnData)) {
-                        $valueReturn['classCard']   =   'axon-border-indigo';
+                        // Coleta subordinados
+                        $tmpUserPerfil  =   UsuarioPerfil::where('situacao',true)
+                                            ->where('id_processo',$valueReturn->id_processo)
+                                            ->select('id_usuario')
+                                            ->get();
+                        $tmpUserData    =   [];
+                        foreach ($tmpUserPerfil as $keyUserPerfil => $valueUserPerfil) {
+                            $tmpUserRef =   User::where('id',$valueUserPerfil->id_usuario)->first();
+
+                            if(!in_array($tmpUserRef, $tmpUserData)) {
+                                array_push($tmpUserData, $tmpUserRef);
+                            } // if(!in_array($valueUserPerfil->id_usuario, $tmpUserData)) { ... }
+                        } // foreach ($tmpUserPerfil as $keyUserPerfil => $valueUserPerfil) { ... }
+
+                        // Coleta o fluxo
+                        $tmpFluxoSituacao   =   Fluxo::where('id_tipo_processo',$valueReturn->id_tipo_processo)
+                                                ->where('id_situacao_ant',$valueReturn->id_situacao)
+                                                ->select('id_situacao')
+                                                ->get();
+
+                        $tmpFluxoData       =   [];
+                        foreach ($tmpFluxoSituacao as $keyFluxo => $valueFluxo) {
+                            $tmpSituacaoFluxo   =   Situacao::where('id_situacao',$valueFluxo->id_situacao)->first();
+
+                            if(!in_array($tmpSituacaoFluxo, $tmpFluxoData)) {
+                                array_push($tmpFluxoData,$tmpSituacaoFluxo);
+                            } // if(!in_array($valueFluxo->id_situacao, $tmpFluxoData)) { ... }
+                        } // foreach ($tmpFluxoSituacao as $keyFluxo => $valueFluxo) { ... }
+
+                        $tmpSituacaoFluxo   =   Situacao::where('id_situacao',$valueReturn->id_situacao)->first();
+                        if(!in_array($tmpSituacaoFluxo, $tmpFluxoData)) {
+                            array_push($tmpFluxoData,$tmpSituacaoFluxo);
+                        } // if(!in_array($valueFluxo->id_situacao, $tmpFluxoData)) { ... }
+
+
+
+                        $valueReturn['describe']    =   (object)[
+                            'company'           =>  Empresa::where('id_empresa',$valueReturn->id_empresa)->first(),
+                            'process'           =>  Processo::where('id_processo', $valueReturn->id_processo)->first(),
+                            'typeProcess'       =>  TipoProcesso::where('id_tipo_processo',$valueReturn->id_tipo_processo)->first(),
+                            'statusData'        =>  Situacao::where('id_situacao',$valueReturn->id_situacao)->first(),
+                            'data_vencimento'   =>  Carbon::parse($valueReturn->data_vencimento)->format('d/m/Y H:i'),
+                            'data_conclusao'    =>  is_null($valueReturn->data_conclusao) ? 'Não finalizada' : Carbon::parse($valueReturn->data_conclusao)->format('d/m/Y H:i'),
+                            'id_solicitante'    =>  User::where('id',$valueReturn->id_solicitante)->first(),
+                            'id_responsavel'    =>  is_null($valueReturn->id_responsavel) ? 'Espera entre atividades' : User::where('id',$valueReturn->id_responsavel)->first(),
+                            'status'            =>  Carbon::now()->lessThan(Carbon::parse($valueReturn->data_vencimento)) ? 'axon-border-red' : 'axon-border-green',
+                            'subordinates'      =>  $tmpUserData,
+                            'fluxo'             =>  $tmpFluxoData,
+                            'url'               =>  $urlChamado.$valueReturn->id_chamado,
+                        ];
                         array_push($returnData,$valueReturn);
                     } // if(!in_array($valueReturn, $returnData)) { ... }
                 } // foreach ($queryUserResponsible as $keyReturn => $valueReturn) { ... }
 
                 foreach ($queryProccess as $keyReturn => $valueReturn) {
                     if(!in_array($valueReturn, $returnData)) {
-                        $valueReturn['classCard']   =   'axon-border-orange';
+                        // Coleta subordinados
+                        $tmpUserPerfil  =   UsuarioPerfil::where('situacao',true)
+                                            ->where('id_processo',$valueReturn->id_processo)
+                                            ->select('id_usuario')
+                                            ->get();
+                        $tmpUserData    =   [];
+                        foreach ($tmpUserPerfil as $keyUserPerfil => $valueUserPerfil) {
+                            $tmpUserRef =   User::where('id',$valueUserPerfil->id_usuario)->first();
+
+                            if(!in_array($tmpUserRef, $tmpUserData)) {
+                                array_push($tmpUserData, $tmpUserRef);
+                            } // if(!in_array($valueUserPerfil->id_usuario, $tmpUserData)) { ... }
+                        } // foreach ($tmpUserPerfil as $keyUserPerfil => $valueUserPerfil) { ... }
+
+                        // Coleta o fluxo
+                        $tmpFluxoSituacao   =   Fluxo::where('id_tipo_processo',$valueReturn->id_tipo_processo)
+                                                ->where('id_situacao_ant',$valueReturn->id_situacao)
+                                                ->select('id_situacao')
+                                                ->get();
+
+                        $tmpFluxoData       =   [];
+                        foreach ($tmpFluxoSituacao as $keyFluxo => $valueFluxo) {
+                            $tmpSituacaoFluxo   =   Situacao::where('id_situacao',$valueFluxo->id_situacao)->first();
+
+                            if(!in_array($tmpSituacaoFluxo, $tmpFluxoData)) {
+                                array_push($tmpFluxoData,$tmpSituacaoFluxo);
+                            } // if(!in_array($valueFluxo->id_situacao, $tmpFluxoData)) { ... }
+                        } // foreach ($tmpFluxoSituacao as $keyFluxo => $valueFluxo) { ... }
+
+                        $tmpSituacaoFluxo   =   Situacao::where('id_situacao',$valueReturn->id_situacao)->first();
+                        if(!in_array($tmpSituacaoFluxo, $tmpFluxoData)) {
+                            array_push($tmpFluxoData,$tmpSituacaoFluxo);
+                        } // if(!in_array($valueFluxo->id_situacao, $tmpFluxoData)) { ... }
+
+
+
+                        $valueReturn['describe']    =   (object)[
+                            'company'           =>  Empresa::where('id_empresa',$valueReturn->id_empresa)->first(),
+                            'process'           =>  Processo::where('id_processo', $valueReturn->id_processo)->first(),
+                            'typeProcess'       =>  TipoProcesso::where('id_tipo_processo',$valueReturn->id_tipo_processo)->first(),
+                            'statusData'        =>  Situacao::where('id_situacao',$valueReturn->id_situacao)->first(),
+                            'data_vencimento'   =>  Carbon::parse($valueReturn->data_vencimento)->format('d/m/Y H:i'),
+                            'data_conclusao'    =>  is_null($valueReturn->data_conclusao) ? 'Não finalizada' : Carbon::parse($valueReturn->data_conclusao)->format('d/m/Y H:i'),
+                            'id_solicitante'    =>  User::where('id',$valueReturn->id_solicitante)->first(),
+                            'id_responsavel'    =>  is_null($valueReturn->id_responsavel) ? 'Espera entre atividades' : User::where('id',$valueReturn->id_responsavel)->first(),
+                            'status'            =>  Carbon::now()->lessThan(Carbon::parse($valueReturn->data_vencimento)) ? 'axon-border-red' : 'axon-border-green',
+                            'subordinates'      =>  $tmpUserData,
+                            'fluxo'             =>  $tmpFluxoData,
+                            'url'               =>  $urlChamado.$valueReturn->id_chamado,
+                        ];
                         array_push($returnData,$valueReturn);
                     } // if(!in_array($valueReturn, $returnData)) { ... }
                 } // foreach ($queryProccess as $keyReturn => $valueReturn) { ... }
 
                 foreach ($querySubordinates as $keyReturn => $valueReturn) {
                     if(!in_array($valueReturn, $returnData)) {
-                        $valueReturn['classCard']   =   'axon-border-teal';
+                        // Coleta subordinados
+                        $tmpUserPerfil  =   UsuarioPerfil::where('situacao',true)
+                                            ->where('id_processo',$valueReturn->id_processo)
+                                            ->select('id_usuario')
+                                            ->get();
+                        $tmpUserData    =   [];
+                        foreach ($tmpUserPerfil as $keyUserPerfil => $valueUserPerfil) {
+                            $tmpUserRef =   User::where('id',$valueUserPerfil->id_usuario)->first();
+
+                            if(!in_array($tmpUserRef, $tmpUserData)) {
+                                array_push($tmpUserData, $tmpUserRef);
+                            } // if(!in_array($valueUserPerfil->id_usuario, $tmpUserData)) { ... }
+                        } // foreach ($tmpUserPerfil as $keyUserPerfil => $valueUserPerfil) { ... }
+
+                        // Coleta o fluxo
+                        $tmpFluxoSituacao   =   Fluxo::where('id_tipo_processo',$valueReturn->id_tipo_processo)
+                                                ->where('id_situacao_ant',$valueReturn->id_situacao)
+                                                ->select('id_situacao')
+                                                ->get();
+
+                        $tmpFluxoData       =   [];
+                        foreach ($tmpFluxoSituacao as $keyFluxo => $valueFluxo) {
+                            $tmpSituacaoFluxo   =   Situacao::where('id_situacao',$valueFluxo->id_situacao)->first();
+
+                            if(!in_array($tmpSituacaoFluxo, $tmpFluxoData)) {
+                                array_push($tmpFluxoData,$tmpSituacaoFluxo);
+                            } // if(!in_array($valueFluxo->id_situacao, $tmpFluxoData)) { ... }
+                        } // foreach ($tmpFluxoSituacao as $keyFluxo => $valueFluxo) { ... }
+
+                        $tmpSituacaoFluxo   =   Situacao::where('id_situacao',$valueReturn->id_situacao)->first();
+                        if(!in_array($tmpSituacaoFluxo, $tmpFluxoData)) {
+                            array_push($tmpFluxoData,$tmpSituacaoFluxo);
+                        } // if(!in_array($valueFluxo->id_situacao, $tmpFluxoData)) { ... }
+
+
+
+                        $valueReturn['describe']    =   (object)[
+                            'company'           =>  Empresa::where('id_empresa',$valueReturn->id_empresa)->first(),
+                            'process'           =>  Processo::where('id_processo', $valueReturn->id_processo)->first(),
+                            'typeProcess'       =>  TipoProcesso::where('id_tipo_processo',$valueReturn->id_tipo_processo)->first(),
+                            'statusData'        =>  Situacao::where('id_situacao',$valueReturn->id_situacao)->first(),
+                            'data_vencimento'   =>  Carbon::parse($valueReturn->data_vencimento)->format('d/m/Y H:i'),
+                            'data_conclusao'    =>  is_null($valueReturn->data_conclusao) ? 'Não finalizada' : Carbon::parse($valueReturn->data_conclusao)->format('d/m/Y H:i'),
+                            'id_solicitante'    =>  User::where('id',$valueReturn->id_solicitante)->first(),
+                            'id_responsavel'    =>  is_null($valueReturn->id_responsavel) ? 'Espera entre atividades' : User::where('id',$valueReturn->id_responsavel)->first(),
+                            'status'            =>  Carbon::now()->lessThan(Carbon::parse($valueReturn->data_vencimento)) ? 'axon-border-red' : 'axon-border-green',
+                            'subordinates'      =>  $tmpUserData,
+                            'fluxo'             =>  $tmpFluxoData,
+                            'url'               =>  $urlChamado.$valueReturn->id_chamado,
+                        ];
                         array_push($returnData,$valueReturn);
                     } // if(!in_array($valueReturn, $returnData)) { ... }
                 } // foreach ($querySubordinates as $keyReturn => $valueReturn) { ... }
