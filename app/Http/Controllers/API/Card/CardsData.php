@@ -29,21 +29,21 @@
                 $idProcess  =   $request->input('idProcess');
                 $idType     =   $request->input('idType');
 
-                if($idCompany == 'null' || $idCompany == '' || !is_numeric($idCompany)) {
+                if($idCompany == 'null' || $idCompany == '' || !is_numeric($idCompany) || $idCompany == null) {
                     $idCompany  =   null;
                 } // if($idCompany == 'null' || $idCompany == '') { ... }
                 else {
                     $idCompany  =   intval($idCompany);
                 } // else { ... }
 
-                if($idProcess == 'null' || $idProcess == '' || !is_numeric($idProcess)) {
+                if($idProcess == 'null' || $idProcess == '' || !is_numeric($idProcess) || $idProcess == null) {
                     $idProcess  =   null;
                 } // if($idProcess == 'null' || $idProcess == '') { ... }
                 else {
                     $idProcess  =   intval($idProcess);
                 } // else { ... }
 
-                if($idType == 'null' || $idType == '' || !is_numeric($idType)) {
+                if($idType == 'null' || $idType == '' || !is_numeric($idType) || $idType == null) {
                     $idType  =   null;
                 } // if($idType == 'null' || $idType == '') { ... }
                 else {
@@ -120,6 +120,10 @@
                 $urlChamado =   '/task/';
 
                 foreach ($queryUserResponsible as $keyReturn => $valueReturn) {
+                    if(!is_null($idCompany) && $idCompany != $valueReturn->id_empresa) continue;
+                    if(!is_null($idProcess) && $idProcess != $valueReturn->id_processo) continue;
+                    if(!is_null($idType) && $idType != $valueReturn->id_tipo_processo) continue;
+
                     if(!in_array($valueReturn, $returnData)) {
                         // Coleta subordinados
                         $tmpUserPerfil  =   UsuarioPerfil::where('situacao',true)
@@ -180,6 +184,10 @@
                 } // foreach ($queryUserResponsible as $keyReturn => $valueReturn) { ... }
 
                 foreach ($queryProccess as $keyReturn => $valueReturn) {
+                    if(!is_null($idCompany) && $idCompany != $valueReturn->id_empresa) continue;
+                    if(!is_null($idProcess) && $idProcess != $valueReturn->id_processo) continue;
+                    if(!is_null($idType) && $idType != $valueReturn->id_tipo_processo) continue;
+
                     if(!in_array($valueReturn, $returnData)) {
                         // Coleta subordinados
                         $tmpUserPerfil  =   UsuarioPerfil::where('situacao',true)
@@ -240,6 +248,11 @@
                 } // foreach ($queryProccess as $keyReturn => $valueReturn) { ... }
 
                 foreach ($querySubordinates as $keyReturn => $valueReturn) {
+
+                    if(!is_null($idCompany) && $idCompany != $valueReturn->id_empresa) continue;
+                    if(!is_null($idProcess) && $idProcess != $valueReturn->id_processo) continue;
+                    if(!is_null($idType) && $idType != $valueReturn->id_tipo_processo) continue;
+
                     if(!in_array($valueReturn, $returnData)) {
                         // Coleta subordinados
                         $tmpUserPerfil  =   UsuarioPerfil::where('situacao',true)

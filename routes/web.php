@@ -53,7 +53,9 @@
                 return redirect()->route('card.list');
             })->name('mainPage');
 
-            // [task.list] - Sistema para criação das cards
+            // [card.list] - Sistema para criação das cards
             Route::any('/list','CardsData@listCard')->name('list');
+            // [card.edit] - Alteração de dados de cartões
+            Route::any('/edit','CardsData@saveCard')->name('edit');
         }); // Route::namespace('Task')->prefix('task')->name('task.')->group(function(){ ... });
     }); // Route::namespace('Page')->middleware(['auth'])->group(function(){ ... });

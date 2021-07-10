@@ -19,7 +19,11 @@
                         <div class="col-12" v-else>
                             <ul class="list-group">
                                 <li v-bind:class="'list-group-item ' + curreg.describe.status" v-for="curreg in content" v-bind:key="curreg.id_chamado">
-                                    <form method="POST" action="/" class="row" autocomplete="off" enctype="multipart/form-data">
+                                    <form method="POST" action="/card/edit" class="row was-validated" autocomplete="off" enctype="multipart/form-data">
+
+                                        <input type="hidden" name="idChamado" v-bind:value="curreg.id_chamado">
+                                        <input type="hidden" name="_token" v-bind:value="token">
+
                                         <div class="col-12 text-center">
                                             <a v-bind:href="curreg.describe.url" target="_blank"><small>{{ curreg.titulo }}</small></a>
                                         </div>
@@ -57,7 +61,7 @@
                                                 <label for="dataLimite">
                                                     <small>Data limite:</small>
                                                 </label>
-                                                <input type="date" class="form-control form-control-sm" name="data_vencimento" v-bind:min="curreg.describe.lastDate" v-bind:value="curreg.describe.lastDate" required>
+                                                <input type="date" class="form-control form-control-sm" name="data_vencimento" v-bind:min="curreg.describe.lastDate" required>
                                             </div>
                                         </div>
 

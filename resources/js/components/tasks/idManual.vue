@@ -20,13 +20,13 @@
                             <div class="row">
                                 <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                     <label class="font-weight-bold" for="empresaBPMS">Empresa</label>
-                                    <input type="text" class="form-control form-control-sm" id="empresaBPMS" name="empresaBPMS" v-bind:value="(content.descriptions.empresa == [] ? 'Nenhuma empresa' : content.descriptions.empresa.descricao)" readonly>
+                                    <input type="text" class="form-control form-control-sm" v-bind:value="(content.descriptions.empresa == [] ? 'Nenhuma empresa' : content.descriptions.empresa.descricao)" readonly>
                                 </div>
 
-                                <input type="hidden" name="idProcessoBPMS">
+                                <input type="hidden">
                                 <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                     <label class="font-weight-bold" for="processoBPMS">Processo</label>
-                                    <input type="text" class="form-control form-control-sm" id="processoBPMS" name="processoBPMS" v-bind:value="(content.descriptions.processo == [] ? 'Nenhum processo' : content.descriptions.processo.descricao)" readonly>
+                                    <input type="text" class="form-control form-control-sm" v-bind:value="(content.descriptions.processo == [] ? 'Nenhum processo' : content.descriptions.processo.descricao)" readonly>
                                 </div>
 
                                 <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
@@ -55,13 +55,12 @@
                             <div class="row">
                                 <div class="form-group col-12">
                                     <label class="font-weight-bold" for="empresaBPMS">Solicitante</label>
-                                    <input type="text" class="form-control form-control-sm" id="empresaBPMS" name="empresaBPMS" v-bind:value="(content.descriptions.solicitante == [] ? 'Nenhum solicitante' : content.descriptions.solicitante.name)" readonly>
+                                    <input type="text" class="form-control form-control-sm" v-bind:value="(content.descriptions.solicitante == [] ? 'Nenhum solicitante' : content.descriptions.solicitante.name)" readonly>
                                 </div>
 
-                                <input type="hidden" name="idProcessoBPMS">
                                 <div class="form-group col-12">
                                     <label class="font-weight-bold" for="processoBPMS">Responsável pelo processo</label>
-                                    <input type="text" class="form-control form-control-sm" id="processoBPMS" name="processoBPMS" v-bind:value="content.descriptions.processo.descriptions.responsavel.name" readonly>
+                                    <input type="text" class="form-control form-control-sm" v-bind:value="content.descriptions.processo.descriptions.responsavel.name" readonly>
                                 </div>
 
                                 <div class="form-group col-12">
@@ -176,7 +175,7 @@
                                                         <li class="list-group-item d-flex justify-content-between text-primary font-weigth-bold" v-for="curreg in content.archives" v-bind:key="curreg.id_arquivo">
                                                             <i class="fas fa-file-alt"></i>
                                                             <a v-bind:href="curreg.url" target="_blank">
-                                                                <span>Arquivo anexado por {{ curreg.createdBy.name }}</span>
+                                                                <span>{{ curreg.nome_arquivo }} anexado por {{ curreg.createdBy.name }}</span>
                                                             </a>
                                                             <i class="fas fa-file-alt"></i>
                                                         </li>
@@ -191,8 +190,51 @@
                                                 <li v-else class="list-group-item">
                                                     <ul class="list-group">
                                                         <!-- Arquivos anexados na abertura do chamado -->
-                                                        <li class="list-group-item d-flex justify-content-between border-primary" v-for="curreg in content.archives" v-bind:key="curreg.id_arquivo">
-                                                            123
+                                                        <li class="list-group-item d-flex justify-content-between border-primary" v-for="curreg in content.taskEntry" v-bind:key="curreg.id_tarefa">
+                                                            <div class="row">
+                                                                <div class="form-group col-12">
+                                                                    <label class="font-weight-bold" for="Entrada">Entrada #{{ curreg.id_tarefa }}</label>
+                                                                    <textarea rows="5" class="form-control form-control-sm" v-bind:value="curreg.conteudo" readonly></textarea>
+                                                                </div>
+                                                                <div class="form-group col-12 col-sm-6 col-md-6 col-lg-6">
+                                                                    <label class="font-weight-bold" for="Entrada">Usuario Anterior</label>
+                                                                    <input type="text" class="form-control form-control-sm" v-bind:value="curreg.descriptions.usrAnt == null ? '' : curreg.descriptions.usrAnt.name" readonly>
+                                                                </div>
+                                                                <div class="form-group col-12 col-sm-6 col-md-6 col-lg-6">
+                                                                    <label class="font-weight-bold" for="Entrada">Usuário Atribuído</label>
+                                                                    <input type="text" class="form-control form-control-sm" v-bind:value="curreg.descriptions.usrAtr == null ? '' : curreg.descriptions.usrAtr.name" readonly>
+                                                                </div>
+
+                                                                <div class="form-group col-12 col-sm-6 col-md-6 col-lg-6">
+                                                                    <label class="font-weight-bold" for="Entrada">Data venc. Anterior</label>
+                                                                    <input type="text" class="form-control form-control-sm" v-bind:value="curreg.descriptions.dtVencAnt" readonly>
+                                                                </div>
+                                                                <div class="form-group col-12 col-sm-6 col-md-6 col-lg-6">
+                                                                    <label class="font-weight-bold" for="Entrada">Data venc. Atribuída</label>
+                                                                    <input type="text" class="form-control form-control-sm" v-bind:value="curreg.descriptions.dtVencAtr" readonly>
+                                                                </div>
+
+                                                                <div class="form-group col-12 col-sm-6 col-md-6 col-lg-6">
+                                                                    <label class="font-weight-bold" for="Entrada">Situação Anterior</label>
+                                                                    <input type="text" class="form-control form-control-sm" v-bind:value="curreg.descriptions.situacaoAnt.descricao" readonly>
+                                                                </div>
+                                                                <div class="form-group col-12 col-sm-6 col-md-6 col-lg-6">
+                                                                    <label class="font-weight-bold" for="Entrada">Situação Atribuída</label>
+                                                                    <input type="text" class="form-control form-control-sm" v-bind:value="curreg.descriptions.situacaoAtr.descricao" readonly>
+                                                                </div>
+
+                                                                <div class="col-12">
+                                                                    <ul class="list-group">
+                                                                        <li class="list-group-item d-flex justify-content-between border-primary" v-for="curfile in curreg.allFiles" v-bind:key="curfile.id_arquivo">
+                                                                            <i class="fas fa-file-alt"></i>
+                                                                            <a v-bind:href="curfile.url" target="_blank">
+                                                                                <span>{{ curfile.nome_arquivo }}</span>
+                                                                            </a>
+                                                                            <i class="fas fa-file-alt"></i>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
                                                         </li>
                                                     </ul>
                                                 </li>

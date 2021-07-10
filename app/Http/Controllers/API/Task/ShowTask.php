@@ -63,8 +63,8 @@
                     'situacao'          =>  is_null($task->id_situacao) ? null : Situacao::where('id_situacao',$task->id_situacao)->first(),
                     'solicitante'       =>  is_null($task->id_solicitante) ? null : User::where('id',$task->id_solicitante)->first(),
                     'responsavel'       =>  is_null($task->id_responsavel) ? null : User::where('id',$task->id_responsavel)->first(),
-                    'dataVencimento'    =>  Carbon::parse($task->data_vencimento)->format('d/m/Y H:i'),
-                    'dataConclusao'     =>  Carbon::parse($task->data_conclusao)->format('d/m/Y H:i'),
+                    'dataVencimento'    =>  is_null($task->data_vencimento) ? null : Carbon::parse($task->data_vencimento)->format('d/m/Y H:i'),
+                    'dataConclusao'     =>  is_null($task->data_conclusao) ? 'Em atendimento' : Carbon::parse($task->data_conclusao)->format('d/m/Y H:i'),
                     'dataCria'          =>  Carbon::parse($task->data_cria)->format('d/m/Y H:i'),
                     'dataAlt'           =>  Carbon::parse($task->data_alt)->format('d/m/Y H:i'),
                     'prazoContratado'   =>  Carbon::parse($task->data_criacao)->diff(Carbon::parse($task->data_criacao)->addMinutes($tmpTipoProcesso->sla))->format('%ya %mm %dd %H:%I:%S'),
@@ -90,14 +90,25 @@
                                         ->get();
 
                 foreach ($task->taskEntry as $keyData => $valueData) {
+                    $tmpListFiles                           =   Arquivo::where('id_tarefa',$valueData->id_tarefa)
+                                                                ->orderBy('id_arquivo','asc')
+                                                                ->get();
+                    $listFilesTmp                           =   [];
+                    foreach ($tmpListFiles as $keyFiles => $valueFiles) {
+                        $valueFiles->url    =   Storage::url('tarefa/'.$valueData->nome_servidor);
+                        array_push($listFilesTmp, $valueFiles);
+                    } // foreach ($tmpListFiles as $keyFiles => $valueFiles) { ... }
+
+                    $task->taskEntry[$keyData]->allFiles    =   $listFilesTmp;
+
                     $task->taskEntry[$keyData]->descriptions    =   (object)[
-                        'situacaoAnt'   =>  is_null($task->id_situacao_anterior) ? null : Situacao::where('id_situacao',$task->id_situacao_anterior)->first(),
-                        'situacaoAtr'   =>  is_null($task->id_situacao_atribuida) ? null : Situacao::where('id_situacao',$task->id_situacao_atribuida)->first(),
-                        'usrAnt'        =>  is_null($task->id_usuario_anterior) ? null : User::where('id',$task->id_usuario_anterior)->first(),
-                        'usrAtr'        =>  is_null($task->id_usuario_atribuido) ? null : User::where('id',$task->id_usuario_atribuido)->first(),
-                        'dtVencAnt'     =>  is_null($task->data_venc_anterior) ? null : Carbon::parse($task->data_venc_anterior),
-                        'dtVencAtr'     =>  is_null($task->data_venc_atribuida) ? null : Carbon::parse($task->data_venc_atribuida),
-                        'resp'          =>  is_null($task->usr_cria) ? null : User::where('id',$task->usr_cria)->first(),
+                        'situacaoAnt'   =>  is_null($valueData->id_situacao_anterior) ? null : Situacao::where('id_situacao',$valueData->id_situacao_anterior)->first(),
+                        'situacaoAtr'   =>  is_null($valueData->id_situacao_atribuida) ? null : Situacao::where('id_situacao',$valueData->id_situacao_atribuida)->first(),
+                        'usrAnt'        =>  is_null($valueData->id_usuario_anterior) ? null : User::where('id',$valueData->id_usuario_anterior)->first(),
+                        'usrAtr'        =>  is_null($valueData->id_usuario_atribuido) ? null : User::where('id',$valueData->id_usuario_atribuido)->first(),
+                        'dtVencAnt'     =>  is_null($valueData->data_venc_anterior) ? null : Carbon::parse($valueData->data_venc_anterior)->format('d/m/Y H:i'),
+                        'dtVencAtr'     =>  is_null($valueData->data_venc_atribuida) ? null : Carbon::parse($valueData->data_venc_atribuida)->format('d/m/Y H:i'),
+                        'resp'          =>  is_null($valueData->usr_cria) ? null : User::where('id',$valueData->usr_cria)->first(),
                     ];
                 } // foreach ($task->taskEntry as $keyData => $valueData) { ... }
 
