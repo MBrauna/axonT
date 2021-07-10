@@ -82,8 +82,8 @@
                                             ->first();
 
                         if(isset($verifyCompany->id_empresa) && !is_null($verifyCompany) && $verifyCompany->situacao) {
-                            if(!in_array($valueStatus, $listStatusActive)) {
-                                array_push($listStatusActive,$valueStatus);
+                            if(!in_array($valueStatus->id_situacao, $listStatusActive)) {
+                                array_push($listStatusActive,$valueStatus->id_situacao);
                             } // if(!in_array($valueStatus->id_situacao, $listStatusActive)) { ... }
                         } // if(isset($verifyCompany->id_empresa) && !is_null($verifyCompany) && $verifyCompany->situacao) { ... }
                     } // if(isset($verifyProccess) && $verifyProccess->situacao) { ... }
@@ -99,15 +99,18 @@
                 } // foreach ($listSubordinates as $keySub => $valueSub) { ... }
 
                 $queryUserResponsible   =   Chamado::where('id_responsavel',Auth::user()->id)
+                                            ->whereIn('id_situacao',$listStatusActive)
                                             ->where('situacao',true)
                                             ->get();
                 
                 $queryProccess          =   Chamado::whereIn('id_processo',$listProccess)
+                                            ->whereIn('id_situacao',$listStatusActive)
                                             ->whereNull('id_responsavel')
                                             ->where('situacao',true)
                                             ->get();
                 
                 $querySubordinates      =   Chamado::whereIn('id_responsavel',$listUser)
+                                            ->whereIn('id_situacao',$listStatusActive)
                                             ->where('situacao',true)
                                             ->get();
 
@@ -141,6 +144,7 @@
                         $tmpFluxoData       =   [];
                         foreach ($tmpFluxoSituacao as $keyFluxo => $valueFluxo) {
                             $tmpSituacaoFluxo   =   Situacao::where('id_situacao',$valueFluxo->id_situacao)->first();
+                            $tmpSituacaoFluxo['selectedData']   =   false;
 
                             if(!in_array($tmpSituacaoFluxo, $tmpFluxoData)) {
                                 array_push($tmpFluxoData,$tmpSituacaoFluxo);
@@ -148,6 +152,7 @@
                         } // foreach ($tmpFluxoSituacao as $keyFluxo => $valueFluxo) { ... }
 
                         $tmpSituacaoFluxo   =   Situacao::where('id_situacao',$valueReturn->id_situacao)->first();
+                        $tmpSituacaoFluxo['selectedData']   =   true;
                         if(!in_array($tmpSituacaoFluxo, $tmpFluxoData)) {
                             array_push($tmpFluxoData,$tmpSituacaoFluxo);
                         } // if(!in_array($valueFluxo->id_situacao, $tmpFluxoData)) { ... }
@@ -155,6 +160,8 @@
 
 
                         $valueReturn['describe']    =   (object)[
+                            'lastDate'          =>  Carbon::now()->toDateString(),
+                            'file'              =>  false,
                             'company'           =>  Empresa::where('id_empresa',$valueReturn->id_empresa)->first(),
                             'process'           =>  Processo::where('id_processo', $valueReturn->id_processo)->first(),
                             'typeProcess'       =>  TipoProcesso::where('id_tipo_processo',$valueReturn->id_tipo_processo)->first(),
@@ -197,6 +204,7 @@
                         $tmpFluxoData       =   [];
                         foreach ($tmpFluxoSituacao as $keyFluxo => $valueFluxo) {
                             $tmpSituacaoFluxo   =   Situacao::where('id_situacao',$valueFluxo->id_situacao)->first();
+                            $tmpSituacaoFluxo['selectedData']   =   false;
 
                             if(!in_array($tmpSituacaoFluxo, $tmpFluxoData)) {
                                 array_push($tmpFluxoData,$tmpSituacaoFluxo);
@@ -204,6 +212,7 @@
                         } // foreach ($tmpFluxoSituacao as $keyFluxo => $valueFluxo) { ... }
 
                         $tmpSituacaoFluxo   =   Situacao::where('id_situacao',$valueReturn->id_situacao)->first();
+                        $tmpSituacaoFluxo['selectedData']   =   true;
                         if(!in_array($tmpSituacaoFluxo, $tmpFluxoData)) {
                             array_push($tmpFluxoData,$tmpSituacaoFluxo);
                         } // if(!in_array($valueFluxo->id_situacao, $tmpFluxoData)) { ... }
@@ -211,6 +220,8 @@
 
 
                         $valueReturn['describe']    =   (object)[
+                            'lastDate'          =>  Carbon::now()->toDateString(),
+                            'file'              =>  false,
                             'company'           =>  Empresa::where('id_empresa',$valueReturn->id_empresa)->first(),
                             'process'           =>  Processo::where('id_processo', $valueReturn->id_processo)->first(),
                             'typeProcess'       =>  TipoProcesso::where('id_tipo_processo',$valueReturn->id_tipo_processo)->first(),
@@ -253,6 +264,7 @@
                         $tmpFluxoData       =   [];
                         foreach ($tmpFluxoSituacao as $keyFluxo => $valueFluxo) {
                             $tmpSituacaoFluxo   =   Situacao::where('id_situacao',$valueFluxo->id_situacao)->first();
+                            $tmpSituacaoFluxo['selectedData']   =   false;
 
                             if(!in_array($tmpSituacaoFluxo, $tmpFluxoData)) {
                                 array_push($tmpFluxoData,$tmpSituacaoFluxo);
@@ -260,6 +272,7 @@
                         } // foreach ($tmpFluxoSituacao as $keyFluxo => $valueFluxo) { ... }
 
                         $tmpSituacaoFluxo   =   Situacao::where('id_situacao',$valueReturn->id_situacao)->first();
+                        $tmpSituacaoFluxo['selectedData']   =   true;
                         if(!in_array($tmpSituacaoFluxo, $tmpFluxoData)) {
                             array_push($tmpFluxoData,$tmpSituacaoFluxo);
                         } // if(!in_array($valueFluxo->id_situacao, $tmpFluxoData)) { ... }
@@ -267,6 +280,8 @@
 
 
                         $valueReturn['describe']    =   (object)[
+                            'lastDate'          =>  Carbon::now()->toDateString(),
+                            'file'              =>  false,
                             'company'           =>  Empresa::where('id_empresa',$valueReturn->id_empresa)->first(),
                             'process'           =>  Processo::where('id_processo', $valueReturn->id_processo)->first(),
                             'typeProcess'       =>  TipoProcesso::where('id_tipo_processo',$valueReturn->id_tipo_processo)->first(),
