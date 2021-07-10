@@ -153,7 +153,7 @@
                         default:
                             $task->itemChamado[$keyData]->respostaFormatada =   $valueData->resposta;
                             break;
-                    }
+                    } // switch ($valueData->tipo) { ... }
                 } // foreach ($task->itemChamado as $keyData => $valueData) { ... }
 
                 return response()->json($task,200);
