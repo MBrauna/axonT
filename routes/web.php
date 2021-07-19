@@ -58,4 +58,14 @@
             // [card.edit] - Alteração de dados de cartões
             Route::any('/edit','CardsData@saveCard')->name('edit');
         }); // Route::namespace('Task')->prefix('task')->name('task.')->group(function(){ ... });
+
+        Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function(){
+            // [admin.mainPage]
+            Route::any('/', function(){
+                return redirect()->route('performance.graph');
+            })->name('mainPage');
+
+            // [admin.company]
+            Route::any('company','Company@pageCompany')->name('company');
+        }); // Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function(){ ... }
     }); // Route::namespace('Page')->middleware(['auth'])->group(function(){ ... });

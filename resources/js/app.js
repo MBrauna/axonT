@@ -58,6 +58,8 @@ Vue.component('id-task', require('./components/tasks/idManual.vue').default);
 Vue.component('list-automatic', require('./components/tasks/listAutomatic.vue').default);
 Vue.component('aceitar-acordo',require('./components/tasks/aceitarAcordo.vue').default);
 
+Vue.component('admin-company', require('./components/admin/company.vue').default);
+
 
 // -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- //
 

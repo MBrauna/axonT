@@ -46,4 +46,9 @@
             // [card.list]
             Route::any('/list','CardsData@getCards')->name('list');
         }); // Route::namespace('Util')->middleware('auth:api')->prefix('util')->name('util.')->group(function(){ ... }
+
+        Route::namespace('Admin')->middleware('auth:api')->prefix('admin')->name('admin.')->group(function(){
+            // [admin.company]
+            Route::any('/company','Company@getCompanies')->name('company');
+        });
     });

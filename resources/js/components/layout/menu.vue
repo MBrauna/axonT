@@ -48,6 +48,22 @@
               <li class="nav-item">
                   <a class="nav-link text-primary" href="/card/list">Tarefa</a>
               </li>
+
+              <li class="nav-item dropdown" v-show="authuser.administrador || authuser.admin_global">
+                  <a class="nav-link text-primary dropdown-toggle" href="#"  role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="menuAdmin">
+                      Administrador
+                  </a>
+                  <div class="dropdown-menu border border-primary" aria-labelledby="menuAdmin">
+                      <a href="/admin/company" class="dropdown-item text-primary d-flex justify-content-between">
+                          <i class="fas fa-briefcase mx-2"></i>
+                          <small class="font-weight-bolder mx-2">Empresa</small>
+                      </a>
+                      <a href="/task/list" class="dropdown-item text-primary d-flex justify-content-between">
+                          <i class="fas fa-users mx-2"></i>
+                          <small class="font-weight-bolder mx-2">Usuário</small>
+                      </a>
+                  </div>
+              </li>
           </ul>
       </div>
 
